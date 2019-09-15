@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+             xmlns:tools="http://schemas.android.com/tools"
+             xmlns:app="http://schemas.android.com/apk/res-auto"
+             android:layout_width="match_parent"
+             android:layout_height="match_parent"
+             tools:context=".findstore.StoreMapFragment">
+
+    <com.google.android.gms.maps.MapView
+            android:id="@+id/mapView"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+        <android.support.v7.widget.CardView
+                android:id="@+id/map_store_card"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:cardCornerRadius="8dp"
+                app:contentPadding="16dp"
+                app:contentPaddingBottom="8dp"
+                android:layout_gravity="bottom"
+                android:layout_marginStart="16dp"
+                android:layout_marginEnd="16dp"
+                android:layout_marginBottom="16dp">
+
+            <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:orientation="vertical">
+                <TextView
+                        android:id="@+id/store_name_text_view"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        style="@style/spoqa_text_black"
+                        android:ellipsize="end"
+                        android:textStyle="bold"
+                        android:textSize="18sp"
+                        android:text="가맹점 이름"/>
+
+                <TextView
+                        android:id="@+id/store_addr_text_view"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        style="@style/spoqa_text_black"
+                        android:textSize="14sp"
+                        android:maxLines="2"
+                        android:layout_marginTop="8dp"
+                        android:text="가맹점 주소"/>
+
+                <TextView
+                        android:id="@+id/store_remark_text_view"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        style="@style/spoqa_text_black"
+                        android:textSize="14sp"
+                        android:ellipsize="end"
+                        android:text="비고"/>
+
+                <Button
+                        android:id="@+id/map_add_expense_button"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="지출 내역 추가"
+                        android:layout_gravity="end"
+                        android:drawablePadding="8dp"
+                        android:drawableStart="@drawable/ic_pencil_icon_16dp"
+                        android:textColor="@color/white"
+                        android:backgroundTint="@color/colorPrimary"
+                        style="@style/spoqa_text_black"/>
+            </LinearLayout>
+        </android.support.v7.widget.CardView>
+
+    </com.google.android.gms.maps.MapView>
+
+
+</FrameLayout>
