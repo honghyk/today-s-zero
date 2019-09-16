@@ -1,29 +1,24 @@
-package com.example.todayzero.data.source
+package com.example.todayzero.notice
 
 import com.example.todayzero.data.Notice
-import com.example.todayzero.data.Store
+import com.example.todayzero.data.source.DataFilterType
+import com.example.todayzero.data.source.DataSource
 
-class NoticeRepository(val noticeList:ArrayList<Notice> ):DataSource {
+class NoticeRepository(val noticeList:ArrayList<Notice> ):
+    DataSource {
 
 
     fun initNotice(callback: DataSource.LoadDataCallback){
-        class ApiListener:DataSource.ApiListener{
+        class ApiListener: DataSource.ApiListener {
             private var count=0
             private var networkState=true
             override fun onDataLoaded(dataFilterType: DataFilterType) {
-                if(dataFilterType==DataFilterType.NOTICE) count++
-//                if(count==5) {
-//                    Notice.loadDetailNotice(noticeList, this)
-//                    count=0
-//                }
-//                if(dataFilterType==DataFilterType.NOTICE_DETAIL) dCount++
-//                if(dCount==noticeList.size)
-//                    callback.onDataLoaded()
+                if(dataFilterType== DataFilterType.NOTICE) count++
                 if(count==5) callback.onDataLoaded()
             }
 
             override fun onFailure(dataFilterType: DataFilterType) {
-                if(true){
+                if(networkState){
                     networkState=false
                     callback.onNetworkNotAvailable()
                 }
@@ -32,7 +27,7 @@ class NoticeRepository(val noticeList:ArrayList<Notice> ):DataSource {
         val apiListener=ApiListener()
         Notice.loadNotice(noticeList,apiListener)
     }
-    interface NoticeNumApiListener:DataSource.ApiListener{
+    interface NoticeNumApiListener: DataSource.ApiListener {
         override fun onDataLoaded(dataFilterType: DataFilterType) {
             TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
         }

@@ -6,13 +6,11 @@ import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
 import android.util.Log
 import android.view.View
-import android.widget.ProgressBar
-import android.widget.TextView
+import android.widget.LinearLayout
 import com.example.todayzero.R
 import com.example.todayzero.data.Notice
 import com.example.todayzero.data.source.DataFilterType
 import com.example.todayzero.data.source.DataSource
-import com.example.todayzero.data.source.NoticeRepository
 import com.example.todayzero.util.NetworkTask
 import kotlinx.android.synthetic.main.notice_act.*
 
@@ -25,29 +23,38 @@ class NoticeActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.notice_act)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
+
+        initLayout()
         initData()
 
+        network_refresh_button.setOnClickListener {
+            initData() }
     }
 
     fun initData() {
-        noticeList = ArrayList()
-        val noticeDataRepository=NoticeRepository(noticeList)
+
+        val noticeDataRepository= NoticeRepository(noticeList)
         noticeDataRepository.initNotice(object:DataSource.LoadDataCallback{
             override fun onDataLoaded() {
-                initLayout()
+                showViews(false)
+                noticeAdapter.notifyDataSetChanged()
             }
             override fun onNetworkNotAvailable() {
-
+                showViews(true)
             }
         })
     }
-
+     fun showViews(showNetworkView: Boolean) {
+         no_network_view.visibility = if(showNetworkView) View.VISIBLE else View.GONE
+        notice_list_view.visibility = if(showNetworkView) View.GONE else View.VISIBLE
+    }
     fun initLayout() {
+
+        noticeList = ArrayList()
         noticeAdapter = NoticeAdapter(noticeList)
         val layoutManager = LinearLayoutManager(this, RecyclerView.VERTICAL, false)
         notice_list_view.layoutManager = layoutManager as RecyclerView.LayoutManager?
         notice_list_view.adapter = noticeAdapter
-
         noticeAdapter.itemClickListener = object : NoticeAdapter.OnItemClickListener {
             override fun onItemClick(holder: NoticeAdapter.ViewHolder, view: View, data: Notice, position: Int)
             {
@@ -61,7 +68,7 @@ class NoticeActivity : AppCompatActivity() {
 
                     }
                     override fun onFailure(dataFilterType: DataFilterType) {
-                       //네트워크 오류
+                        showViews(true)
                     }
                 },position)
                 noticeDetailTask.execute()

@@ -1,12 +1,10 @@
 package com.example.todayzero.data
 
 import android.os.AsyncTask
-import android.util.Log
 import com.example.todayzero.data.source.DataFilterType
-import com.example.todayzero.data.source.NoticeRepository
+import com.example.todayzero.notice.NoticeRepository
 import com.example.todayzero.data.source.DataSource
 import com.example.todayzero.util.NetworkTask
-import kotlin.math.ceil
 
 data class Notice(val title:String, var content:String, val data:String, val num:String, var selected:Boolean=false) {
 
@@ -17,14 +15,14 @@ data class Notice(val title:String, var content:String, val data:String, val num
         fun loadNotice(noticeList:ArrayList<Notice>,callback:DataSource.ApiListener){
             lateinit var noticeNumCallBack:DataSource.ApiListener
 
-            class LoadNoticeList(var url:String):NoticeRepository.NoticeNumApiListener{
+            class LoadNoticeList(var url:String): NoticeRepository.NoticeNumApiListener{
 
                 override fun onDataLoaded(dataFilterType: DataFilterType) {
 
                 }
 
                 override fun onFailure(dataFilterType: DataFilterType) {
-
+                    callback.onFailure(DataFilterType.NOTICE_NUM)
                 }
 
                 override fun onDataLoaded(fixedNoticeNum: Int) {

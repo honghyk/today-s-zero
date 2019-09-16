@@ -5,7 +5,7 @@ import android.util.Log
 import com.example.todayzero.data.Notice
 import com.example.todayzero.data.Store
 import com.example.todayzero.data.source.DataFilterType
-import com.example.todayzero.data.source.NoticeRepository
+import com.example.todayzero.notice.NoticeRepository
 import com.example.todayzero.data.source.DataSource
 
 class NetworkTask(
@@ -134,7 +134,6 @@ class NetworkTask(
                     detailText=detailText.replace("&gt;",">")
                     detailText=detailText.replace("                                                                                ","\n")
                     detailText = detailText.replace("                                                                                ", "\n")
-                    Log.i("test","!"+detailText[0]+"!"+detailText[0].toInt())
                     noticeList[limitNum!!].content=detailText
 
             }
