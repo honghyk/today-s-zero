@@ -76,7 +76,6 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
                 startActivity(webIntent)
             }
         }
-
         drawer_layout.closeDrawer(GravityCompat.START)
         return true
     }
