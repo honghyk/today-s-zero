@@ -1,6 +1,7 @@
 package com.example.todayzero
 
 import android.content.Intent
+import android.net.Uri
 import android.os.Bundle
 import android.support.design.widget.NavigationView
 import android.support.v4.view.GravityCompat
@@ -52,6 +53,27 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
             }
             R.id.nav_notice -> {
                 startActivity(Intent(this, NoticeActivity::class.java))
+            }
+            R.id.nav_use ->{
+                val youtubePage= Uri.parse("https://www.youtube.com/watch?v=p1ZApN4JvRA")
+                val webIntent= Intent(Intent.ACTION_VIEW,youtubePage)
+                startActivity(webIntent)
+            }
+            R.id.nav_call->{
+                val emailIntent = Intent(Intent.ACTION_SEND)
+                emailIntent.putExtra(Intent.EXTRA_EMAIL, arrayOf("help@zpay.or.kr"))
+                emailIntent.putExtra(Intent.EXTRA_SUBJECT, "[제로페이] 관련 문의사항")
+                emailIntent.putExtra(Intent.EXTRA_TEXT, "불편사항, 문의사항을 작성해주세요:)\n")
+                emailIntent.type="message/rfc822"
+                startActivity(emailIntent) //네트워크 오류 , 설치 오류 예외처리 해야할 듯
+            }
+            R.id.nav_share->{
+
+            }
+            R.id.nav_send->{
+                val instaPage= Uri.parse("https://www.instagram.com/zeropay.official/")
+                val webIntent= Intent(Intent.ACTION_VIEW,instaPage)
+                startActivity(webIntent)
             }
         }
 
