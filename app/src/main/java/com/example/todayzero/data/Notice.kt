@@ -10,7 +10,6 @@ data class Notice(val title:String, var content:String, val data:String, val num
 
     companion object{
         private const val baseUrl="https://www.zeropay.or.kr/custCntr/notiMtrList.do?pageIndex="
-        private const val detailUrl="https://www.zeropay.or.kr/custCntr/notiMtrDetail.do?id="
 
         fun loadNotice(noticeList:ArrayList<Notice>,callback:DataSource.ApiListener){
             lateinit var noticeNumCallBack:DataSource.ApiListener
@@ -40,14 +39,5 @@ data class Notice(val title:String, var content:String, val data:String, val num
             noticeNumTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR)
         }
 
-        fun loadDetailNotice(noticeList:ArrayList<Notice>,callback:DataSource.ApiListener){
-            var count=0
-            for(notice in noticeList){
-                val url= detailUrl+notice.num
-                val noticeDetailTask=NetworkTask(noticeList,DataFilterType.NOTICE_DETAIL,url,callback,count)
-                noticeDetailTask.execute()
-                count++
-            }
-        }
     }
 }

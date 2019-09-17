@@ -13,7 +13,6 @@ import com.example.todayzero.data.source.DataFilterType
 import com.example.todayzero.data.source.DataSource
 import com.example.todayzero.util.NetworkTask
 import kotlinx.android.synthetic.main.notice_act.*
-
 class NoticeActivity : AppCompatActivity() {
 
     private lateinit var noticeList: ArrayList<Notice>
@@ -32,21 +31,24 @@ class NoticeActivity : AppCompatActivity() {
     }
 
     fun initData() {
-
+        noticeList.clear()
+        noticeAdapter.notifyDataSetChanged()
+        showViews(true,false)
         val noticeDataRepository= NoticeRepository(noticeList)
         noticeDataRepository.initNotice(object:DataSource.LoadDataCallback{
             override fun onDataLoaded() {
-                showViews(false)
+                showViews(false,false)
                 noticeAdapter.notifyDataSetChanged()
             }
             override fun onNetworkNotAvailable() {
-                showViews(true)
+                showViews(false,true)
             }
         })
     }
-     fun showViews(showNetworkView: Boolean) {
+     fun showViews(showProgressView:Boolean,showNetworkView: Boolean) {
          no_network_view.visibility = if(showNetworkView) View.VISIBLE else View.GONE
         notice_list_view.visibility = if(showNetworkView) View.GONE else View.VISIBLE
+         progress_circular.visibility =if(showProgressView) View.VISIBLE else View.GONE
     }
     fun initLayout() {
 
@@ -68,7 +70,7 @@ class NoticeActivity : AppCompatActivity() {
 
                     }
                     override fun onFailure(dataFilterType: DataFilterType) {
-                        showViews(true)
+                        showViews(false,true)
                     }
                 },position)
                 noticeDetailTask.execute()

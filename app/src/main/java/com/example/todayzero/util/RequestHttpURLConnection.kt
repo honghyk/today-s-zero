@@ -20,7 +20,7 @@ class RequestHttpURLConnection {
             urlConn.setRequestProperty("Accept", "application/json")
 
             if (urlConn.getResponseCode() != HttpURLConnection.HTTP_OK) {
-                return urlConn.getResponseCode().toString() + "  " + urlConn.responseMessage
+                return "ERROR"
             }
             var reader = BufferedReader(InputStreamReader(urlConn.getInputStream(), "UTF-8"))
             var page = ""
