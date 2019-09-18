@@ -68,7 +68,6 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
                 startActivity(emailIntent) //네트워크 오류 , 설치 오류 예외처리 해야할 듯
             }
             R.id.nav_share->{
-
             }
             R.id.nav_send->{
                 val instaPage= Uri.parse("https://www.instagram.com/zeropay.official/")

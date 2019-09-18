@@ -21,7 +21,7 @@ data class Notice(val title:String, var content:String, val data:String, val num
                 }
 
                 override fun onFailure(dataFilterType: DataFilterType) {
-                    callback.onFailure(DataFilterType.NOTICE_NUM)
+                    callback.onFailure(dataFilterType)
                 }
 
                 override fun onDataLoaded(fixedNoticeNum: Int) {
