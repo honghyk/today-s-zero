@@ -143,8 +143,8 @@ class DBHelper(context: Context):SQLiteOpenHelper(context,DATABASE_NAME,null,DAT
 
         val stoAddr=store.addr
         if(stoAddr.length>0){
-            // if(!findSameStore(stoAddr,store.locality)){
-            if(findSameStore(stoAddr,store.locality)){
+            if(!findSameStore(stoAddr,store.locality)){
+
                 val values=ContentValues().apply {
                     put(stores.KEY_NAME,store.sname)
                     put(stores.KEY_ADDR,store.addr)
@@ -307,14 +307,18 @@ class DBHelper(context: Context):SQLiteOpenHelper(context,DATABASE_NAME,null,DAT
     }
     fun findSameStore(newaddr:String,gu: String):Boolean{
 
-        val db=this.readableDatabase
-        val selectAllQuery="SELECT * FROM ${stores.TABLE_NAME}$gu WHERE ${stores.KEY_ADDR} LIKE ?"
-        Log.i("findSameStore",stores.TABLE_NAME+gu)
+        val str=stores.TABLE_NAME+gu
+        val selectAllQuery="SELECT * FROM $str WHERE  ${stores.KEY_ADDR} = ?"
         val selectionArgs=arrayOf(newaddr)
-        val cursor=db.rawQuery(selectAllQuery,selectionArgs)
+        val cursor=rdb.rawQuery(selectAllQuery,selectionArgs)
 
-        if(cursor!=null)//같은 것 존재
-            return true
+        if(cursor!=null){
+
+            while (cursor.moveToNext()) {
+                return true
+            }
+            return false
+        }
         else
             return false
     }
