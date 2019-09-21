@@ -1,4 +1,4 @@
 package com.example.zeropaytest
 
-data class user(val uid:String, val uname:String, val balance:Int, val income:String) {
+data class user(val uname:String, val balance:Int, val income:String) {
 }

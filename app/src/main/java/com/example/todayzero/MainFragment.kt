@@ -28,8 +28,9 @@ class MainFragment : Fragment() {
         dbHelper= DBHelper(this.requireContext())
         init()
     }
+
     fun init(){
-        //user 정보 등록 후
-       // userBalanceTxt.text=dbHelper.getUsers().get(1).balance.toString()
+       // user정보 등록 후
+        //userBalanceTxt.text=dbHelper.getUser().balance.toString()
     }
 }
