@@ -6,8 +6,7 @@ import android.database.sqlite.SQLiteDatabase
 import android.database.sqlite.SQLiteOpenHelper
 import android.provider.BaseColumns
 import android.util.Log
-import com.example.zeropaytest.store
-import com.example.zeropaytest.user
+
 
 
 class DBHelper(context: Context):SQLiteOpenHelper(context,DATABASE_NAME,null,DATABASE_VERSION){
@@ -48,6 +47,22 @@ class DBHelper(context: Context):SQLiteOpenHelper(context,DATABASE_NAME,null,DAT
 
     }
 
+    fun createTable(){
+
+        //zeroPayDB에 users 와 stores 테이블 생성
+        wdb.execSQL(SQL_CREATE_TABLE_USERS)
+        Log.i("create db","create utable")
+
+        for(gu in 1..25){
+            var sql= SQL_CREATE_TABLE_STORES_PRE+"${zone[gu]}"+ SQL_CREATE_TABLE_STORES_POST
+            wdb.execSQL(sql)
+            Log.i("create db","create stable ${zone[gu]}")
+        }
+
+
+        wdb.execSQL(SQL_CREATE_TABLE_DEALS)
+        Log.i("create db","create dtable")
+    }
 
     companion object {
         val DATABASE_VERSION=1
@@ -268,17 +283,17 @@ class DBHelper(context: Context):SQLiteOpenHelper(context,DATABASE_NAME,null,DAT
     fun getStores(gu:String):ArrayList<store>{
         Log.i("getStore","getstore")
         val storeList=ArrayList<store>()
-        val projection=arrayOf(BaseColumns._ID, DBHelper.stores.KEY_NAME, DBHelper.stores.KEY_ADDR,DBHelper.stores.KEY_GU,
-            DBHelper.stores.KEY_INFO)
-        val cursor=rdb.query(DBHelper.stores.TABLE_NAME+gu,projection,null,null,null,null,null,null)
+        val projection=arrayOf(BaseColumns._ID, stores.KEY_NAME, stores.KEY_ADDR,stores.KEY_GU,
+            stores.KEY_INFO)
+        val cursor=rdb.query(stores.TABLE_NAME+gu,projection,null,null,null,null,null,null)
         if(cursor!=null) {
             Log.i("getStore","cursor")
             while (cursor.moveToNext()) {
                 val sid = cursor.getString(cursor.getColumnIndex(BaseColumns._ID))
-                val name = cursor.getString(cursor.getColumnIndex(DBHelper.stores.KEY_NAME))
-                val addr = cursor.getString(cursor.getColumnIndex(DBHelper.stores.KEY_ADDR))
-                val gu = cursor.getString(cursor.getColumnIndex(DBHelper.stores.KEY_GU))
-                val info = cursor.getString(cursor.getColumnIndex(DBHelper.stores.KEY_INFO))
+                val name = cursor.getString(cursor.getColumnIndex(stores.KEY_NAME))
+                val addr = cursor.getString(cursor.getColumnIndex(stores.KEY_ADDR))
+                val gu = cursor.getString(cursor.getColumnIndex(stores.KEY_GU))
+                val info = cursor.getString(cursor.getColumnIndex(stores.KEY_INFO))
                 val store = store(sid, name, addr, gu, info)
                 Log.i("getStore",store.sid)
 
