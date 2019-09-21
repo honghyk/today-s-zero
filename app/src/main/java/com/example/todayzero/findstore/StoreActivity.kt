@@ -26,7 +26,7 @@ class StoreActivity : AppCompatActivity() {
         initData()
         //구/동 선택 -> 가맹점 리스트 -> 선택한 가맹점 위치
         //GuDongFragment -> StoreListFragment -> StoreMapFragment 순서로 호출
-        replaceFragmentInActivity(GuDongFragment(), R.id.store_contentFrame)
+        replaceFragmentInActivity(StoreListFragment(), R.id.store_contentFrame)
     }
 
 
