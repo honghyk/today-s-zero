@@ -11,6 +11,7 @@ import android.view.ViewGroup
 import com.example.todayzero.R
 import com.example.todayzero.util.replaceFragmentInActivity
 import android.support.v7.app.AppCompatActivity
+import android.widget.LinearLayout
 import android.widget.Toast
 
 
@@ -39,7 +40,6 @@ class GuDongFragment : Fragment() {
 
         val root = inflater.inflate(R.layout.gu_dong_frag, container, false)
         with(root) {
-
             dongView = findViewById(R.id.dongView)
             dongAdapter = DongAdapter(dongList)
             val dongLayoutManager = LinearLayoutManager(context, RecyclerView.VERTICAL, false)

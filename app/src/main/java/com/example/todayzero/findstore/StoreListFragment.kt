@@ -87,23 +87,14 @@ class StoreListFragment : Fragment() {
     fun addFilterList(vararg text: String) {
         Collections.addAll(filterList, *text)
     }
+
     fun indexer(root:View){
 
         zeroList = arrayListOf()
-        //일단 임의로 넣어놓음..
-        addList(
-            "가나다라", "가", "나", "다람쥐", "호랑이", "리스트", "마바", "바보바보바보바보바보바보바보바보바보바보바보바보바보바보",
-            "사아", "아랑", "타타타타타타타타", "스크롤스크롤스크롤",
-            "파파파파파파", "자차", "하하", "ABC", "BC", "C", "D", "F", "G", "I", "J", "K", "L",
-            "사자", "개구리", "노랑이", "초록이", "하양이", "차", "자동차", "M", "N", "O", "P",
-            "Q", "R", "S", "?", "!", "1", "2", "5","4"
-        )
-        addList("가나다라", "4")
-        //Toast.makeText(context,"" + zeroList, Toast.LENGTH_LONG).show()
-
-        //var adapter = ArrayAdapter(context, android.R.layout.simple_list_item_1, zeroList)
-        //listView.adapter = adapter
-
+        for(store in StoreActivity.storeList){
+            if(store.dong==dongName)
+                zeroList.add(store.name)
+        }
 
         val adapter = AlphabetAdapter(zeroList)
         listView!!.setKeywordList(zeroList)

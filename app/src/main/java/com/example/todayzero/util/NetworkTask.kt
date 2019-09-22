@@ -1,5 +1,6 @@
 package com.example.todayzero.util
 
+import android.app.ProgressDialog
 import android.os.AsyncTask
 import android.util.Log
 import com.example.todayzero.data.Notice
@@ -34,8 +35,9 @@ class NetworkTask(
     }
 
     override fun doInBackground(vararg params: String?): String {
-        if(dataType==DataFilterType.STORE_RAW)
+        if(dataType==DataFilterType.STORE_RAW) {
             return url
+        }
         return RequestHttpURLConnection().request(url)
     }
 
@@ -54,7 +56,7 @@ class NetworkTask(
                         val sLocality = storeObj.getString("locality")
                         val sType = storeObj.getString("type")
                         //db에 인서트하는 작업
-                        storeList.add(Store(sName, sAddr, sLocality, sType))
+                        storeList.add(Store(sName, sAddr, sLocality,"", sType))
                     }
                 }
                 DataFilterType.STORE -> {
@@ -70,7 +72,7 @@ class NetworkTask(
                             val addr1 = sObj.optString("pobsBaseAddr")
                             val addr2 = sObj.optString("pobsDtlAddr")
                             val type = sObj.optString("bztypName")
-                            storeList.add(Store(name, addr1 + " " + addr2,"", type))
+                            storeList.add(Store(name, addr1 + " " + addr2,"", "",type))
                             //db에도 insert 하기 ! 데이터가 추가될때 끝에 추가되는게 아닌데, 중간에 출력되는거면 일치여부를 다 검사해봐야할듯 . ..
 
                         }
