@@ -1,9 +1,11 @@
 package com.example.todayzero.expense
 
+import android.content.Intent
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
 import android.view.Menu
 import android.view.MenuItem
+import com.example.todayzero.MainActivity
 import com.example.todayzero.R
 import kotlinx.android.synthetic.main.expense_act.*
 
@@ -18,9 +20,14 @@ class ExpenseActivity : AppCompatActivity() {
     }
 
     override fun onOptionsItemSelected(item: MenuItem?): Boolean {
+        val intent = Intent(this, MainActivity::class.java)
+
         when(item!!.itemId) {
             R.id.complete -> {
-
+                startActivity(intent)
+            }
+            R.id.delete -> {
+                startActivity(intent)
             }
         }
 
