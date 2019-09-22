@@ -49,7 +49,7 @@ class StoreListFragment : Fragment() {
                 if (filterText.length > 0) {
                     filterList.clear()
                     for (i in zeroList) {
-                        if (i.contains(s.toString()))
+                        if (i.toLowerCase().contains(filterText.toLowerCase()))
                             addFilterList(i)
                     }
                     listView!!.adapter = AlphabetAdapter(filterList)
