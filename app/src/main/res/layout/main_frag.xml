@@ -36,6 +36,7 @@
                     android:layout_marginTop="16dp"/>
 
             <TextView
+                    android:id="@+id/userBalanceTxt"
                     android:text="200,000원"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
