@@ -32,8 +32,9 @@
                         android:layout_gravity="center_vertical"
                         android:src="@drawable/ic_search_black_24dp"/>
 
-                <TextView
-                        android:text="가맹점 이름 검색"
+                <EditText
+                        android:hint="가맹점 이름 검색"
+                        android:id="@+id/search_store"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginStart="24dp"
@@ -43,9 +44,21 @@
 
         </android.support.v7.widget.CardView>
 
-        <ListView
+        <com.github.windsekirun.koreanindexer.KoreanIndexerListView
                 android:id="@+id/store_list_view"
+                android:textFilterEnabled="true"
+                android:clipChildren="false"
                 android:layout_width="match_parent"
+                android:dividerHeight="0px"
+                app:indexerBackground="#ffffff"
+                app:indexerRadius="60"
+                app:indexerTextColor="#000000"
+                app:indexerWidth="20"
+                app:sectionBackground="#ffffff"
+                app:sectionDelay="1000"
+                app:sectionTextColor="#000000"
+                app:indexerMargin="0"
+                app:useSection="true"
                 android:layout_height="wrap_content"/>
 
     </LinearLayout>

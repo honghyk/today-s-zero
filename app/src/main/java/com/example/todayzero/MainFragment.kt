@@ -9,12 +9,18 @@ import android.support.v4.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+<<<<<<< HEAD
 import com.example.todayzero.expense.ExpenseActivity
 import kotlinx.android.synthetic.main.activity_main.*
+=======
+import com.example.todayzero.db.DBHelper
+import kotlinx.android.synthetic.main.main_frag.*
+>>>>>>> f5c5ae3c2492e3c940dde04a7e62f05862e78c7a
 
 
 class MainFragment : Fragment() {
 
+    lateinit var dbHelper: DBHelper
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         // Inflate the layout for this fragment
         val root = inflater.inflate(R.layout.main_frag, container, false)
@@ -39,5 +45,14 @@ class MainFragment : Fragment() {
         requireActivity().actionBar?.title = resources.getString(R.string.app_name)
     }
 
+    override fun onActivityCreated(savedInstanceState: Bundle?) {
+        super.onActivityCreated(savedInstanceState)
+        dbHelper= DBHelper(this.requireContext())
+        init()
+    }
 
+    fun init(){
+       // user정보 등록 후
+        //userBalanceTxt.text=dbHelper.getUser().balance.toString()
+    }
 }
