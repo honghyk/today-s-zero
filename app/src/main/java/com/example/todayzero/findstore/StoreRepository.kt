@@ -24,6 +24,7 @@ class StoreRepository(val storeList:ArrayList<Store> ): DataSource {
                     count--
                     if(count==0)  isUpdateStore=true
                 }
+                isUpdateStore=true //임시로 해놓은 것임!
                 if(isInitStore && isUpdateStore) callback.onDataLoaded()
             }
 
@@ -35,7 +36,7 @@ class StoreRepository(val storeList:ArrayList<Store> ): DataSource {
             }
         }
         val apiListener=ApiListener()
-        Store.updateStore(storeList,apiListener)
+      //  Store.updateStore(storeList,apiListener)
         Store.loadStore(storeList,apiListener,scanArr)
     }
 

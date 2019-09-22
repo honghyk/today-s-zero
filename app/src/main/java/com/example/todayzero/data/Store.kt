@@ -31,7 +31,6 @@ data class Store(val name:String, val addr:String, var locality:String, val type
                 val storeRawTask =  NetworkTask(storeList,DataFilterType.STORE_RAW,result,callback,-1)
                 storeRawTask.execute()
             }
-            Log.i("test",storeList.size.toString())
             callback.onDataLoaded(DataFilterType.STORE_RAW)// callback 호출한 곳 가서 storelist 삭제하기 !
         }
 
@@ -62,7 +61,6 @@ data class Store(val name:String, val addr:String, var locality:String, val type
                                 val storeUpdateTask =  NetworkTask(storeList,DataFilterType.STORE,url,callback,-1)
                                 storeUpdateTask.execute() //execteOnExecutor() 는 순차적으로 호출함 , 쓰레드 풀 -> 병렬 처리
                                 callback.onDataLoaded(DataFilterType.STORE_NUM)
-                                Log.i("test",url)
                             }
                         }
 

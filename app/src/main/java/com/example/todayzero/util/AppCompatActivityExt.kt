@@ -16,6 +16,7 @@
 package com.example.todayzero.util
 
 
+import android.os.Bundle
 import android.support.annotation.IdRes
 import android.support.v4.app.Fragment
 import android.support.v4.app.FragmentManager
@@ -29,6 +30,15 @@ import android.support.v7.app.AppCompatActivity
  */
 fun AppCompatActivity.replaceFragmentInActivity(fragment: Fragment, @IdRes frameId: Int) {
     supportFragmentManager.transact {
+        replace(frameId, fragment)
+        addToBackStack(null)
+    }
+}
+fun AppCompatActivity.replaceFragmentInActivity(fragment: Fragment, @IdRes frameId: Int,str:String) {
+    supportFragmentManager.transact {
+        var arg=Bundle()
+        arg.putString("dongName",str)
+        fragment.arguments=arg
         replace(frameId, fragment)
         addToBackStack(null)
     }

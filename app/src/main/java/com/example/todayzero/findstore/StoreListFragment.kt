@@ -2,6 +2,7 @@ package com.example.todayzero.findstore
 
 
 import android.annotation.SuppressLint
+import android.content.Context
 import android.os.Bundle
 import android.support.v4.app.Fragment
 import android.text.Editable
@@ -13,12 +14,6 @@ import android.view.ViewGroup
 import android.widget.*
 import com.example.todayzero.R
 import com.github.windsekirun.koreanindexer.KoreanIndexerListView
-import com.google.android.libraries.places.internal.i
-import kotlinx.android.synthetic.main.list_item.*
-import kotlinx.android.synthetic.main.notice_act.*
-import kotlinx.android.synthetic.main.store_list_frag.*
-import kotlinx.android.synthetic.main.store_list_frag.view.*
-import org.apache.commons.lang3.ArrayUtils.add
 import java.util.*
 import kotlin.collections.ArrayList
 
@@ -28,6 +23,7 @@ class StoreListFragment : Fragment() {
     lateinit var filterList:ArrayList<String>
     private var listView: KoreanIndexerListView? = null
     lateinit var search_adapter:ArrayAdapter<String>
+    lateinit var dongName:String
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         // Inflate the layout for this fragment
@@ -60,22 +56,27 @@ class StoreListFragment : Fragment() {
                     listView!!.adapter = AlphabetAdapter(zeroList)
                     listView!!.setIndexerWidth(20)
                 }
-                //TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+
             }
             override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
-                //TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+
             }
 
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
-                //TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+
             }
-
-
-
         })
-        //선택한 동 이름으로
-        //requireActivity().actionBar!!.title = ""
         return root
+    }
+    override fun onAttach(context: Context?) {
+        super.onAttach(context)
+        if(arguments!=null)
+            dongName = arguments!!.getString("dongName")
+    }
+
+    override fun onResume() {
+        super.onResume()
+        (activity as StoreActivity).supportActionBar?.title=dongName
     }
 
     @SuppressLint("InflateParams")

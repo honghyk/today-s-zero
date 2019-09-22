@@ -40,7 +40,6 @@ class NetworkTask(
     }
 
     override fun onPostExecute(result: String?) {
-        Log.i("test",result)
         super.onPostExecute(result)
         if (result == "ERROR") {
             callback.onFailure(dataType)

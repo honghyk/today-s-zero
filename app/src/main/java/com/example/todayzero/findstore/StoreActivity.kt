@@ -1,15 +1,16 @@
 package com.example.todayzero.findstore
 
 import android.os.Bundle
+import android.support.v4.app.Fragment
+import android.support.v7.app.ActionBarDrawerToggle
 import android.support.v7.app.AppCompatActivity
 import android.util.Log
 import com.example.todayzero.R
 import com.example.todayzero.data.Store
 import com.example.todayzero.data.source.DataSource
 import com.example.todayzero.util.replaceFragmentInActivity
+import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.store_act.*
-import org.json.JSONArray
-import java.io.InputStream
 import java.util.*
 import kotlin.collections.ArrayList
 
@@ -26,7 +27,7 @@ class StoreActivity : AppCompatActivity() {
         initData()
         //구/동 선택 -> 가맹점 리스트 -> 선택한 가맹점 위치
         //GuDongFragment -> StoreListFragment -> StoreMapFragment 순서로 호출
-        replaceFragmentInActivity(StoreListFragment(), R.id.store_contentFrame)
+
     }
 
 
@@ -44,13 +45,12 @@ class StoreActivity : AppCompatActivity() {
             ,Scanner(resources.openRawResource(R.raw.storelist4)),Scanner(resources.openRawResource(R.raw.storelist5)),Scanner(resources.openRawResource(R.raw.storelist6))
             ,Scanner(resources.openRawResource(R.raw.storelist7)),Scanner(resources.openRawResource(R.raw.storelist8)), Scanner(resources.openRawResource(R.raw.storelist9))
             ,Scanner(resources.openRawResource(R.raw.storelist10)),Scanner(resources.openRawResource(R.raw.storelist11)))
-
         val storeDataRepository= StoreRepository(storeList)
         storeDataRepository.initStore(scannerList,object:
             DataSource.LoadDataCallback{
             override fun onDataLoaded() {
                 Log.i("test","데이터파싱 잘끝남  "+storeList.size)
-                //창넘기기
+                replaceFragmentInActivity(GuDongFragment(), R.id.store_contentFrame)
             }
             override fun onNetworkNotAvailable() {
                 //showViews(false,true) -> 넘어가되, 가맹점 정보 업데이트 실패했습니다. 업데이트를 위해서는, 네트워크 환경을 확인하시고,
