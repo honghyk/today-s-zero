@@ -5,17 +5,18 @@ import android.annotation.SuppressLint
 import android.content.Context
 import android.os.Bundle
 import android.support.v4.app.Fragment
+import android.support.v7.app.AppCompatActivity
 import android.text.Editable
 import android.text.TextWatcher
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.*
 import com.example.todayzero.R
+import com.example.todayzero.data.Store
+import com.example.todayzero.util.replaceFragmentInActivity
 import com.github.windsekirun.koreanindexer.KoreanIndexerListView
 import java.util.*
-import kotlin.collections.ArrayList
 
 
 class StoreListFragment : Fragment() {
@@ -76,7 +77,7 @@ class StoreListFragment : Fragment() {
 
     override fun onResume() {
         super.onResume()
-        (activity as StoreActivity).supportActionBar?.title=dongName
+        (activity as StoreActivity).supportActionBar?.title = dongName
     }
 
     @SuppressLint("InflateParams")
@@ -99,13 +100,16 @@ class StoreListFragment : Fragment() {
         val adapter = AlphabetAdapter(zeroList)
         listView!!.setKeywordList(zeroList)
         listView!!.onItemClickListener = AdapterView.OnItemClickListener { adapterView, view, i, l ->
-            Toast.makeText(
-                context,
-                "clicked -> $i",
-                Toast.LENGTH_SHORT
-            ).show()
+//            Toast.makeText(
+//                context,
+//                "clicked -> $i",
+//                Toast.LENGTH_SHORT
+//            ).show()
+            (requireActivity() as AppCompatActivity).replaceFragmentInActivity(StoreMapFragment.newInstance(
+                Store("store", "서울시 은평구 갈현로23길 5 지하1층", "은평구", "ㅇㅇ동", "type")),
+                R.id.store_contentFrame)
         }
-        listView!!.setAdapter(adapter)
+        listView!!.adapter = adapter
     }
 
     inner class AlphabetAdapter internal constructor(var list:ArrayList<String>) :

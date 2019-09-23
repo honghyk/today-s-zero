@@ -16,6 +16,7 @@ import android.widget.Toast
 import com.example.todayzero.db.DBHelper
 import com.example.todayzero.db.user
 import com.example.todayzero.util.replaceFragInActNotAddToBackStack
+import kotlinx.android.synthetic.main.activity_main.*
 import java.text.NumberFormat
 
 
@@ -28,10 +29,11 @@ class WelcomeFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         // Inflate the layout for this fragment
-        val root = inflater.inflate(R.layout.fragment_welcome, container, false)
+        val root = inflater.inflate(R.layout.welcome_frag, container, false)
 
         requireActivity().window.decorView.systemUiVisibility = 0
         requireActivity().window.statusBarColor = requireContext().getColor(R.color.colorPrimaryDark)
+        requireActivity().toolbar.visibility = View.GONE
 
         val fab = requireActivity().findViewById<FloatingActionButton>(R.id.fab).apply {
             setImageDrawable(requireActivity().getDrawable(R.drawable.ic_arrow_forward_24px))
@@ -56,9 +58,16 @@ class WelcomeFragment : Fragment() {
                 }
             }
         }
+
         with(root) {
             userNameEditText = findViewById(R.id.user_name_edit_text)
             userIncomeEditText = findViewById(R.id.user_income_edit_text)
+        }
+
+        if(isModify) {
+            userNameEditText.setText(name)
+            val incomeStr = NumberFormat.getNumberInstance().format(income)
+            userIncomeEditText.setText(incomeStr)
         }
 
         showNumberScales()
@@ -99,5 +108,19 @@ class WelcomeFragment : Fragment() {
         val user= user(name,0,income.toString())
         dbHelper.insertUser(user)
 
+    }
+
+    companion object {
+        private var name: String = ""
+        private var income: Long = 0L
+        private var isModify = false
+
+        fun newInstance(name: String, income: Long): WelcomeFragment {
+            this.name = name
+            this.income = income
+            isModify = true
+
+            return WelcomeFragment()
+        }
     }
 }

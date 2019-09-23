@@ -6,15 +6,15 @@
     <group android:checkableBehavior="single">
         <item
                 android:id="@+id/nav_find_store"
-                android:icon="@drawable/ic_menu_camera"
+                android:icon="@drawable/ic_search_black_24dp"
                 android:title="가맹점 찾기"/>
         <item
                 android:id="@+id/nav_notice"
-                android:icon="@drawable/ic_menu_gallery"
+                android:icon="@drawable/ic_menu_notice"
                 android:title="공지사항"/>
         <item
                 android:id="@+id/nav_use"
-                android:icon="@drawable/ic_menu_slideshow"
+                android:icon="@drawable/ic_menu_information"
                 android:title="제로페이 사용방법"/>
         <item
                 android:id="@+id/nav_call"
@@ -22,12 +22,12 @@
                 android:title="오류 신고"/>
 
         <item
-                android:id="@+id/nav_share"
-                android:icon="@drawable/ic_menu_share"
+                android:id="@+id/nav_facebook"
+                android:icon="@drawable/ic_menu_facebook"
                 android:title="페이스북 페이지"/>
         <item
-                android:id="@+id/nav_send"
-                android:icon="@drawable/ic_menu_send"
+                android:id="@+id/nav_instagram"
+                android:icon="@drawable/ic_menu_instagram"
                 android:title="인스타그램 페이지"/>
     </group>
 

@@ -8,4 +8,5 @@
     <color name="black">#000000</color>
     <color name="gray">#737474</color>
     <color name="lightGray">#f0f0f0</color>
+    <color name="guSelectedColor">#E7F0FC</color>
 </resources>

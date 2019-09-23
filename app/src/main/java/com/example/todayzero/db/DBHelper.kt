@@ -6,7 +6,6 @@ import android.database.sqlite.SQLiteDatabase
 import android.database.sqlite.SQLiteOpenHelper
 import android.provider.BaseColumns
 import android.util.Log
-import com.example.todayzero.findstore.StoreActivity.Companion.storeList
 
 
 class DBHelper(context: Context):SQLiteOpenHelper(context,DATABASE_NAME,null,DATABASE_VERSION){
@@ -375,7 +374,7 @@ class DBHelper(context: Context):SQLiteOpenHelper(context,DATABASE_NAME,null,DAT
     fun getDeals():ArrayList<deal>{
 
         val dealList=ArrayList<deal>()
-        val projection=arrayOf(BaseColumns._ID,deals.KEY_NAME,deals.KEY_DATE,deals.KEY_PRICE,deals.KEY_CATEGORY,deals.KEY_MEMO,deals.KEY_ISZERO)
+        val projection=arrayOf(BaseColumns._ID, deals.KEY_NAME, deals.KEY_DATE, deals.KEY_PRICE, deals.KEY_CATEGORY, deals.KEY_MEMO, deals.KEY_ISZERO)
         val cursor=rdb.query(deals.TABLE_NAME,projection,null,null,null,null,null,null)
         if(cursor!=null) {
             while (cursor.moveToNext()) {
@@ -387,7 +386,7 @@ class DBHelper(context: Context):SQLiteOpenHelper(context,DATABASE_NAME,null,DAT
                 val memo=cursor.getString(cursor.getColumnIndex(deals.KEY_MEMO))
                 val isZero = cursor.getInt(cursor.getColumnIndex(deals.KEY_ISZERO))
 
-                val deal = deal(did, date, sname, price, category,memo, isZero)
+                val deal = deal(did, date, sname, price, category, memo, isZero)
                 dealList.add(deal)
             }
         }else{

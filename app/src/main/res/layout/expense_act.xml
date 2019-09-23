@@ -23,6 +23,26 @@
             app:layout_constraintTop_toBottomOf="@+id/memo_edit_text">
 
         <TextView
+                android:id="@+id/zeropay_text"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="제로페이로 지출"
+                style="@style/spoqa_text_black"
+                android:textSize="16sp"
+                android:layout_marginTop="16dp"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"/>
+
+        <CheckBox
+                android:id="@+id/zeropay_checkbox"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:layout_constraintStart_toEndOf="@id/zeropay_text"
+                app:layout_constraintTop_toTopOf="@id/zeropay_text"
+                android:checked="true"
+                android:layout_marginStart="16dp"/>
+
+        <TextView
                 android:id="@+id/price_text"
                 android:text="금액"
                 android:layout_width="wrap_content"
@@ -37,10 +57,10 @@
                 android:layout_height="wrap_content"
                 android:inputType="number"
                 app:layout_constraintStart_toEndOf="@+id/price_text"
-                app:layout_constraintTop_toTopOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 android:layout_marginStart="@dimen/expense_edit_margin_start"
-                android:layout_marginTop="16dp"/>
+                android:layout_marginTop="24dp"
+                app:layout_constraintTop_toBottomOf="@+id/zeropay_text"/>
 
         <TextView
                 android:id="@+id/cagetory_text"
@@ -91,19 +111,50 @@
                 android:layout_height="wrap_content"
                 style="@style/spoqa_text_black"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintEnd_toStartOf="@id/date_edit_text"
-                app:layout_constraintBaseline_toBaselineOf="@+id/date_edit_text"/>
+                app:layout_constraintEnd_toStartOf="@id/date_layout"
+                app:layout_constraintBottom_toBottomOf="@id/date_layout" android:layout_marginBottom="4dp"/>
 
-        <EditText
-                android:id="@+id/date_edit_text"
+        <android.support.constraint.ConstraintLayout
+                android:id="@+id/date_layout"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:inputType="datetime"
                 app:layout_constraintStart_toEndOf="@+id/date_text"
                 app:layout_constraintTop_toBottomOf="@id/place_edit_text"
                 app:layout_constraintEnd_toEndOf="parent"
                 android:layout_marginStart="@dimen/expense_edit_margin_start"
-                android:layout_marginTop="@dimen/expense_edit_margin_top"/>
+                android:layout_marginTop="@dimen/expense_edit_margin_top"
+                android:paddingStart="6dp"
+                android:paddingEnd="4dp"
+                android:paddingTop="12dp">
+
+            <TextView
+                    android:id="@+id/date_pick_text"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    style="@style/spoqa_text_black"
+                    android:textSize="18sp"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintBottom_toTopOf="@id/date_under_bar"/>
+
+            <TextView
+                    android:id="@+id/time_pick_text"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    style="@style/spoqa_text_black"
+                    android:textSize="18sp"
+                    android:layout_marginStart="8dp"
+                    app:layout_constraintStart_toEndOf="@id/date_pick_text"
+                    app:layout_constraintBottom_toTopOf="@id/date_under_bar"/>
+
+            <View
+                    android:id="@+id/date_under_bar"
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    android:background="@android:color/darker_gray"/>
+
+        </android.support.constraint.ConstraintLayout>
 
         <TextView
                 android:id="@+id/memo_text"
@@ -121,18 +172,10 @@
                 android:layout_height="wrap_content"
                 android:hint="메모 입력"
                 app:layout_constraintStart_toEndOf="@+id/memo_text"
-                app:layout_constraintTop_toBottomOf="@id/date_edit_text"
+                app:layout_constraintTop_toBottomOf="@id/date_layout"
                 app:layout_constraintEnd_toEndOf="parent"
                 android:layout_marginStart="@dimen/expense_edit_margin_start"
                 android:layout_marginTop="@dimen/expense_edit_margin_top"/>
-        <Button
-
-                android:text="저장"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                app:layout_constraintStart_toStartOf="parent" app:layout_constraintEnd_toEndOf="parent"
-                android:id="@+id/expense_save_btn" app:layout_constraintTop_toBottomOf="@+id/memo_edit_text"
-                android:layout_marginBottom="8dp" app:layout_constraintBottom_toBottomOf="parent"/>
 
     </android.support.constraint.ConstraintLayout>
 

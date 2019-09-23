@@ -35,7 +35,7 @@
                 <EditText
                         android:hint="가맹점 이름 검색"
                         android:id="@+id/search_store"
-                        android:layout_width="wrap_content"
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginStart="24dp"
                         android:layout_gravity="center_vertical"/>
