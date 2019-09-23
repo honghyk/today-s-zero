@@ -3,6 +3,7 @@ package com.example.todayzero.findstore
 
 import android.os.Bundle
 import android.support.v4.app.Fragment
+import android.support.v7.widget.DividerItemDecoration
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
@@ -10,10 +11,6 @@ import android.view.View
 import android.view.ViewGroup
 import com.example.todayzero.R
 import com.example.todayzero.util.replaceFragmentInActivity
-import android.support.v7.app.AppCompatActivity
-import android.support.v7.widget.DividerItemDecoration
-import android.widget.LinearLayout
-import android.widget.Toast
 
 
 class GuDongFragment : Fragment() {
@@ -26,11 +23,7 @@ class GuDongFragment : Fragment() {
      var dongList =ArrayList<String>()
     lateinit var dongAdapter: DongAdapter
 
-    override fun onCreateView(
-        inflater: LayoutInflater,
-        container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View? {
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         zone = mapOf(
             1 to R.array.gangnam, 2 to R.array.gangdong, 3 to R.array.gangbuk, 4 to R.array.gangseo, 5 to R.array.gwanak, 6 to R.array.gwangjin
             , 7 to R.array.guro, 8 to R.array.geumcheon, 9 to R.array.nowon, 10 to R.array.dobong, 11 to R.array.dongdaemun, 12 to R.array.dongjak
@@ -83,7 +76,7 @@ class GuDongFragment : Fragment() {
                     data: String,
                     position: Int
                 ) {
-                    (activity as StoreActivity).replaceFragmentInActivity(StoreListFragment(),R.id.store_contentFrame,data)
+                    (activity as StoreActivity).replaceFragmentInActivity(StoreListFragment(),R.id.store_contentFrame, data)
                 }
             }
 

@@ -1,24 +1,14 @@
 package com.example.todayzero.findstore
 
 import android.os.Bundle
-import android.renderscript.ScriptGroup
-import android.support.v4.app.Fragment
-import android.support.v7.app.ActionBarDrawerToggle
 import android.support.v7.app.AppCompatActivity
-import android.util.Log
-import android.widget.LinearLayout
 import android.widget.ProgressBar
 import com.example.todayzero.R
 import com.example.todayzero.data.Store
 import com.example.todayzero.data.source.DataSource
-import com.example.todayzero.util.replaceFragmentInActivity
-import kotlinx.android.synthetic.main.activity_main.*
+import com.example.todayzero.util.replaceFragInActNotAddToBackStack
 import kotlinx.android.synthetic.main.store_act.*
-import java.io.FileDescriptor
-import java.io.FileInputStream
 import java.io.InputStream
-import java.util.*
-import kotlin.collections.ArrayList
 
 class StoreActivity : AppCompatActivity() {
 
@@ -70,7 +60,7 @@ class StoreActivity : AppCompatActivity() {
             DataSource.LoadDataCallback {
             override fun onDataLoaded() {
                 progress_circular.visibility=ProgressBar.GONE
-                replaceFragmentInActivity(GuDongFragment(), R.id.store_contentFrame)
+                replaceFragInActNotAddToBackStack(GuDongFragment(), R.id.store_contentFrame)
             }
 
             override fun onNetworkNotAvailable() {

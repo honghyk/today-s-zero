@@ -7,8 +7,8 @@ import android.support.design.widget.NavigationView
 import android.support.v4.view.GravityCompat
 import android.support.v7.app.ActionBarDrawerToggle
 import android.support.v7.app.AppCompatActivity
+import android.view.Menu
 import android.view.MenuItem
-import android.view.View
 import com.example.todayzero.expense.ExpenseActivity
 import com.example.todayzero.findstore.StoreActivity
 import com.example.todayzero.notice.NoticeActivity
@@ -36,15 +36,14 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         nav_view.setNavigationItemSelectedListener(this)
 
         //데이터베이스 확인해서 true / false 값 설정하는 과정 필요
-        val isUserInfoInit = false
+        val isUserInfoInit = true
 
         if(isUserInfoInit) {
             val mainFragment = supportFragmentManager.findFragmentById(R.id.main_contentFrame)
                     as MainFragment? ?: MainFragment().also {
-                replaceFragmentInActivity(it, R.id.main_contentFrame)
+                replaceFragInActNotAddToBackStack(it, R.id.main_contentFrame)
             }
         } else {
-            toolbar.visibility = View.GONE
             val welcomeFragment = supportFragmentManager.findFragmentById(R.id.main_contentFrame)
                     as WelcomeFragment? ?: WelcomeFragment().also {
                 replaceFragInActNotAddToBackStack(it, R.id.main_contentFrame)
@@ -52,12 +51,42 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         }
     }
 
+    private fun loadUserDataAndShowWelcomeFrag() {
+        //사용자 이름, 총급여 정보를  데이터베이스에서 불러옴
+        var name: String = "testetes"
+        var income: Long = 30000L
+
+        showWelcomeFragToModifyUserData(name, income)
+    }
+
+    private fun showWelcomeFragToModifyUserData(name: String, income: Long) {
+        val welcomeFragment = WelcomeFragment.newInstance(name, income).also {
+            replaceFragInActNotAddToBackStack(it, R.id.main_contentFrame)
+        }
+    }
+
+
+
     override fun onBackPressed() {
         if (drawer_layout.isDrawerOpen(GravityCompat.START)) {
             drawer_layout.closeDrawer(GravityCompat.START)
         } else {
             super.onBackPressed()
         }
+    }
+
+    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
+        menuInflater.inflate(R.menu.main_option_menu, menu)
+
+        return true
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem?): Boolean {
+        if(item!!.itemId == R.id.menu_modify) {
+            loadUserDataAndShowWelcomeFrag()
+        }
+
+        return super.onOptionsItemSelected(item)
     }
 
     override fun onNavigationItemSelected(item: MenuItem): Boolean {
@@ -82,9 +111,9 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
                 emailIntent.type="message/rfc822"
                 startActivity(emailIntent) //네트워크 오류 , 설치 오류 예외처리 해야할 듯
             }
-            R.id.nav_share->{
+            R.id.nav_facebook->{
             }
-            R.id.nav_send->{
+            R.id.nav_instagram->{
                 val instaPage= Uri.parse("https://www.instagram.com/zeropay.official/")
                 val webIntent= Intent(Intent.ACTION_VIEW,instaPage)
                 startActivity(webIntent)

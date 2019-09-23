@@ -34,7 +34,7 @@ fun AppCompatActivity.replaceFragmentInActivity(fragment: Fragment, @IdRes frame
         addToBackStack(null)
     }
 }
-fun AppCompatActivity.replaceFragmentInActivity(fragment: Fragment, @IdRes frameId: Int,str:String) {
+fun AppCompatActivity.replaceFragmentInActivity(fragment: Fragment, @IdRes frameId: Int, str:String) {
     supportFragmentManager.transact {
         var arg=Bundle()
         arg.putString("dongName",str)
