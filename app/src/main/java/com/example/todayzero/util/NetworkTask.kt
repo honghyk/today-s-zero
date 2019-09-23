@@ -1,6 +1,8 @@
 package com.example.todayzero.util
 
+import android.app.ProgressDialog
 import android.os.AsyncTask
+import android.renderscript.ScriptGroup
 import android.util.Log
 import com.example.todayzero.data.Notice
 import com.example.todayzero.data.Store
@@ -10,6 +12,8 @@ import com.example.todayzero.data.source.DataSource
 import com.example.todayzero.findstore.StoreRepository
 import org.json.JSONArray
 import org.json.JSONObject
+import java.io.BufferedInputStream
+import java.io.InputStream
 
 class NetworkTask(
     val dataType: DataFilterType,
@@ -19,6 +23,7 @@ class NetworkTask(
     lateinit var storeList: ArrayList<Store>
     lateinit var noticeList: ArrayList<Notice>
     var limitNum: Int? = null
+    lateinit var fisArr: Array<InputStream>
 
     constructor(
         dataList: ArrayList<*>,
@@ -28,25 +33,48 @@ class NetworkTask(
         limitNum: Int
     )
             : this(dataType, url, callback) {
-        if (dataType == DataFilterType.STORE || dataType ==DataFilterType.STORE_RAW) storeList = dataList as ArrayList<Store>
+        if (dataType == DataFilterType.STORE || dataType == DataFilterType.STORE_RAW) storeList =
+            dataList as ArrayList<Store>
         else noticeList = dataList as ArrayList<Notice>
         this.limitNum = limitNum
     }
 
+    constructor(
+        dataList: ArrayList<*>,
+        dataType: DataFilterType,
+        fisArr: Array<InputStream>,
+        callback: DataSource.ApiListener,
+        limitNum: Int
+    ) : this(dataType, "", callback) {
+        storeList = dataList as ArrayList<Store>
+        this.fisArr = fisArr
+    }
+
     override fun doInBackground(vararg params: String?): String {
-        if(dataType==DataFilterType.STORE_RAW)
-            return url
+        if (dataType == DataFilterType.STORE_RAW) {
+            //return url
+            var sb = StringBuilder()
+            for (fis in fisArr) {
+                var bis = BufferedInputStream(fis)
+                var fileBody = ByteArray(fis.available())
+                var len = bis.read(fileBody, 0, fileBody.size)
+                if (len != -1)
+                    sb.append(String(fileBody, charset("utf-8")))
+                fis.close()
+                bis.close()
+            }
+            return sb.toString()
+        }
         return RequestHttpURLConnection().request(url)
     }
 
     override fun onPostExecute(result: String?) {
-        Log.i("test",result)
         super.onPostExecute(result)
         if (result == "ERROR") {
             callback.onFailure(dataType)
         } else {
             when (dataType) {
-                DataFilterType.STORE_RAW->{
+                DataFilterType.STORE_RAW -> {
                     val storeArr = JSONArray(result)
                     for (i in 0 until storeArr.length()) {
                         val storeObj = storeArr.getJSONObject(i)
@@ -55,7 +83,7 @@ class NetworkTask(
                         val sLocality = storeObj.getString("locality")
                         val sType = storeObj.getString("type")
                         //db에 인서트하는 작업
-                        storeList.add(Store(sName, sAddr, sLocality, sType))
+                        storeList.add(Store(sName, sAddr, sLocality, "", sType))
                     }
                 }
                 DataFilterType.STORE -> {
@@ -71,7 +99,7 @@ class NetworkTask(
                             val addr1 = sObj.optString("pobsBaseAddr")
                             val addr2 = sObj.optString("pobsDtlAddr")
                             val type = sObj.optString("bztypName")
-                            storeList.add(Store(name, addr1 + " " + addr2,"", type))
+                            storeList.add(Store(name, addr1 + " " + addr2, "", "", type))
                             //db에도 insert 하기 ! 데이터가 추가될때 끝에 추가되는게 아닌데, 중간에 출력되는거면 일치여부를 다 검사해봐야할듯 . ..
 
                         }

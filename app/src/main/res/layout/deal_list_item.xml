@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:orientation="vertical"
+              android:layout_width="match_parent"
+              android:layout_height="wrap_content"
+              android:paddingTop="10dp"
+              android:paddingHorizontal="10dp"
+
+>
+    <LinearLayout
+
+            android:orientation="horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            >
+
+    <ImageView
+               android:id="@+id/deal_list_img"
+               android:src="@drawable/ic_favorite_black_24dp"
+               android:layout_weight="1"
+               android:layout_gravity="center"
+               android:layout_width="0dp"
+               android:layout_height="wrap_content"/>
+        <LinearLayout
+                android:layout_gravity="center_vertical"
+                android:layout_weight="8"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+        >
+            <TextView
+                    android:id="@+id/deal_list_store"
+                    android:text="스타벅스"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textSize="20sp"
+                    android:textColor="@color/black"
+            />
+            <TextView
+                    android:id="@+id/deal_list_pay"
+                    android:text="제로페이 결제"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textSize="12sp"
+            />
+
+        </LinearLayout>
+    <TextView
+              android:id="@+id/deal_list_price"
+              android:text="200원"
+              android:layout_width="0dp"
+              android:layout_weight="1.5"
+              android:layout_height="wrap_content"
+              android:textSize="18sp"
+              android:layout_gravity="end|center_vertical"
+              android:gravity="right"
+    />
+    </LinearLayout>
+    <View
+            android:paddingStart="20dp"
+            android:layout_width="match_parent"
+            android:layout_height="0.5dp"
+            android:background="#879cac"
+            android:layout_marginTop="7dp"
+    />
+</LinearLayout>

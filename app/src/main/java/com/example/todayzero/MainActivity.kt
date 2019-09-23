@@ -8,9 +8,11 @@ import android.support.v4.view.GravityCompat
 import android.support.v7.app.ActionBarDrawerToggle
 import android.support.v7.app.AppCompatActivity
 import android.view.MenuItem
+import android.view.View
 import com.example.todayzero.expense.ExpenseActivity
 import com.example.todayzero.findstore.StoreActivity
 import com.example.todayzero.notice.NoticeActivity
+import com.example.todayzero.util.replaceFragInActNotAddToBackStack
 import com.example.todayzero.util.replaceFragmentInActivity
 import kotlinx.android.synthetic.main.activity_main.*
 
@@ -33,8 +35,21 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
 
         nav_view.setNavigationItemSelectedListener(this)
 
-        val mainFragment = supportFragmentManager.findFragmentById(R.id.main_contentFrame)
-                as MainFragment? ?: MainFragment().also { replaceFragmentInActivity(it, R.id.main_contentFrame) }
+        //데이터베이스 확인해서 true / false 값 설정하는 과정 필요
+        val isUserInfoInit = false
+
+        if(isUserInfoInit) {
+            val mainFragment = supportFragmentManager.findFragmentById(R.id.main_contentFrame)
+                    as MainFragment? ?: MainFragment().also {
+                replaceFragmentInActivity(it, R.id.main_contentFrame)
+            }
+        } else {
+            toolbar.visibility = View.GONE
+            val welcomeFragment = supportFragmentManager.findFragmentById(R.id.main_contentFrame)
+                    as WelcomeFragment? ?: WelcomeFragment().also {
+                replaceFragInActNotAddToBackStack(it, R.id.main_contentFrame)
+            }
+        }
     }
 
     override fun onBackPressed() {

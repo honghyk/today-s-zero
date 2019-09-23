@@ -2,6 +2,7 @@ package com.example.todayzero.findstore
 
 
 import android.annotation.SuppressLint
+import android.content.Context
 import android.os.Bundle
 import android.support.v4.app.Fragment
 import android.text.Editable
@@ -14,28 +15,24 @@ import android.widget.*
 import com.example.todayzero.R
 import com.example.todayzero.db.DBHelper
 import com.github.windsekirun.koreanindexer.KoreanIndexerListView
-import com.google.android.libraries.places.internal.i
-import kotlinx.android.synthetic.main.list_item.*
-import kotlinx.android.synthetic.main.notice_act.*
-import kotlinx.android.synthetic.main.store_list_frag.*
-import kotlinx.android.synthetic.main.store_list_frag.view.*
-import org.apache.commons.lang3.ArrayUtils.add
 import java.util.*
 import kotlin.collections.ArrayList
 import android.content.Context.INPUT_METHOD_SERVICE
 import android.support.v4.content.ContextCompat.getSystemService
-import android.content.Context
 import android.view.inputmethod.InputMethodManager
 import android.support.v4.content.ContextCompat.getSystemService
 import android.app.Activity
+import com.github.windsekirun.koreanindexer.KoreanIndexerListView.OrderingByKorean
+import kotlinx.android.synthetic.main.store_list_frag.*
+import kotlin.Comparator
 
 
 class StoreListFragment : Fragment() {
     lateinit var zeroList: ArrayList<String>
     lateinit var filterList: ArrayList<String>
     private var listView: KoreanIndexerListView? = null
-    lateinit var search_adapter: ArrayAdapter<String>
-
+    lateinit var search_adapter:ArrayAdapter<String>
+    lateinit var dongName:String
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         // Inflate the layout for this fragment
@@ -66,16 +63,16 @@ class StoreListFragment : Fragment() {
                     val imm = activity!!.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
                     imm!!.hideSoftInputFromWindow(searchinput.getWindowToken(), 0) // 키보드 숨기기
                 }
-                //TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+
             }
 
             override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
-                //TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+
+            }
+            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
+
             }
 
-            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
-                //TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
-            }
         })
         searchinput.setOnFocusChangeListener { v, hasFocus ->
             if (hasFocus == true)
@@ -85,7 +82,18 @@ class StoreListFragment : Fragment() {
         }
         //선택한 동 이름으로
         //requireActivity().actionBar!!.title = ""
+
         return root
+    }
+    override fun onAttach(context: Context?) {
+        super.onAttach(context)
+        if(arguments!=null)
+            dongName = arguments!!.getString("dongName")
+    }
+
+    override fun onResume() {
+        super.onResume()
+        (activity as StoreActivity).supportActionBar?.title=dongName
     }
 
     @SuppressLint("InflateParams")
@@ -98,24 +106,13 @@ class StoreListFragment : Fragment() {
         Collections.addAll(filterList, *text)
     }
 
-    fun indexer(root: View) {
 
+    fun indexer(root:View){
         zeroList = arrayListOf()
-        //일단 임의로 넣어놓음..
-        addList(
-            "가나다라", "가", "나", "다람쥐", "호랑이", "리스트", "마바", "바보바보바보바보바보바보바보바보바보바보바보바보바보바보",
-            "사아", "아랑", "타타타타타타타타", "스크롤스크롤스크롤",
-            "파파파파파파", "자차", "하하", "ABC", "BC", "C", "D", "F", "G", "I", "J", "K", "L",
-            "사자", "개구리", "노랑이", "초록이", "하양이", "차", "자동차", "M", "N", "O", "P",
-            "Q", "R", "S", "?", "!", "1", "2", "5", "4"
-        )
-        addList("가나다라", "4")
-        //Toast.makeText(context,"" + zeroList, Toast.LENGTH_LONG).show()
-
-        //var adapter = ArrayAdapter(context, android.R.layout.simple_list_item_1, zeroList)
-        //listView.adapter = adapter
-
-
+        for(store in StoreActivity.storeList){
+            if(store.dong==dongName)
+                addList(store.name)
+        }
         val adapter = AlphabetAdapter(zeroList)
         listView!!.setKeywordList(zeroList)
         listView!!.onItemClickListener = AdapterView.OnItemClickListener { adapterView, view, i, l ->
