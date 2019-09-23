@@ -19,17 +19,8 @@ class StoreRepository(val storeList:ArrayList<Store> ): DataSource {
             private var networkState=true
             private var isInitStore=false
             private var isUpdateStore=false
-            private var count=0
             override fun onDataLoaded(dataFilterType: DataFilterType) {
-                if(dataFilterType== DataFilterType.STORE_NUM) count++
-                if(dataFilterType== DataFilterType.STORE_RAW) {
-                    count--
-                    if(count==0)  isInitStore=true
-                }
-//                if(dataFilterType== DataFilterType.STORE) {
-//                    count--
-//                    if(count==0)  isUpdateStore=true
-//                }
+                if(dataFilterType== DataFilterType.STORE_RAW)  isInitStore=true
                 isUpdateStore=true //임시로 해놓은 것임!
                 if(isInitStore && isUpdateStore) callback.onDataLoaded()
             }

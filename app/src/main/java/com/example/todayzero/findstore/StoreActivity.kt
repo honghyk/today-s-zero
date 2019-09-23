@@ -21,8 +21,9 @@ import kotlin.collections.ArrayList
 
 class StoreActivity : AppCompatActivity() {
 
-    companion object{lateinit var storeList: ArrayList<Store>}
-
+    companion object{
+        lateinit var storeList: ArrayList<Store>
+    }
     private lateinit var fisList: Array<InputStream>
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
