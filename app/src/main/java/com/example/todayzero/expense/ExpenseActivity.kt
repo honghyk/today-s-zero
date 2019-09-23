@@ -31,11 +31,6 @@ class ExpenseActivity : AppCompatActivity() {
         setContentView(R.layout.expense_act)
         setSupportActionBar(expense_toolbar)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
-        init()
-
-    }
-
-    fun init(){
         dbHelper=DBHelper(this)
 
         datePickText = findViewById<TextView>(R.id.date_pick_text).apply {
