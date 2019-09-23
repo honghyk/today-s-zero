@@ -7,15 +7,32 @@ import android.view.Menu
 import android.view.MenuItem
 import com.example.todayzero.MainActivity
 import com.example.todayzero.R
+import com.example.todayzero.db.DBHelper
+import com.example.todayzero.db.deal
 import kotlinx.android.synthetic.main.expense_act.*
 
 class ExpenseActivity : AppCompatActivity() {
+
+
+    lateinit var dbHelper:DBHelper
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.expense_act)
         setSupportActionBar(expense_toolbar)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
+        init()
+
+    }
+
+    fun init(){
+        dbHelper=DBHelper(this)
+        expense_save_btn.setOnClickListener {
+            //일단 제로페이. 제로페이 여부 ui 생성 이후 바꾸기
+           val deal= deal("",date_edit_text.text.toString(),place_edit_text.text.toString(),price_edit_text.text.toString(),category_edit_text.text.toString(),memo_edit_text.text.toString(),0)
+           dbHelper.insertDeal(deal)
+
+        }
 
     }
 

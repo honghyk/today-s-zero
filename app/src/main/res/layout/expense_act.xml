@@ -19,7 +19,8 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:paddingStart="16dp"
-            android:paddingEnd="16dp">
+            android:paddingEnd="16dp" app:layout_constraintBottom_toBottomOf="@+id/memo_edit_text"
+            app:layout_constraintTop_toBottomOf="@+id/memo_edit_text">
 
         <TextView
                 android:id="@+id/price_text"
@@ -124,7 +125,16 @@
                 app:layout_constraintEnd_toEndOf="parent"
                 android:layout_marginStart="@dimen/expense_edit_margin_start"
                 android:layout_marginTop="@dimen/expense_edit_margin_top"/>
+        <Button
+
+                android:text="저장"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:layout_constraintStart_toStartOf="parent" app:layout_constraintEnd_toEndOf="parent"
+                android:id="@+id/expense_save_btn" app:layout_constraintTop_toBottomOf="@+id/memo_edit_text"
+                android:layout_marginBottom="8dp" app:layout_constraintBottom_toBottomOf="parent"/>
 
     </android.support.constraint.ConstraintLayout>
+
 
 </LinearLayout>
