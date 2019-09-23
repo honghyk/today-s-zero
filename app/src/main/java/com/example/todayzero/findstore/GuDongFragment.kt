@@ -11,6 +11,7 @@ import android.view.ViewGroup
 import com.example.todayzero.R
 import com.example.todayzero.util.replaceFragmentInActivity
 import android.support.v7.app.AppCompatActivity
+import android.support.v7.widget.DividerItemDecoration
 import android.widget.LinearLayout
 import android.widget.Toast
 
@@ -22,7 +23,7 @@ class GuDongFragment : Fragment() {
     lateinit var guAdapter: GuAdapter
     lateinit var guView: RecyclerView
     lateinit var dongView: RecyclerView
-    var dongList = ArrayList<String>()
+     var dongList =ArrayList<String>()
     lateinit var dongAdapter: DongAdapter
 
     override fun onCreateView(
@@ -40,28 +41,14 @@ class GuDongFragment : Fragment() {
 
         val root = inflater.inflate(R.layout.gu_dong_frag, container, false)
         with(root) {
-            dongView = findViewById(R.id.dongView)
-            dongAdapter = DongAdapter(dongList)
-            val dongLayoutManager = LinearLayoutManager(context, RecyclerView.VERTICAL, false)
-            dongView.layoutManager = dongLayoutManager
-            dongView.adapter = dongAdapter
-            dongAdapter.itemClickListener = object : DongAdapter.OnItemClickListener {
-                override fun onItemClick(
-                    holder: DongAdapter.ViewHolder,
-                    view: View,
-                    data: String,
-                    position: Int
-                ) {
-
-                    (activity as StoreActivity).replaceFragmentInActivity(StoreListFragment(),R.id.store_contentFrame,data)
-                }
-            }
 
             guView = findViewById(R.id.guView)
             guList = resources.getStringArray(R.array.gu_name)
             guAdapter = GuAdapter(guList)
             val guLayoutManager = LinearLayoutManager(context, RecyclerView.VERTICAL, false)
             guView.layoutManager = guLayoutManager
+            val dividerItemDecoration1 = DividerItemDecoration(requireContext(), guLayoutManager.orientation)
+            guView.addItemDecoration(dividerItemDecoration1)
             guView.adapter = guAdapter
             guAdapter.itemClickListener = object : GuAdapter.OnItemClickListener {
                 override fun onItemClick(
@@ -76,7 +63,27 @@ class GuDongFragment : Fragment() {
                         dongList.add(str)
                     }
                     dongAdapter.notifyDataSetChanged()
-                    //기본으로 selected 강남구 선택 상태 만들기
+                }
+            }
+            dongView = findViewById(R.id.dongView)
+            var dongArr = resources.getStringArray(R.array.gangnam).sortedArray()
+            for (str in dongArr) {
+                dongList.add(str)
+            }
+            dongAdapter = DongAdapter(dongList)
+            val dongLayoutManager = LinearLayoutManager(context, RecyclerView.VERTICAL, false)
+            dongView.layoutManager = dongLayoutManager
+            val dividerItemDecoration = DividerItemDecoration(requireContext(), dongLayoutManager.orientation)
+            dongView.addItemDecoration(dividerItemDecoration)
+            dongView.adapter = dongAdapter
+            dongAdapter.itemClickListener = object : DongAdapter.OnItemClickListener {
+                override fun onItemClick(
+                    holder: DongAdapter.ViewHolder,
+                    view: View,
+                    data: String,
+                    position: Int
+                ) {
+                    (activity as StoreActivity).replaceFragmentInActivity(StoreListFragment(),R.id.store_contentFrame,data)
                 }
             }
 

@@ -1,16 +1,22 @@
 package com.example.todayzero.findstore
 
+import android.graphics.Color
 import android.graphics.ColorSpace
 import android.support.v7.widget.RecyclerView
+import android.util.SparseBooleanArray
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
 import com.example.todayzero.R
+import com.google.android.libraries.places.internal.i
 
 class GuAdapter(var items:Array<String>):RecyclerView.Adapter<GuAdapter.ViewHolder>() {
     var itemClickListener:OnItemClickListener?=null
+     var mSelectedItem = 0
+
+
     interface OnItemClickListener  {
         fun onItemClick(holder: ViewHolder, view: View, data: String, position: Int)
     }
@@ -21,7 +27,9 @@ class GuAdapter(var items:Array<String>):RecyclerView.Adapter<GuAdapter.ViewHold
 
     override fun onBindViewHolder(p0: ViewHolder, p1: Int) {
         p0.gu.text=items[p1]
+        p0.itemView.isSelected=if(p1==mSelectedItem) true else false
        }
+
 
     override fun getItemCount(): Int {
         return items.size
@@ -35,6 +43,8 @@ class GuAdapter(var items:Array<String>):RecyclerView.Adapter<GuAdapter.ViewHold
             check=itemView.findViewById(R.id.guSelImageView)
             itemView.setOnClickListener {
                 val position=adapterPosition
+                mSelectedItem=position
+                notifyDataSetChanged()
                 itemClickListener?.onItemClick(this,it,items[position],position)
             }
         }

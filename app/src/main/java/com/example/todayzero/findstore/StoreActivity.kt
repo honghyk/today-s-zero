@@ -7,6 +7,7 @@ import android.support.v7.app.ActionBarDrawerToggle
 import android.support.v7.app.AppCompatActivity
 import android.util.Log
 import android.widget.LinearLayout
+import android.widget.ProgressBar
 import com.example.todayzero.R
 import com.example.todayzero.data.Store
 import com.example.todayzero.data.source.DataSource
@@ -64,9 +65,11 @@ class StoreActivity : AppCompatActivity() {
             assetManager.open("storelist11.json")
         )
         val storeDataRepository = StoreRepository(storeList)
+        progress_circular.visibility=ProgressBar.VISIBLE
         storeDataRepository.initStore(fisList, object :
             DataSource.LoadDataCallback {
             override fun onDataLoaded() {
+                progress_circular.visibility=ProgressBar.GONE
                 replaceFragmentInActivity(GuDongFragment(), R.id.store_contentFrame)
             }
 
