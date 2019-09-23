@@ -13,6 +13,8 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.EditText
 import android.widget.Toast
+import com.example.todayzero.db.DBHelper
+import com.example.todayzero.db.user
 import com.example.todayzero.util.replaceFragInActNotAddToBackStack
 import java.text.NumberFormat
 
@@ -93,5 +95,9 @@ class WelcomeFragment : Fragment() {
 
     private fun storeUserData(name: String, income: Long) {
         //이름, 총급여 데이터 DB에 넣는 함수
+        val dbHelper=DBHelper(requireContext())
+        val user= user(name,0,income.toString())
+        dbHelper.insertUser(user)
+
     }
 }

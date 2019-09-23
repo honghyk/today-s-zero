@@ -6,7 +6,7 @@ import android.database.sqlite.SQLiteDatabase
 import android.database.sqlite.SQLiteOpenHelper
 import android.provider.BaseColumns
 import android.util.Log
-
+import com.example.todayzero.findstore.StoreActivity.Companion.storeList
 
 
 class DBHelper(context: Context):SQLiteOpenHelper(context,DATABASE_NAME,null,DATABASE_VERSION){
@@ -138,7 +138,7 @@ class DBHelper(context: Context):SQLiteOpenHelper(context,DATABASE_NAME,null,DAT
         }
 
         val success=wdb.insert(users.TABLE_NAME,null,values)
-        Log.i("InsertedUserID: ","$success")
+        Log.i("InsertedUserID: ","$success ${user.uname}")
     }
 
     fun insertStores( Stores:ArrayList<store>){
@@ -155,6 +155,7 @@ class DBHelper(context: Context):SQLiteOpenHelper(context,DATABASE_NAME,null,DAT
                 Log.i("InsertedStoreID: ","${Stores.get(i).locality} +$success + storekeyID+ ${Stores.get(i).sid}")
 
             }
+            wdb.setTransactionSuccessful()
         }finally {
             wdb.endTransaction()
         }
@@ -341,7 +342,7 @@ class DBHelper(context: Context):SQLiteOpenHelper(context,DATABASE_NAME,null,DAT
     }
 
     fun getStores(gu:String):ArrayList<store>{
-        Log.i("getStore","getstore")
+
         val storeList=ArrayList<store>()
         val projection=arrayOf(BaseColumns._ID, DBHelper.stores.KEY_NAME, DBHelper.stores.KEY_ADDR,stores.KEY_GU,
             stores.KEY_INFO)
