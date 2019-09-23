@@ -35,6 +35,7 @@ class DBHelper(context: Context):SQLiteOpenHelper(context,DATABASE_NAME,null,DAT
         db.execSQL(SQL_CREATE_TABLE_USERS)
         Log.i("create db","create utable")
 
+        //table name : stores강남구, stores마포구
         for(gu in 1..25){
             var sql= SQL_CREATE_TABLE_STORES_PRE+"${zone[gu]}"+ SQL_CREATE_TABLE_STORES_POST
             db.execSQL(sql)
@@ -70,7 +71,7 @@ class DBHelper(context: Context):SQLiteOpenHelper(context,DATABASE_NAME,null,DAT
 
         val SQL_CREATE_TABLE_USERS="CREATE TABLE ${users.TABLE_NAME}"+
                 "(${BaseColumns._ID} INTEGER PRIMARY KEY AUTOINCREMENT,"+ users.KEY_NAME+" TEXT,"+
-                users.KEY_BALANCE+" INTEGER,"+users.KEY_INCOME+" TEXT );"
+                users.KEY_EXPENDITURE+" INTEGER,"+users.KEY_INCOME+" TEXT );"
 
         /*
         val SQL_CREATE_TABLE_STORES="CREATE TABLE ${stores.TABLE_NAME}"+
@@ -86,7 +87,7 @@ class DBHelper(context: Context):SQLiteOpenHelper(context,DATABASE_NAME,null,DAT
 
         val SQL_CREATE_TABLE_DEALS="CREATE TABLE ${deals.TABLE_NAME}"+
                 "(${BaseColumns._ID} INTEGER PRIMARY KEY AUTOINCREMENT,"+
-                deals.KEY_DATE+" TEXT,"+ deals.KEY_NAME+" TEXT,"+deals.KEY_PRICE+" TEXT,"+deals.KEY_CATEGORY+" TEXT,"+deals.KEY_ISZERO+" INTEGER);"
+                deals.KEY_DATE+" TEXT,"+ deals.KEY_NAME+" TEXT,"+deals.KEY_PRICE+" TEXT,"+deals.KEY_CATEGORY+" TEXT,"+deals.KEY_MEMO+" TEXT,"+deals.KEY_ISZERO+" INTEGER);"
 
 
     }
@@ -95,7 +96,7 @@ class DBHelper(context: Context):SQLiteOpenHelper(context,DATABASE_NAME,null,DAT
         companion object {
             val TABLE_NAME="users"
             val KEY_NAME="u_name"
-            val KEY_BALANCE="u_balance"
+            val KEY_EXPENDITURE="u_expenditure"
             val KEY_INCOME="u_income"
         }
     }
@@ -118,6 +119,7 @@ class DBHelper(context: Context):SQLiteOpenHelper(context,DATABASE_NAME,null,DAT
             val KEY_NAME="store"
             val KEY_PRICE="price"
             val KEY_CATEGORY="category"
+            val KEY_MEMO="memo"
             val KEY_ISZERO="is_zeropay"
         }
     }
@@ -131,7 +133,7 @@ class DBHelper(context: Context):SQLiteOpenHelper(context,DATABASE_NAME,null,DAT
         val values=ContentValues().apply {
 
             put(users.KEY_NAME,user.uname)
-            put(users.KEY_BALANCE,user.balance)
+            put(users.KEY_EXPENDITURE,user.expenditure)
             put(users.KEY_INCOME,user.income)
         }
 
@@ -169,6 +171,7 @@ class DBHelper(context: Context):SQLiteOpenHelper(context,DATABASE_NAME,null,DAT
             put(deals.KEY_NAME,deal.store)
             put(deals.KEY_PRICE,deal.price)
             put(deals.KEY_CATEGORY,deal.category)
+            put(deals.KEY_MEMO,deal.memo)
             put(deals.KEY_ISZERO,deal.isZero)
         }
 
@@ -205,10 +208,10 @@ class DBHelper(context: Context):SQLiteOpenHelper(context,DATABASE_NAME,null,DAT
 
         Log.i("updateDB_user","$count")
     }
-    fun updateUserBalance(balance:String){
-        //balance 변경을 많이 쓸 것같아 따로.
+    fun updateUserExpenditure(expenditure:String){
+        //expenditure 변경을 많이 쓸 것같아 따로.
         val value=ContentValues()
-        value.put(users.KEY_BALANCE,balance)
+        value.put(users.KEY_EXPENDITURE,expenditure)
         //val selection="${users.KEY_ID} LIKE ?"
         //val selectionArgs=arrayOf(uid)
         val count=wdb.update(users.TABLE_NAME,value,null,null)
@@ -239,6 +242,7 @@ class DBHelper(context: Context):SQLiteOpenHelper(context,DATABASE_NAME,null,DAT
             put(deals.KEY_NAME,deal.store)
             put(deals.KEY_PRICE,deal.price)
             put(deals.KEY_CATEGORY,deal.category)
+            put(deals.KEY_MEMO,deal.memo)
             put(deals.KEY_ISZERO,deal.isZero)
         }
 
@@ -262,8 +266,8 @@ class DBHelper(context: Context):SQLiteOpenHelper(context,DATABASE_NAME,null,DAT
                 while(moveToNext()){
                     val name=cursor.getString(cursor.getColumnIndex(users.KEY_NAME))
                     val income=cursor.getString(cursor.getColumnIndex(users.KEY_INCOME))
-                    val balance=cursor.getInt(cursor.getColumnIndex(users.KEY_BALANCE))
-                    val result=user(name,balance,income)
+                    val expenditure=cursor.getInt(cursor.getColumnIndex(users.KEY_EXPENDITURE))
+                    val result=user(name,expenditure,income)
                     return result
                 }
 
@@ -274,16 +278,35 @@ class DBHelper(context: Context):SQLiteOpenHelper(context,DATABASE_NAME,null,DAT
         return fail
     }
 
+    fun getStorebyQuery(sid:Int,gu: String):store{
+        // 스토어 빨리 찾기
+        val projection=arrayOf(BaseColumns._ID,stores.KEY_NAME,stores.KEY_ADDR,stores.KEY_GU,stores.KEY_INFO)
 
+        val selection="${BaseColumns._ID} = ?"
+        val selectionArgs=arrayOf(sid.toString())
+        lateinit var store:store
+        val cursor=rdb.query(stores.TABLE_NAME, projection, selection,  selectionArgs,null,null,null)
+        while (cursor.moveToNext()) {
+                val sid = cursor.getString(cursor.getColumnIndex(BaseColumns._ID))
+                val name = cursor.getString(cursor.getColumnIndex(stores.KEY_NAME))
+                val addr = cursor.getString(cursor.getColumnIndex(stores.KEY_ADDR))
+                val gu = cursor.getString(cursor.getColumnIndex(stores.KEY_GU))
+                val info = cursor.getString(cursor.getColumnIndex(stores.KEY_INFO))
+                store = store(sid, name, addr, gu, info)
+                Log.i("getStore",store.sid)
+        }
+        return store
+    }
 
     fun getStore(sid:Int,gu:String):store{ //gu: 찾으려는 store의 locality
         var store=getStores(gu).get(sid-1)
         return store
     }
+
     fun getStores(gu:String):ArrayList<store>{
         Log.i("getStore","getstore")
         val storeList=ArrayList<store>()
-        val projection=arrayOf(BaseColumns._ID, stores.KEY_NAME, stores.KEY_ADDR,stores.KEY_GU,
+        val projection=arrayOf(BaseColumns._ID, DBHelper.stores.KEY_NAME, DBHelper.stores.KEY_ADDR,stores.KEY_GU,
             stores.KEY_INFO)
         val cursor=rdb.query(stores.TABLE_NAME+gu,projection,null,null,null,null,null,null)
         if(cursor!=null) {
@@ -330,7 +353,7 @@ class DBHelper(context: Context):SQLiteOpenHelper(context,DATABASE_NAME,null,DAT
     fun getDeals():ArrayList<deal>{
 
         val dealList=ArrayList<deal>()
-        val projection=arrayOf(BaseColumns._ID,deals.KEY_NAME,deals.KEY_DATE,deals.KEY_PRICE,deals.KEY_CATEGORY,deals.KEY_ISZERO)
+        val projection=arrayOf(BaseColumns._ID,deals.KEY_NAME,deals.KEY_DATE,deals.KEY_PRICE,deals.KEY_CATEGORY,deals.KEY_MEMO,deals.KEY_ISZERO)
         val cursor=rdb.query(deals.TABLE_NAME,projection,null,null,null,null,null,null)
         if(cursor!=null) {
             while (cursor.moveToNext()) {
@@ -339,9 +362,10 @@ class DBHelper(context: Context):SQLiteOpenHelper(context,DATABASE_NAME,null,DAT
                 val date = cursor.getString(cursor.getColumnIndex(deals.KEY_DATE))
                 val price = cursor.getString(cursor.getColumnIndex(deals.KEY_PRICE))
                 val category = cursor.getString(cursor.getColumnIndex(deals.KEY_CATEGORY))
+                val memo=cursor.getString(cursor.getColumnIndex(deals.KEY_MEMO))
                 val isZero = cursor.getInt(cursor.getColumnIndex(deals.KEY_ISZERO))
 
-                val deal = deal(did, sname, date, price, category, isZero)
+                val deal = deal(did, date, sname, price, category,memo, isZero)
                 dealList.add(deal)
             }
         }else{
