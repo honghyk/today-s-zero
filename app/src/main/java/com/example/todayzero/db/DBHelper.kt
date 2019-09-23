@@ -140,10 +140,29 @@ class DBHelper(context: Context):SQLiteOpenHelper(context,DATABASE_NAME,null,DAT
         val success=wdb.insert(users.TABLE_NAME,null,values)
         Log.i("InsertedUserID: ","$success")
     }
+
+    fun insertStores( Stores:ArrayList<store>){
+        wdb.beginTransaction()
+        try{
+            for (i in 0..Stores.size-1){
+                val values=ContentValues().apply {
+                    put(stores.KEY_NAME,Stores.get(i).sname)
+                    put(stores.KEY_ADDR,Stores.get(i).addr)
+                    put(stores.KEY_GU,Stores.get(i).locality)
+                    put(stores.KEY_INFO,Stores.get(i).info)
+                }
+                val success=wdb.insert(stores.TABLE_NAME+Stores.get(i).locality,null,values)
+                Log.i("InsertedStoreID: ","${Stores.get(i).locality} +$success + storekeyID+ ${Stores.get(i).sid}")
+
+            }
+        }finally {
+            wdb.endTransaction()
+        }
+    }
+
+
     fun insertStore(store: store){
-
-
-        val stoAddr=store.addr
+     val stoAddr=store.addr
         if(stoAddr.length>0){
             if(!findSameStore(stoAddr,store.locality)){
 
@@ -153,6 +172,7 @@ class DBHelper(context: Context):SQLiteOpenHelper(context,DATABASE_NAME,null,DAT
                     put(stores.KEY_GU,store.locality)
                     put(stores.KEY_INFO,store.info)
                 }
+
                 val success=wdb.insert(stores.TABLE_NAME+store.locality,null,values)
                 Log.i("InsertedStoreID: ","${store.locality} +$success + storekeyID+ ${store.sid}")
 
@@ -162,8 +182,25 @@ class DBHelper(context: Context):SQLiteOpenHelper(context,DATABASE_NAME,null,DAT
                 return
             }
         }
-
     }
+    fun findSameStore(newaddr:String,gu: String):Boolean{
+
+        val str=stores.TABLE_NAME+gu
+        val selectAllQuery="SELECT * FROM $str WHERE  ${stores.KEY_ADDR} = ?"
+        val selectionArgs=arrayOf(newaddr)
+        val cursor=rdb.rawQuery(selectAllQuery,selectionArgs)
+
+        if(cursor!=null){
+
+            while (cursor.moveToNext()) {
+                return true
+            }
+            return false
+        }
+        else
+            return false
+    }
+
     fun insertDeal(deal: deal){
 
         val values=ContentValues().apply {
@@ -328,23 +365,7 @@ class DBHelper(context: Context):SQLiteOpenHelper(context,DATABASE_NAME,null,DAT
         }
         return storeList
     }
-    fun findSameStore(newaddr:String,gu: String):Boolean{
 
-        val str=stores.TABLE_NAME+gu
-        val selectAllQuery="SELECT * FROM $str WHERE  ${stores.KEY_ADDR} = ?"
-        val selectionArgs=arrayOf(newaddr)
-        val cursor=rdb.rawQuery(selectAllQuery,selectionArgs)
-
-        if(cursor!=null){
-
-            while (cursor.moveToNext()) {
-                return true
-            }
-            return false
-        }
-        else
-            return false
-    }
     fun getDeal(did:Int):deal{
 
         var deal=getDeals().get(did-1)
