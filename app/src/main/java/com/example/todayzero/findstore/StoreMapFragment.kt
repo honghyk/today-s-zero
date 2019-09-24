@@ -120,7 +120,6 @@ class StoreMapFragment : Fragment(), OnMapReadyCallback {
 
         fun newInstance(store: Store): StoreMapFragment {
             this.store = store
-
             return StoreMapFragment()
         }
     }

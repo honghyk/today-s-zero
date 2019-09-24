@@ -82,9 +82,6 @@ class StoreListFragment : Fragment() {
             else
                 listView!!.setIndexerWidth(20)
         }
-        //선택한 동 이름으로
-        //requireActivity().actionBar!!.title = ""
-
         return root
     }
     override fun onAttach(context: Context?) {
@@ -118,11 +115,6 @@ class StoreListFragment : Fragment() {
         val adapter = AlphabetAdapter(zeroList)
         listView!!.setKeywordList(zeroList)
         listView!!.onItemClickListener = AdapterView.OnItemClickListener { adapterView, view, i, l ->
-//            Toast.makeText(
-//                context,
-//                "clicked -> $i",
-//                Toast.LENGTH_SHORT
-//            ).show()
             (requireActivity() as AppCompatActivity).replaceFragmentInActivity(StoreMapFragment.newInstance(
                 Store("store", "서울시 은평구 갈현로23길 5 지하1층", "은평구", "ㅇㅇ동", "type")),
                 R.id.store_contentFrame)

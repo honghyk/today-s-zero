@@ -60,6 +60,7 @@ class GuDongFragment : Fragment() {
             }
             dongView = findViewById(R.id.dongView)
             var dongArr = resources.getStringArray(R.array.gangnam).sortedArray()
+            dongList.clear()
             for (str in dongArr) {
                 dongList.add(str)
             }
@@ -79,7 +80,7 @@ class GuDongFragment : Fragment() {
                     (activity as StoreActivity).replaceFragmentInActivity(StoreListFragment(),R.id.store_contentFrame, data)
                 }
             }
-
+            (activity as StoreActivity).supportActionBar?.title = "가맹점 찾기"
         }
         return root
     }
