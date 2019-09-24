@@ -47,7 +47,6 @@ class MainFragment : Fragment() {
         // Inflate the layout for this fragment
 
         Log.i("life","oncreateView")
-        dbHelper = DBHelper(requireContext())
 
         val root = inflater.inflate(R.layout.main_frag, container, false)
 
@@ -67,18 +66,27 @@ class MainFragment : Fragment() {
             spentListView=findViewById<RecyclerView>(R.id.spent_list_view)
             layoutManager = LinearLayoutManager(requireContext(), RecyclerView.VERTICAL, false)
             spentListView.layoutManager=layoutManager
+
             currentMonthTextView = findViewById(R.id.current_month_text_view)
             prevMonthTextView = findViewById<TextView>(R.id.prev_month_text_button).apply {
-                setOnClickListener { backwardMonth() }
+                setOnClickListener { backwardMonth()
+                    init()
+                }
             }
             prevMonthBtn = findViewById<ImageButton>(R.id.prev_month_button).apply {
-                setOnClickListener { backwardMonth() }
+                setOnClickListener { backwardMonth()
+                    init()
+                }
             }
             nextMonthTextView = findViewById<TextView>(R.id.next_month_text_button).apply {
-                setOnClickListener { forwardMonth() }
+                setOnClickListener { forwardMonth()
+                init()
+                }
             }
             nextMonthBtn = findViewById<ImageButton>(R.id.next_month_button).apply {
-                setOnClickListener { forwardMonth() }
+                setOnClickListener { forwardMonth()
+                init()
+                }
             }
         }
 
@@ -112,7 +120,8 @@ class MainFragment : Fragment() {
     }
 
     fun init() {
-        // user정보 등록 후
+        dbHelper= DBHelper(requireContext())
+        Log.i("init","${dbHelper.getUser().expenditure.toString()}")
         userBalanceTxt.text=dbHelper.getUser().expenditure.toString()
         val dealList = dbHelper.getDeals("$currentYear.$currentMonth")
        //al dealList = dbHelper.getDeals("$currentYear.%$currentMonth")
@@ -169,9 +178,6 @@ class MainFragment : Fragment() {
         }
 
         Log.i("setPrevNextBtn","click$currentYear/$currentMonth")
-        val dealList = dbHelper.getDeals("$currentYear.$currentMonth")
-        val adapter = DealAdapter(dealList)
-        adapter.notifyDataSetChanged()
-        spentListView.adapter=adapter
+
     }
 }
