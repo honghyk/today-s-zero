@@ -152,8 +152,7 @@ class DBHelper(context: Context):SQLiteOpenHelper(context,DATABASE_NAME,null,DAT
                     put(stores.KEY_INFO,Stores.get(i).type)
                 }
                 val success=wdb.insert(stores.TABLE_NAME+Stores.get(i).locality,null,values)
-      //          Log.i("InsertedStoreID: ","${Stores.get(i).locality} +$success + storekeyID+ ${Stores.get(i).sid}")
-
+                Log.i("test ","${Stores.get(i).locality} +$success + storekeyID+ ${Stores.get(i).sid}")
             }
             wdb.setTransactionSuccessful()
         }finally {

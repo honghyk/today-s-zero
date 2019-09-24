@@ -8,6 +8,7 @@ import android.support.v4.app.Fragment
 import android.support.v7.app.AppCompatActivity
 import android.text.Editable
 import android.text.TextWatcher
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -102,11 +103,9 @@ class StoreListFragment : Fragment() {
 
     fun indexer(root:View){
         zeroList = arrayListOf()
-
         for(store in StoreActivity.storeList[guNum!!]){
             if(store.dong==dongName)
                 addList(store.name)
-
         }
         val adapter = AlphabetAdapter(zeroList)
         listView!!.setKeywordList(zeroList)

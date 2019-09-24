@@ -66,6 +66,7 @@ class StoreActivity : AppCompatActivity() {
             storeDataRepository.initStore(fisList, object :
                 DataSource.LoadDataCallback {
                 override fun onDataLoaded() {
+
                     for (storeArr in storeList) {
                         dbHelper.insertStores(storeArr)
                     }
@@ -74,8 +75,6 @@ class StoreActivity : AppCompatActivity() {
                 }
 
                 override fun onNetworkNotAvailable() {
-                    //showViews(false,true) -> 넘어가되, 가맹점 정보 업데이트 실패했습니다. 업데이트를 위해서는, 네트워크 환경을 확인하시고,
-                    //다시 실행해달라는 토스트 메시지 띄우깅
                 }
             })
         } else {

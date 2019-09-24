@@ -23,6 +23,7 @@ import android.support.v4.app.FragmentManager
 import android.support.v4.app.FragmentTransaction
 import android.support.v7.app.ActionBar
 import android.support.v7.app.AppCompatActivity
+import android.util.Log
 
 /**
  * The `fragment` is added to the container view with id `frameId`. The operation is
@@ -38,7 +39,7 @@ fun AppCompatActivity.replaceFragmentInActivity(fragment: Fragment, @IdRes frame
     supportFragmentManager.transact {
         var arg=Bundle()
         arg.putString("dongName",str)
-        arg.putInt("guNuM",num)
+        arg.putInt("guNum",num)
         fragment.arguments=arg
         replace(frameId, fragment)
         addToBackStack(null)
