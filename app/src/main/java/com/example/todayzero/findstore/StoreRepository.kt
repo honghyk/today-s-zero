@@ -3,26 +3,18 @@ package com.example.todayzero.findstore
 import com.example.todayzero.data.Store
 import com.example.todayzero.data.source.DataFilterType
 import com.example.todayzero.data.source.DataSource
-import java.io.FileDescriptor
-import java.io.FileInputStream
+import com.example.todayzero.db.DBHelper
 import java.io.InputStream
-import java.util.*
 import kotlin.collections.ArrayList
 
 
-class StoreRepository(val storeList:ArrayList<Store> ): DataSource {
+class StoreRepository(val storeList:ArrayList<ArrayList<Store>> ): DataSource {
 
-
-
-    fun initStore(scanArr:Array<InputStream>, callback: DataSource.LoadDataCallback){
+    fun initStore(scanArr:Array<InputStream>,callback: DataSource.LoadDataCallback){
         class ApiListener: DataSource.ApiListener {
             private var networkState=true
-            private var isInitStore=false
-            private var isUpdateStore=false
             override fun onDataLoaded(dataFilterType: DataFilterType) {
-                if(dataFilterType== DataFilterType.STORE_RAW)  isInitStore=true
-                isUpdateStore=true //임시로 해놓은 것임!
-                if(isInitStore && isUpdateStore) callback.onDataLoaded()
+                callback.onDataLoaded()
             }
 
             override fun onFailure(dataFilterType: DataFilterType) {
@@ -33,7 +25,6 @@ class StoreRepository(val storeList:ArrayList<Store> ): DataSource {
             }
         }
         val apiListener=ApiListener()
-        //  Store.updateStore(storeList,apiListener)
         Store.loadStore(storeList,apiListener,scanArr)
     }
     interface StoreNumApiListener: DataSource.ApiListener {

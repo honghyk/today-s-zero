@@ -6,6 +6,7 @@ import android.database.sqlite.SQLiteDatabase
 import android.database.sqlite.SQLiteOpenHelper
 import android.provider.BaseColumns
 import android.util.Log
+import com.example.todayzero.data.Store
 
 
 class DBHelper(context: Context):SQLiteOpenHelper(context,DATABASE_NAME,null,DATABASE_VERSION){
@@ -140,18 +141,18 @@ class DBHelper(context: Context):SQLiteOpenHelper(context,DATABASE_NAME,null,DAT
         Log.i("InsertedUserID: ","$success ${user.uname}")
     }
 
-    fun insertStores( Stores:ArrayList<store>){
+    fun insertStores( Stores:ArrayList<Store>){
         wdb.beginTransaction()
         try{
             for (i in 0..Stores.size-1){
                 val values=ContentValues().apply {
-                    put(stores.KEY_NAME,Stores.get(i).sname)
+                    put(stores.KEY_NAME,Stores.get(i).name)
                     put(stores.KEY_ADDR,Stores.get(i).addr)
                     put(stores.KEY_GU,Stores.get(i).locality)
-                    put(stores.KEY_INFO,Stores.get(i).info)
+                    put(stores.KEY_INFO,Stores.get(i).type)
                 }
                 val success=wdb.insert(stores.TABLE_NAME+Stores.get(i).locality,null,values)
-                Log.i("InsertedStoreID: ","${Stores.get(i).locality} +$success + storekeyID+ ${Stores.get(i).sid}")
+      //          Log.i("InsertedStoreID: ","${Stores.get(i).locality} +$success + storekeyID+ ${Stores.get(i).sid}")
 
             }
             wdb.setTransactionSuccessful()
@@ -161,16 +162,16 @@ class DBHelper(context: Context):SQLiteOpenHelper(context,DATABASE_NAME,null,DAT
     }
 
 
-    fun insertStore(store: store){
+    fun insertStore(store: Store){
         val stoAddr=store.addr
         if(stoAddr.length>0){
             if(!findSameStore(stoAddr,store.locality)){
 
                 val values=ContentValues().apply {
-                    put(stores.KEY_NAME,store.sname)
+                    put(stores.KEY_NAME,store.name)
                     put(stores.KEY_ADDR,store.addr)
                     put(stores.KEY_GU,store.locality)
-                    put(stores.KEY_INFO,store.info)
+                    put(stores.KEY_INFO,store.type)
                 }
 
                 val success=wdb.insert(stores.TABLE_NAME+store.locality,null,values)
@@ -256,24 +257,8 @@ class DBHelper(context: Context):SQLiteOpenHelper(context,DATABASE_NAME,null,DAT
         Log.i("updateDB_user","$count")
     }
 
-    fun updateStore(store: store){
 
-        val value=ContentValues().apply {
-            put(stores.KEY_NAME,store.sname)
-            put(stores.KEY_ADDR,store.addr)
-            put(stores.KEY_GU,store.locality)
-            put(stores.KEY_INFO,store.info)
-        }
-
-        val selection="${BaseColumns._ID} LIKE ?"
-        val selectionArgs=arrayOf(store.sid)
-        val count=wdb.update(stores.TABLE_NAME+store.locality,value,selection,selectionArgs)
-
-        Log.i("update_db: ","$count")
-
-    }
     fun updateDeal(deal: deal){
-
         val value=ContentValues().apply {
             put(deals.KEY_DATE,deal.date)
             put(deals.KEY_NAME,deal.store)
@@ -292,7 +277,6 @@ class DBHelper(context: Context):SQLiteOpenHelper(context,DATABASE_NAME,null,DAT
 
     //db  조회
     fun getUser(): user {
-
         val selectAllQuery="SELECT * FROM ${users.TABLE_NAME}"
         val cursor=rdb.rawQuery(selectAllQuery,null)
 
@@ -315,47 +299,72 @@ class DBHelper(context: Context):SQLiteOpenHelper(context,DATABASE_NAME,null,DAT
         return fail
     }
 
-    fun getStorebyQuery(sid:Int,gu: String):store{
+    fun getStorebyQuery(sid:Int,gu: String):Store{
         // 스토어 빨리 찾기
         val projection=arrayOf(BaseColumns._ID,stores.KEY_NAME,stores.KEY_ADDR,stores.KEY_GU,stores.KEY_INFO)
 
         val selection="${BaseColumns._ID} = ?"
         val selectionArgs=arrayOf(sid.toString())
-        lateinit var store:store
+        lateinit var store:Store
         val cursor=rdb.query(stores.TABLE_NAME, projection, selection,  selectionArgs,null,null,null)
         while (cursor.moveToNext()) {
-            val sid = cursor.getString(cursor.getColumnIndex(BaseColumns._ID))
+            val sid = cursor.getInt(cursor.getColumnIndex(BaseColumns._ID))
             val name = cursor.getString(cursor.getColumnIndex(stores.KEY_NAME))
             val addr = cursor.getString(cursor.getColumnIndex(stores.KEY_ADDR))
             val gu = cursor.getString(cursor.getColumnIndex(stores.KEY_GU))
             val info = cursor.getString(cursor.getColumnIndex(stores.KEY_INFO))
-            store = store(sid, name, addr, gu, info)
-            Log.i("getStore",store.sid)
+            store = Store(sid, name, addr, gu,"", info)
+            Log.i("getStore",store.sid.toString())
         }
         return store
     }
 
-    fun getStore(sid:Int,gu:String):store{ //gu: 찾으려는 store의 locality
+    fun getStore(sid:Int,gu:String):Store{ //gu: 찾으려는 store의 locality
         var store=getStores(gu).get(sid-1)
         return store
     }
 
-    fun getStores(gu:String):ArrayList<store>{
+    fun getStores(gu:String):ArrayList<Store>{
 
-        val storeList=ArrayList<store>()
+        val storeList=ArrayList<Store>()
         val projection=arrayOf(BaseColumns._ID, DBHelper.stores.KEY_NAME, DBHelper.stores.KEY_ADDR,stores.KEY_GU,
             stores.KEY_INFO)
         val cursor=rdb.query(stores.TABLE_NAME+gu,projection,null,null,null,null,null,null)
         if(cursor!=null) {
             Log.i("getStore","cursor")
             while (cursor.moveToNext()) {
-                val sid = cursor.getString(cursor.getColumnIndex(BaseColumns._ID))
+                val sid = cursor.getInt(cursor.getColumnIndex(BaseColumns._ID))
                 val name = cursor.getString(cursor.getColumnIndex(stores.KEY_NAME))
                 val addr = cursor.getString(cursor.getColumnIndex(stores.KEY_ADDR))
                 val gu = cursor.getString(cursor.getColumnIndex(stores.KEY_GU))
                 val info = cursor.getString(cursor.getColumnIndex(stores.KEY_INFO))
-                val store = store(sid, name, addr, gu, info)
-                Log.i("getStore",store.sid)
+                val store = Store(sid, name, addr, gu, "",info)
+                Log.i("getStore",store.sid.toString())
+
+                storeList.add(store)
+            }
+        }
+        else{
+            Log.i("searchStores","no store")
+        }
+        return storeList
+    }
+    fun getStores(gu:Int):ArrayList<Store>{
+
+        val storeList=ArrayList<Store>()
+        val projection=arrayOf(BaseColumns._ID, DBHelper.stores.KEY_NAME, DBHelper.stores.KEY_ADDR,stores.KEY_GU,
+            stores.KEY_INFO)
+        val cursor=rdb.query(stores.TABLE_NAME+zone[gu],projection,null,null,null,null,null,null)
+        if(cursor!=null) {
+            Log.i("getStore","cursor")
+            while (cursor.moveToNext()) {
+                val sid = cursor.getInt(cursor.getColumnIndex(BaseColumns._ID))
+                val name = cursor.getString(cursor.getColumnIndex(stores.KEY_NAME))
+                val addr = cursor.getString(cursor.getColumnIndex(stores.KEY_ADDR))
+                val gu = cursor.getString(cursor.getColumnIndex(stores.KEY_GU))
+                val info = cursor.getString(cursor.getColumnIndex(stores.KEY_INFO))
+                val store = Store(sid, name, addr, gu, "",info)
+                Log.i("getStore",store.sid.toString())
 
                 storeList.add(store)
             }

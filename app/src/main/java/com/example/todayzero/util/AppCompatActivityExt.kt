@@ -34,10 +34,11 @@ fun AppCompatActivity.replaceFragmentInActivity(fragment: Fragment, @IdRes frame
         addToBackStack(null)
     }
 }
-fun AppCompatActivity.replaceFragmentInActivity(fragment: Fragment, @IdRes frameId: Int, str:String) {
+fun AppCompatActivity.replaceFragmentInActivity(fragment: Fragment, @IdRes frameId: Int, str:String,num:Int) {
     supportFragmentManager.transact {
         var arg=Bundle()
         arg.putString("dongName",str)
+        arg.putInt("guNuM",num)
         fragment.arguments=arg
         replace(frameId, fragment)
         addToBackStack(null)
