@@ -23,12 +23,13 @@ class DealAdapter(var items: ArrayList<deal>) :
 
     override fun onBindViewHolder(p0: DealAdapter.ViewHolder, p1: Int) {
             p0.deal_list_store.text=items[p1].store
-             if(items[p1].isZero==1){
-                 p0.deal_list_payment.text="제로 페이 결제"
-                 p0.deal_list_img.setImageResource(R.drawable.ic_favorite_black_24dp)
+            p0.deal_list_payment.text=items[p1].date
+        if(items[p1].isZero==1){
+                 //p0.deal_list_payment.text="제로 페이 결제"
+                 p0.deal_list_img.setImageResource(R.drawable.ic_exposure_zero_blue_24dp)
              }else{
-                 p0.deal_list_payment.text="일반 결제"
-                 p0.deal_list_img.setImageResource(R.drawable.ic_favorite_border_black_24dp)
+                 //p0.deal_list_payment.text="일반 결제"
+                 p0.deal_list_img.setImageResource(R.drawable.ic_exposure_zero_black_24dp)
              }
           p0.deal_list_price.text=items[p1].price +"원"
 

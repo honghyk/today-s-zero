@@ -1,6 +1,7 @@
 package com.example.todayzero
 
 
+import android.content.Context
 import android.content.Intent
 import android.content.res.ColorStateList
 import android.media.Image
@@ -9,22 +10,30 @@ import android.support.design.widget.FloatingActionButton
 import android.support.v4.app.Fragment
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageButton
 import android.widget.TextView
 import com.example.todayzero.db.DBHelper
+import com.example.todayzero.db.deal
 import com.example.todayzero.expense.ExpenseActivity
 import com.example.todayzero.util.DealAdapter
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.main_frag.*
+import org.w3c.dom.Text
 import java.text.SimpleDateFormat
 import java.util.*
 
 
 class MainFragment : Fragment() {
 
+    companion object {
+        lateinit var spentListView:RecyclerView
+    }
+    lateinit var userBalanceTxt:TextView
+    lateinit var layoutManager: LinearLayoutManager
     lateinit var dbHelper: DBHelper
     lateinit var currentMonthTextView: TextView
     lateinit var prevMonthTextView: TextView
@@ -36,6 +45,10 @@ class MainFragment : Fragment() {
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         // Inflate the layout for this fragment
+
+        Log.i("life","oncreateView")
+        dbHelper = DBHelper(requireContext())
+
         val root = inflater.inflate(R.layout.main_frag, container, false)
 
         requireActivity().window.statusBarColor = requireContext().getColor(R.color.white)
@@ -50,6 +63,10 @@ class MainFragment : Fragment() {
             }
         }
         with(root) {
+            userBalanceTxt=findViewById(R.id.userBalanceTxt)
+            spentListView=findViewById<RecyclerView>(R.id.spent_list_view)
+            layoutManager = LinearLayoutManager(requireContext(), RecyclerView.VERTICAL, false)
+            spentListView.layoutManager=layoutManager
             currentMonthTextView = findViewById(R.id.current_month_text_view)
             prevMonthTextView = findViewById<TextView>(R.id.prev_month_text_button).apply {
                 setOnClickListener { backwardMonth() }
@@ -66,7 +83,7 @@ class MainFragment : Fragment() {
         }
 
         initMonth()
-
+        init()
         return root
     }
 
@@ -77,19 +94,31 @@ class MainFragment : Fragment() {
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
-        dbHelper = DBHelper(requireContext())
-        //init()
+        Log.i("life","ActivityCreated")
+
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+
+        Log.i("life","onviewCreated")
+       // init()
+
+    }
+
+    override fun onAttach(context: Context?) {
+        super.onAttach(context)
+        Log.i("life","onAttach")
+
     }
 
     fun init() {
         // user정보 등록 후
-        //userBalanceTxt.text=dbHelper.getUser().balance.toString()
-        val layoutManager = LinearLayoutManager(requireContext(), RecyclerView.VERTICAL, false)
-        val dealList = dbHelper.getDeals()
+        userBalanceTxt.text=dbHelper.getUser().expenditure.toString()
+        val dealList = dbHelper.getDeals("$currentYear.$currentMonth")
+       //al dealList = dbHelper.getDeals("$currentYear.%$currentMonth")
         val adapter = DealAdapter(dealList)
-        spent_list_view.layoutManager = layoutManager
-        spent_list_view.adapter = adapter
         adapter.notifyDataSetChanged()
+        spentListView.adapter = adapter
     }
 
     fun initMonth() {
@@ -138,5 +167,11 @@ class MainFragment : Fragment() {
         if(currentMonth == 12) {
             nextMonthTextView.text = "1월"
         }
+
+        Log.i("setPrevNextBtn","click$currentYear/$currentMonth")
+        val dealList = dbHelper.getDeals("$currentYear.$currentMonth")
+        val adapter = DealAdapter(dealList)
+        adapter.notifyDataSetChanged()
+        spentListView.adapter=adapter
     }
 }

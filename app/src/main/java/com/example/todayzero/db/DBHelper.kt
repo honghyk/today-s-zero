@@ -214,7 +214,7 @@ class DBHelper(context: Context):SQLiteOpenHelper(context,DATABASE_NAME,null,DAT
         }
 
         val success=wdb.insert(deals.TABLE_NAME,null,values)
-        Log.i("InsertedDealID: ","$success InsertedDealID:  ${BaseColumns._ID}")
+        Log.i("InsertedDealID: ","$success InsertedDealdate:  ${deal.date}")
 
     }
 
@@ -367,17 +367,20 @@ class DBHelper(context: Context):SQLiteOpenHelper(context,DATABASE_NAME,null,DAT
         return storeList
     }
 
-    fun getDeal(did:Int):deal{
 
-        var deal=getDeals().get(did-1)
-        return deal
-    }
-    fun getDeals():ArrayList<deal>{
+   fun getDeals(date:String):ArrayList<deal>{
+
 
         val dealList=ArrayList<deal>()
+        dealList.clear()
+
         val projection=arrayOf(BaseColumns._ID,deals.KEY_NAME,deals.KEY_DATE,deals.KEY_PRICE,deals.KEY_CATEGORY,deals.KEY_MEMO,deals.KEY_ISZERO)
+        val selection="${deals.KEY_DATE} LIKE ?"
+        val selectionArgs=arrayOf("$date%")
         val sortOrder="${deals.KEY_DATE} DESC"
-        val cursor=rdb.query(deals.TABLE_NAME,projection,null,null,null,null,sortOrder,null)
+        val cursor=rdb.query(deals.TABLE_NAME,projection,selection,selectionArgs,null,null,sortOrder,null)
+
+        //val cursor=rdb.query(deals.TABLE_NAME,projection,null,null,null,null,sortOrder,null)
         if(cursor!=null) {
             while (cursor.moveToNext()) {
                 val did = cursor.getString(cursor.getColumnIndex(BaseColumns._ID))
@@ -387,11 +390,16 @@ class DBHelper(context: Context):SQLiteOpenHelper(context,DATABASE_NAME,null,DAT
                 val category = cursor.getString(cursor.getColumnIndex(deals.KEY_CATEGORY))
                 val memo=cursor.getString(cursor.getColumnIndex(deals.KEY_MEMO))
                 val isZero = cursor.getInt(cursor.getColumnIndex(deals.KEY_ISZERO))
-
+                Log.i("searchDeal",date)
                 val deal = deal(did, date, sname, price, category,memo, isZero)
                 //***날짜 입력을 어떻게 하느냐***
                 // 1.달을 따로 디비에 저장 , 2. date에서 달 추출해 list에 포함시킬지말지 > getDeals 인자로 달 보내기
-                dealList.add(deal)
+
+
+
+                    dealList.add(deal)
+
+
             }
         }else{
             Log.i("searchdeal","nodeal")

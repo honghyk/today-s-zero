@@ -4,16 +4,22 @@ import android.app.DatePickerDialog
 import android.app.TimePickerDialog
 import android.content.Intent
 import android.os.Bundle
+import android.support.v4.content.ContextCompat.startActivity
 import android.support.v7.app.AppCompatActivity
+import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
 import android.widget.TextView
 import android.widget.Toast
 import com.example.todayzero.MainActivity
+import com.example.todayzero.MainFragment
+import com.example.todayzero.MainFragment.Companion.spentListView
 import com.example.todayzero.R
 import com.example.todayzero.db.DBHelper
 import com.example.todayzero.db.deal
+import com.example.todayzero.util.DealAdapter
 import kotlinx.android.synthetic.main.expense_act.*
+import kotlinx.android.synthetic.main.main_frag.*
 import java.text.SimpleDateFormat
 import java.util.*
 
@@ -50,7 +56,8 @@ class ExpenseActivity : AppCompatActivity() {
         val day = c.get(Calendar.DAY_OF_MONTH)
 
         DatePickerDialog(this, DatePickerDialog.OnDateSetListener { view, year, month, dayOfMonth ->
-                val date = "$year.${month + 1}.$dayOfMonth"
+            val date = if(month<10){"$year.0${month + 1}.$dayOfMonth"}else{"$year.${month + 1}.$dayOfMonth"}
+            //val date = "$year.${month + 1}.$dayOfMonth"
                 datePickText.text = date
             }, year, month, day).show()
     }
@@ -69,7 +76,10 @@ class ExpenseActivity : AppCompatActivity() {
     private fun initDateAndStore() {
         val currentTime = System.currentTimeMillis()
         val currentDate = Date(currentTime)
+        //sol1
+        // val dateFormat = SimpleDateFormat("yyyy.M.dd", Locale.KOREA)
         val dateFormat = SimpleDateFormat("yyyy.MM.dd", Locale.KOREA)
+
         val timeFormat = SimpleDateFormat("k시 m분", Locale.KOREA)
 
         date_pick_text.text = dateFormat.format(currentDate)
@@ -104,6 +114,14 @@ private fun storeDealInDatabase() {
 
     val deal = deal("", date, store!!, price, category, memo, isZero)
     dbHelper.insertDeal(deal)
+    //user 지출액 증가
+    val expense=dbHelper.getUser().expenditure+price.toInt()
+    dbHelper.updateUserExpenditure(expense.toString())
+    val deallist=dbHelper.getDeals(datePickText.text.toString().substring(0,7))
+    val adapter= DealAdapter(deallist)
+    adapter.notifyDataSetChanged()
+    spentListView.adapter=adapter
+
 }
 
 private fun checkDealForm(): Boolean {
