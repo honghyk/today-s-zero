@@ -6,6 +6,7 @@ import android.support.v4.app.Fragment
 import android.support.v7.widget.DividerItemDecoration
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -22,7 +23,7 @@ class GuDongFragment : Fragment() {
     lateinit var dongView: RecyclerView
      var dongList =ArrayList<String>()
     lateinit var dongAdapter: DongAdapter
-
+    var guNum=0
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         zone = mapOf(
             1 to R.array.gangnam, 2 to R.array.gangdong, 3 to R.array.gangbuk, 4 to R.array.gangseo, 5 to R.array.gwanak, 6 to R.array.gwangjin
@@ -34,7 +35,6 @@ class GuDongFragment : Fragment() {
 
         val root = inflater.inflate(R.layout.gu_dong_frag, container, false)
         with(root) {
-
             guView = findViewById(R.id.guView)
             guList = resources.getStringArray(R.array.gu_name)
             guAdapter = GuAdapter(guList)
@@ -50,6 +50,7 @@ class GuDongFragment : Fragment() {
                     data: String,
                     position: Int
                 ) {
+                    guNum=position
                     dongList.clear()
                     var dongArr = resources.getStringArray(zone[position+1]!!).sortedArray()
                     for (str in dongArr) {
@@ -60,6 +61,7 @@ class GuDongFragment : Fragment() {
             }
             dongView = findViewById(R.id.dongView)
             var dongArr = resources.getStringArray(R.array.gangnam).sortedArray()
+            dongList.clear()
             for (str in dongArr) {
                 dongList.add(str)
             }
@@ -76,10 +78,10 @@ class GuDongFragment : Fragment() {
                     data: String,
                     position: Int
                 ) {
-                    (activity as StoreActivity).replaceFragmentInActivity(StoreListFragment(),R.id.store_contentFrame, data)
+                    (activity as StoreActivity).replaceFragmentInActivity(StoreListFragment(),R.id.store_contentFrame, data,guNum)
                 }
             }
-
+            (activity as StoreActivity).supportActionBar?.title = "가맹점 찾기"
         }
         return root
     }

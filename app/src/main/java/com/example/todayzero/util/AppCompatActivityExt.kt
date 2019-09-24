@@ -23,6 +23,7 @@ import android.support.v4.app.FragmentManager
 import android.support.v4.app.FragmentTransaction
 import android.support.v7.app.ActionBar
 import android.support.v7.app.AppCompatActivity
+import android.util.Log
 
 /**
  * The `fragment` is added to the container view with id `frameId`. The operation is
@@ -34,10 +35,11 @@ fun AppCompatActivity.replaceFragmentInActivity(fragment: Fragment, @IdRes frame
         addToBackStack(null)
     }
 }
-fun AppCompatActivity.replaceFragmentInActivity(fragment: Fragment, @IdRes frameId: Int, str:String) {
+fun AppCompatActivity.replaceFragmentInActivity(fragment: Fragment, @IdRes frameId: Int, str:String,num:Int) {
     supportFragmentManager.transact {
         var arg=Bundle()
         arg.putString("dongName",str)
+        arg.putInt("guNum",num)
         fragment.arguments=arg
         replace(frameId, fragment)
         addToBackStack(null)

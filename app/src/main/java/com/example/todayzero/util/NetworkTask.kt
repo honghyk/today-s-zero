@@ -9,6 +9,7 @@ import com.example.todayzero.data.Store
 import com.example.todayzero.data.source.DataFilterType
 import com.example.todayzero.notice.NoticeRepository
 import com.example.todayzero.data.source.DataSource
+import com.example.todayzero.db.DBHelper
 import com.example.todayzero.findstore.StoreRepository
 import org.json.JSONArray
 import org.json.JSONObject
@@ -20,39 +21,33 @@ class NetworkTask(
     var url: String,
     val callback: DataSource.ApiListener
 ) : AsyncTask<String, Void, String>() {
-    lateinit var storeList: ArrayList<Store>
+    lateinit var storeList: ArrayList<ArrayList<Store>>
     lateinit var noticeList: ArrayList<Notice>
     var limitNum: Int? = null
     lateinit var fisArr: Array<InputStream>
+    lateinit var dbHelper: DBHelper
+    val zone= mutableMapOf<String,Int>("강남구" to 0,"강동구"  to 1, "강북구"  to 2, "강서구"  to 3,"관악구"  to 4,"광진구"  to 5,
+        "구로구"  to 6,"금천구"  to 7, "노원구" to 8, "도봉구" to 9, "동대문구" to 10,  "동작구" to 11,  "마포구" to 12, "서대문구" to 13, "서초구" to 14,
+        "성동구" to 15, "성북구" to 16, "송파구" to 17,  "양천구" to 18, "영등포구" to 19,  "용산구" to 20,"은평구" to 21,"종로구" to 22, "중구" to 23, "중랑구" to 24)
 
-    constructor(
-        dataList: ArrayList<*>,
-        dataType: DataFilterType,
-        url: String,
-        callback: DataSource.ApiListener,
-        limitNum: Int
-    )
-            : this(dataType, url, callback) {
-        if (dataType == DataFilterType.STORE || dataType == DataFilterType.STORE_RAW) storeList =
-            dataList as ArrayList<Store>
-        else noticeList = dataList as ArrayList<Notice>
+
+    constructor(dataList: ArrayList<*>, dataType: DataFilterType, url: String, callback: DataSource.ApiListener, limitNum: Int) : this(dataType, url, callback) {
+        noticeList = dataList as ArrayList<Notice>
         this.limitNum = limitNum
     }
 
-    constructor(
-        dataList: ArrayList<*>,
-        dataType: DataFilterType,
-        fisArr: Array<InputStream>,
-        callback: DataSource.ApiListener,
-        limitNum: Int
-    ) : this(dataType, "", callback) {
-        storeList = dataList as ArrayList<Store>
+    constructor(dataList: ArrayList<*>, dataType: DataFilterType, fisArr: Array<InputStream>, callback: DataSource.ApiListener) : this(dataType, "", callback) {
+        storeList = dataList as ArrayList<ArrayList<Store>>
         this.fisArr = fisArr
+    }
+    constructor(dataList: ArrayList<*>, dbHelper:DBHelper,dataType: DataFilterType, callback: DataSource.ApiListener) : this(dataType, "", callback)
+    {
+        storeList = dataList as ArrayList<ArrayList<Store>>
+        this.dbHelper=dbHelper
     }
 
     override fun doInBackground(vararg params: String?): String {
         if (dataType == DataFilterType.STORE_RAW) {
-            //return url
             var sb = StringBuilder()
             for (fis in fisArr) {
                 var bis = BufferedInputStream(fis)
@@ -64,6 +59,12 @@ class NetworkTask(
                 bis.close()
             }
             return sb.toString()
+        }
+        else if(dataType==DataFilterType.STORE_DB){
+            for (i in 1..25) {
+                storeList.add(dbHelper.getStores(i))
+            }
+            return ""
         }
         return RequestHttpURLConnection().request(url)
     }
@@ -82,8 +83,7 @@ class NetworkTask(
                         val sAddr = storeObj.getString("addr")
                         val sLocality = storeObj.getString("locality")
                         val sType = storeObj.getString("type")
-                        //db에 인서트하는 작업
-                        storeList.add(Store(sName, sAddr, sLocality, "", sType))
+                        storeList.get(zone[sLocality]!!).add(Store(-1,sName, sAddr, sLocality, "", sType))
                     }
                 }
                 DataFilterType.STORE -> {
@@ -99,7 +99,7 @@ class NetworkTask(
                             val addr1 = sObj.optString("pobsBaseAddr")
                             val addr2 = sObj.optString("pobsDtlAddr")
                             val type = sObj.optString("bztypName")
-                            storeList.add(Store(name, addr1 + " " + addr2, "", "", type))
+                            storeList.get(0).add(Store(-1,name, addr1 + " " + addr2, "", "", type)) //임시로 0
                             //db에도 insert 하기 ! 데이터가 추가될때 끝에 추가되는게 아닌데, 중간에 출력되는거면 일치여부를 다 검사해봐야할듯 . ..
 
                         }

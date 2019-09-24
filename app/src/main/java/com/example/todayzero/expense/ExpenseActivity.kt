@@ -8,6 +8,7 @@ import android.os.Bundle
 import android.support.v4.content.ContextCompat.startActivity
 import android.support.v7.app.AppCompatActivity
 import android.util.Log
+import android.support.v7.widget.GridLayoutManager
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
@@ -20,20 +21,22 @@ import com.example.todayzero.MainFragment.Companion.spentListView
 import com.example.todayzero.R
 import com.example.todayzero.db.DBHelper
 import com.example.todayzero.db.deal
+import kotlinx.android.synthetic.main.category_layout.*
 import com.example.todayzero.util.DealAdapter
 import kotlinx.android.synthetic.main.expense_act.*
 import kotlinx.android.synthetic.main.main_frag.*
 import java.text.SimpleDateFormat
 import java.util.*
+import kotlin.collections.ArrayList
 
 class ExpenseActivity : AppCompatActivity() {
     var store: String? = ""
 
     lateinit var datePickText: TextView
     lateinit var timePickText: TextView
+    lateinit var category_list: ArrayList<category>
 
-
-    lateinit var dbHelper:DBHelper
+    lateinit var dbHelper: DBHelper
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -41,31 +44,69 @@ class ExpenseActivity : AppCompatActivity() {
         setSupportActionBar(expense_toolbar)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
         dbHelper=DBHelper(this)
+        init()
 
+    }
+
+    fun init() {
+        initLayout()
         datePickText = findViewById<TextView>(R.id.date_pick_text).apply {
-            setOnClickListener{ makeDatePickerDialog() }
+            setOnClickListener { makeDatePickerDialog() }
         }
         timePickText = findViewById<TextView>(R.id.time_pick_text).apply {
             setOnClickListener { makeTimePickerDialog() }
         }
-        expense_food.setOnClickListener {
-            category_edit_text.setText(expense_food_text.text.toString())
-            expense_category.visibility = View.GONE
-        }
+
         category_edit_text.setOnFocusChangeListener { v, hasFocus ->
-            if(hasFocus == true){
+            if (hasFocus == true) {
                 expense_layout.setFocusableInTouchMode(true)
                 expense_layout.requestFocus()
                 val imm = getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
                 imm!!.hideSoftInputFromWindow(category_edit_text.getWindowToken(), 0) // 키보드 숨기기
-                expense_category.visibility = View.VISIBLE
-            }
-            else
-                expense_category.visibility = View.GONE
+                recyclerview.visibility = View.VISIBLE
+            } else
+                recyclerview.visibility = View.GONE
         }
 
 
         initDateAndStore()
+    }
+
+    fun initLayout(){
+        category_list = arrayListOf(
+            category("식비", R.drawable.ic_restaurant),
+            category("카페/간식", R.drawable.ic_coffee),
+            category("술/유흥", R.drawable.ic_drink),
+            category("생활", R.drawable.ic_couch),
+            category("쇼핑", R.drawable.ic_shopping),
+            category("뷰티/미용", R.drawable.ic_cosmetics),
+            category("교통", R.drawable.ic_bus),
+            category("자동차", R.drawable.ic_car),
+            category("주거/통신", R.drawable.ic_phone),
+            category("의료/건강", R.drawable.ic_health),
+            category("금융", R.drawable.ic_finance),
+            category("문화/여가", R.drawable.ic_hobby),
+            category("여행/숙박", R.drawable.ic_trip),
+            category("교육/학습", R.drawable.ic_education),
+            category("자녀/육아", R.drawable.ic_baby),
+            category("경조/선물", R.drawable.ic_gift)
+        )
+        val layoutManager = GridLayoutManager(this, 4)
+        recyclerview.layoutManager = layoutManager
+        var adpater = ExpenseCategoryAdapter(category_list)
+        recyclerview.adapter = adpater
+        adpater.itemClickListener = object : ExpenseCategoryAdapter.OnItemClickListener{
+            override fun OnItemClick(
+                holder: ExpenseCategoryAdapter.ViewHolder,
+                view: View,
+                data: category,
+                position: Int
+            ) {
+                category_edit_text.setText(data.category_string)
+                //TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+            }
+
+        }
     }
 
     private fun makeDatePickerDialog() {
@@ -75,6 +116,7 @@ class ExpenseActivity : AppCompatActivity() {
         val day = c.get(Calendar.DAY_OF_MONTH)
 
         DatePickerDialog(this, DatePickerDialog.OnDateSetListener { view, year, month, dayOfMonth ->
+            month++
             val date = if(month<10){"$year.0${month + 1}.$dayOfMonth"}else{"$year.${month + 1}.$dayOfMonth"}
             //val date = "$year.${month + 1}.$dayOfMonth"
                 datePickText.text = date
@@ -95,36 +137,33 @@ class ExpenseActivity : AppCompatActivity() {
     private fun initDateAndStore() {
         val currentTime = System.currentTimeMillis()
         val currentDate = Date(currentTime)
-        //sol1
-        // val dateFormat = SimpleDateFormat("yyyy.M.dd", Locale.KOREA)
         val dateFormat = SimpleDateFormat("yyyy.MM.dd", Locale.KOREA)
-
         val timeFormat = SimpleDateFormat("k시 m분", Locale.KOREA)
 
         date_pick_text.text = dateFormat.format(currentDate)
         time_pick_text.text = timeFormat.format(currentDate)
 
         store = intent.getStringExtra(STORE_NAME_TAG)
-        if(store != null)
+        if (store != null)
             place_edit_text.setText(store)
         else
             store = ""
-}
-
-private fun storeDealInDatabase() {
-
-    val price: String
-    val isZero: Int
-
-    if(price_edit_text.text.toString().isEmpty()) {
-        price = "0"
-    } else {
-        price = price_edit_text.text.toString()
     }
-    store = place_edit_text.text.toString()
-    val category = category_edit_text.text.toString()
-    val memo = memo_edit_text.text.toString()
-    val date = datePickText.text.toString() + " " + timePickText.text.toString()
+
+    private fun storeDealInDatabase() {
+
+        val price: String
+        val isZero: Int
+
+        if (price_edit_text.text.toString().isEmpty()) {
+            price = "0"
+        } else {
+            price = price_edit_text.text.toString()
+        }
+        store = place_edit_text.text.toString()
+        val category = category_edit_text.text.toString()
+        val memo = memo_edit_text.text.toString()
+        val date = datePickText.text.toString() + " " + timePickText.text.toString()
 
     if(zeropay_checkbox.isChecked)
         isZero = 1
@@ -143,27 +182,27 @@ private fun storeDealInDatabase() {
 
 }
 
-private fun checkDealForm(): Boolean {
-    val categoryEdit = category_edit_text.text.toString()
-    val storeEdit = place_edit_text.text.toString()
+    private fun checkDealForm(): Boolean {
+        val categoryEdit = category_edit_text.text.toString()
+        val storeEdit = place_edit_text.text.toString()
 
-    if(categoryEdit.isEmpty()) {
-        Toast.makeText(this, "분류를 선택해주세요", Toast.LENGTH_SHORT).show()
-        return false
+        if (categoryEdit.isEmpty()) {
+            Toast.makeText(this, "분류를 선택해주세요", Toast.LENGTH_SHORT).show()
+            return false
+        }
+        if (storeEdit.isEmpty()) {
+            Toast.makeText(this, "사용처를 입력해주세요", Toast.LENGTH_SHORT).show()
+            return false
+        }
+        return true
     }
-    if(storeEdit.isEmpty()) {
-        Toast.makeText(this, "사용처를 입력해주세요", Toast.LENGTH_SHORT).show()
-        return false
-    }
-    return true
-}
 
     override fun onOptionsItemSelected(item: MenuItem?): Boolean {
         val intent = Intent(this, MainActivity::class.java)
 
-        when(item!!.itemId) {
+        when (item!!.itemId) {
             R.id.complete -> {
-                if(checkDealForm()) {
+                if (checkDealForm()) {
                     storeDealInDatabase()
                     startActivity(intent)
                 }

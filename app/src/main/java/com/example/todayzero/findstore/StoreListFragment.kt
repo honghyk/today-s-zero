@@ -8,6 +8,7 @@ import android.support.v4.app.Fragment
 import android.support.v7.app.AppCompatActivity
 import android.text.Editable
 import android.text.TextWatcher
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -17,14 +18,8 @@ import com.example.todayzero.db.DBHelper
 import com.github.windsekirun.koreanindexer.KoreanIndexerListView
 import java.util.*
 import kotlin.collections.ArrayList
-import android.content.Context.INPUT_METHOD_SERVICE
-import android.support.v4.content.ContextCompat.getSystemService
 import android.view.inputmethod.InputMethodManager
-import android.support.v4.content.ContextCompat.getSystemService
-import android.app.Activity
-import com.github.windsekirun.koreanindexer.KoreanIndexerListView.OrderingByKorean
 import kotlinx.android.synthetic.main.store_list_frag.*
-import kotlin.Comparator
 import com.example.todayzero.data.Store
 import com.example.todayzero.util.replaceFragmentInActivity
 
@@ -35,15 +30,13 @@ class StoreListFragment : Fragment() {
     private var listView: KoreanIndexerListView? = null
     lateinit var search_adapter:ArrayAdapter<String>
     lateinit var dongName:String
-
+     var guNum:Int?=null
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         // Inflate the layout for this fragment
         var root = inflater.inflate(com.example.todayzero.R.layout.store_list_frag, container, false)
 
         var searchinput = root.findViewById<EditText>(com.example.todayzero.R.id.search_store);
         listView = root.findViewById(com.example.todayzero.R.id.store_list_view)
-        val DB: DBHelper
-
         indexer(root)
         filterList = arrayListOf()
 
@@ -82,15 +75,14 @@ class StoreListFragment : Fragment() {
             else
                 listView!!.setIndexerWidth(20)
         }
-        //선택한 동 이름으로
-        //requireActivity().actionBar!!.title = ""
-
         return root
     }
     override fun onAttach(context: Context?) {
         super.onAttach(context)
-        if(arguments!=null)
+        if(arguments!=null) {
             dongName = arguments!!.getString("dongName")
+            guNum=arguments!!.getInt("guNum")
+        }
     }
 
     override fun onResume() {
@@ -111,20 +103,15 @@ class StoreListFragment : Fragment() {
 
     fun indexer(root:View){
         zeroList = arrayListOf()
-        for(store in StoreActivity.storeList){
+        for(store in StoreActivity.storeList[guNum!!]){
             if(store.dong==dongName)
                 addList(store.name)
         }
         val adapter = AlphabetAdapter(zeroList)
         listView!!.setKeywordList(zeroList)
         listView!!.onItemClickListener = AdapterView.OnItemClickListener { adapterView, view, i, l ->
-//            Toast.makeText(
-//                context,
-//                "clicked -> $i",
-//                Toast.LENGTH_SHORT
-//            ).show()
             (requireActivity() as AppCompatActivity).replaceFragmentInActivity(StoreMapFragment.newInstance(
-                Store("store", "서울시 은평구 갈현로23길 5 지하1층", "은평구", "ㅇㅇ동", "type")),
+                Store(0, "서울시 은평구 갈현로23길 5 지하1층", "은평구", "ㅇㅇ동", "dong","type")),
                 R.id.store_contentFrame)
         }
         listView!!.adapter = adapter
