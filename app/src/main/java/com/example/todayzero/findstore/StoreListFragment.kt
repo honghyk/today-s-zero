@@ -13,34 +13,41 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.*
 import com.example.todayzero.R
-import com.example.todayzero.data.Store
-import com.example.todayzero.util.replaceFragmentInActivity
+import com.example.todayzero.db.DBHelper
 import com.github.windsekirun.koreanindexer.KoreanIndexerListView
 import java.util.*
+import kotlin.collections.ArrayList
+import android.content.Context.INPUT_METHOD_SERVICE
+import android.support.v4.content.ContextCompat.getSystemService
+import android.view.inputmethod.InputMethodManager
+import android.support.v4.content.ContextCompat.getSystemService
+import android.app.Activity
+import com.github.windsekirun.koreanindexer.KoreanIndexerListView.OrderingByKorean
+import kotlinx.android.synthetic.main.store_list_frag.*
+import kotlin.Comparator
+import com.example.todayzero.data.Store
+import com.example.todayzero.util.replaceFragmentInActivity
 
 
 class StoreListFragment : Fragment() {
-    lateinit var zeroList:ArrayList<String>
-    lateinit var filterList:ArrayList<String>
+    lateinit var zeroList: ArrayList<String>
+    lateinit var filterList: ArrayList<String>
     private var listView: KoreanIndexerListView? = null
     lateinit var search_adapter:ArrayAdapter<String>
     lateinit var dongName:String
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         // Inflate the layout for this fragment
-        var root = inflater.inflate(R.layout.store_list_frag, container, false)
-        var searchinput=root.findViewById<EditText>(R.id.search_store);
-        listView = root.findViewById(R.id.store_list_view)
-        searchinput.setOnFocusChangeListener { v, hasFocus ->
-            if (v == searchinput)
-                listView!!.setIndexerWidth(0)
-            else
-                listView!!.setIndexerWidth(20)
-        }
+        var root = inflater.inflate(com.example.todayzero.R.layout.store_list_frag, container, false)
+
+        var searchinput = root.findViewById<EditText>(com.example.todayzero.R.id.search_store);
+        listView = root.findViewById(com.example.todayzero.R.id.store_list_view)
+        val DB: DBHelper
+
         indexer(root)
         filterList = arrayListOf()
 
-        searchinput.addTextChangedListener(object :TextWatcher{
+        searchinput.addTextChangedListener(object : TextWatcher {
             override fun afterTextChanged(s: Editable?) {
                 var filterText = s.toString()
                 if (filterText.length > 0) {
@@ -50,23 +57,34 @@ class StoreListFragment : Fragment() {
                             addFilterList(i)
                     }
                     listView!!.adapter = AlphabetAdapter(filterList)
-                    listView!!.setIndexerWidth(0)
-
-                    Toast.makeText(context, ""+ filterList, Toast.LENGTH_LONG).show()
+                    Toast.makeText(context, "" + filterList, Toast.LENGTH_LONG).show()
                 } else {
                     listView!!.adapter = AlphabetAdapter(zeroList)
-                    listView!!.setIndexerWidth(20)
+                    search_layout.setFocusableInTouchMode(true)
+                    search_layout.requestFocus()
+                    val imm = activity!!.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+                    imm!!.hideSoftInputFromWindow(searchinput.getWindowToken(), 0) // 키보드 숨기기
                 }
 
             }
+
             override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
 
             }
-
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
 
             }
+
         })
+        searchinput.setOnFocusChangeListener { v, hasFocus ->
+            if (hasFocus == true)
+                listView!!.setIndexerWidth(0)
+            else
+                listView!!.setIndexerWidth(20)
+        }
+        //선택한 동 이름으로
+        //requireActivity().actionBar!!.title = ""
+
         return root
     }
     override fun onAttach(context: Context?) {
@@ -85,18 +103,18 @@ class StoreListFragment : Fragment() {
     fun addList(vararg text: String) {
         Collections.addAll(zeroList, *text)
     }
+
     fun addFilterList(vararg text: String) {
         Collections.addAll(filterList, *text)
     }
 
-    fun indexer(root:View){
 
+    fun indexer(root:View){
         zeroList = arrayListOf()
         for(store in StoreActivity.storeList){
             if(store.dong==dongName)
-                zeroList.add(store.name)
+                addList(store.name)
         }
-
         val adapter = AlphabetAdapter(zeroList)
         listView!!.setKeywordList(zeroList)
         listView!!.onItemClickListener = AdapterView.OnItemClickListener { adapterView, view, i, l ->
@@ -112,7 +130,7 @@ class StoreListFragment : Fragment() {
         listView!!.adapter = adapter
     }
 
-    inner class AlphabetAdapter internal constructor(var list:ArrayList<String>) :
+    inner class AlphabetAdapter internal constructor(var list: ArrayList<String>) :
         KoreanIndexerListView.KoreanIndexerAdapter<String>(context!!, list), Filterable {
 
         override fun getView(position: Int, convertView: View?, parent: ViewGroup): View {
@@ -120,9 +138,9 @@ class StoreListFragment : Fragment() {
             val holder: ViewHolder
 
             if (convertView == null) {
-                convertView = LayoutInflater.from(context).inflate(R.layout.list_item, parent, false)
+                convertView = LayoutInflater.from(context).inflate(com.example.todayzero.R.layout.list_item, parent, false)
                 holder = ViewHolder()
-                holder.txtName = convertView!!.findViewById(R.id.txtName)
+                holder.txtName = convertView!!.findViewById(com.example.todayzero.R.id.txtName)
                 convertView.tag = holder
             } else {
                 holder = convertView.tag as ViewHolder
@@ -141,7 +159,6 @@ class StoreListFragment : Fragment() {
             var txtName: TextView? = null
         }
     }
-
 
 
 }

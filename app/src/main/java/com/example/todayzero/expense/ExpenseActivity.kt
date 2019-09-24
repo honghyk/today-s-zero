@@ -1,5 +1,6 @@
 package com.example.todayzero.expense
 
+import android.content.Context
 import android.app.DatePickerDialog
 import android.app.TimePickerDialog
 import android.content.Intent
@@ -9,6 +10,8 @@ import android.support.v7.app.AppCompatActivity
 import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
+import android.view.View
+import android.view.inputmethod.InputMethodManager
 import android.widget.TextView
 import android.widget.Toast
 import com.example.todayzero.MainActivity
@@ -45,6 +48,22 @@ class ExpenseActivity : AppCompatActivity() {
         timePickText = findViewById<TextView>(R.id.time_pick_text).apply {
             setOnClickListener { makeTimePickerDialog() }
         }
+        expense_food.setOnClickListener {
+            category_edit_text.setText(expense_food_text.text.toString())
+            expense_category.visibility = View.GONE
+        }
+        category_edit_text.setOnFocusChangeListener { v, hasFocus ->
+            if(hasFocus == true){
+                expense_layout.setFocusableInTouchMode(true)
+                expense_layout.requestFocus()
+                val imm = getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+                imm!!.hideSoftInputFromWindow(category_edit_text.getWindowToken(), 0) // 키보드 숨기기
+                expense_category.visibility = View.VISIBLE
+            }
+            else
+                expense_category.visibility = View.GONE
+        }
+
 
         initDateAndStore()
     }

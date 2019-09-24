@@ -228,6 +228,9 @@ class KoreanIndexerListView : ListView {
      *
      * @param keywordList 키워드 리스트
      */
+    fun sort(keywordList: ArrayList<String>) {
+        Collections.sort(keywordList, OrderingByKorean.comparator)
+    }
     fun setKeywordList(keywordList: ArrayList<String>) {
         Collections.sort(keywordList, OrderingByKorean.comparator)
 

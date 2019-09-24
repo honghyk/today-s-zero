@@ -163,7 +163,7 @@ class DBHelper(context: Context):SQLiteOpenHelper(context,DATABASE_NAME,null,DAT
 
 
     fun insertStore(store: store){
-     val stoAddr=store.addr
+        val stoAddr=store.addr
         if(stoAddr.length>0){
             if(!findSameStore(stoAddr,store.locality)){
 
@@ -325,13 +325,13 @@ class DBHelper(context: Context):SQLiteOpenHelper(context,DATABASE_NAME,null,DAT
         lateinit var store:store
         val cursor=rdb.query(stores.TABLE_NAME, projection, selection,  selectionArgs,null,null,null)
         while (cursor.moveToNext()) {
-                val sid = cursor.getString(cursor.getColumnIndex(BaseColumns._ID))
-                val name = cursor.getString(cursor.getColumnIndex(stores.KEY_NAME))
-                val addr = cursor.getString(cursor.getColumnIndex(stores.KEY_ADDR))
-                val gu = cursor.getString(cursor.getColumnIndex(stores.KEY_GU))
-                val info = cursor.getString(cursor.getColumnIndex(stores.KEY_INFO))
-                store = store(sid, name, addr, gu, info)
-                Log.i("getStore",store.sid)
+            val sid = cursor.getString(cursor.getColumnIndex(BaseColumns._ID))
+            val name = cursor.getString(cursor.getColumnIndex(stores.KEY_NAME))
+            val addr = cursor.getString(cursor.getColumnIndex(stores.KEY_ADDR))
+            val gu = cursor.getString(cursor.getColumnIndex(stores.KEY_GU))
+            val info = cursor.getString(cursor.getColumnIndex(stores.KEY_INFO))
+            store = store(sid, name, addr, gu, info)
+            Log.i("getStore",store.sid)
         }
         return store
     }
