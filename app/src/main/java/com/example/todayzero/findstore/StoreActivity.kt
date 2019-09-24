@@ -66,7 +66,6 @@ class StoreActivity : AppCompatActivity() {
             storeDataRepository.initStore(fisList, object :
                 DataSource.LoadDataCallback {
                 override fun onDataLoaded() {
-                    Log.i("test","ondataloaded")
                     for (storeArr in storeList) {
                         dbHelper.insertStores(storeArr)
                     }
