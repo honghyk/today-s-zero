@@ -51,6 +51,8 @@ class ExpenseActivity : AppCompatActivity() {
 
     fun init() {
         initLayout()
+
+
         datePickText = findViewById<TextView>(R.id.date_pick_text).apply {
             setOnClickListener { makeDatePickerDialog() }
         }
@@ -136,19 +138,33 @@ class ExpenseActivity : AppCompatActivity() {
     }
 
     private fun initDateAndStore() {
+        val update_deal=intent.getSerializableExtra("updateDeal") as deal
+
         val currentTime = System.currentTimeMillis()
         val currentDate = Date(currentTime)
         val dateFormat = SimpleDateFormat("yyyy.MM.dd", Locale.KOREA)
         val timeFormat = SimpleDateFormat("k시 m분", Locale.KOREA)
 
-        date_pick_text.text = dateFormat.format(currentDate)
-        time_pick_text.text = timeFormat.format(currentDate)
+
+         date_pick_text.text = dateFormat.format(currentDate)
+         time_pick_text.text = timeFormat.format(currentDate)
 
         store = intent.getStringExtra(STORE_NAME_TAG)
         if (store != null)
             place_edit_text.setText(store)
         else
             store = ""
+
+        if(update_deal!=null){
+            zeropay_checkbox.isChecked=if(update_deal.isZero==1){true}else{false}
+            price_edit_text.setText(update_deal.price)
+            category_edit_text.setText(update_deal.category)
+            place_edit_text.setText(update_deal.store)
+            datePickText.setText(update_deal.date)
+            timePickText.setText(" ")
+            memo_edit_text.setText(update_deal.memo)
+        }
+
     }
 
     private fun storeDealInDatabase() {
