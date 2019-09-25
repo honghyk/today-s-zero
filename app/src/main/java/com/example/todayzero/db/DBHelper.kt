@@ -205,6 +205,7 @@ class DBHelper(context: Context):SQLiteOpenHelper(context,DATABASE_NAME,null,DAT
     fun insertDeal(deal: deal){
 
         val values=ContentValues().apply {
+
             put(deals.KEY_DATE,deal.date)
             put(deals.KEY_NAME,deal.store)
             put(deals.KEY_PRICE,deal.price)
@@ -214,7 +215,7 @@ class DBHelper(context: Context):SQLiteOpenHelper(context,DATABASE_NAME,null,DAT
         }
 
         val success=wdb.insert(deals.TABLE_NAME,null,values)
-        Log.i("InsertedDealID: ","$success InsertedDealID:  ${BaseColumns._ID}")
+        Log.i("InsertedDealID: ", " ${BaseColumns._ID}")
 
     }
 
@@ -232,6 +233,7 @@ class DBHelper(context: Context):SQLiteOpenHelper(context,DATABASE_NAME,null,DAT
         val selection="${BaseColumns._ID} = ?"
         val selectionArgs=arrayOf(did)
         wdb.delete(deals.TABLE_NAME,selection,selectionArgs)
+
     }
 
     //db 변경
@@ -288,7 +290,7 @@ class DBHelper(context: Context):SQLiteOpenHelper(context,DATABASE_NAME,null,DAT
         val selectionArgs=arrayOf(did)
         val count=wdb.update(deals.TABLE_NAME,value,selection,selectionArgs)
 
-        Log.i("update_db: ","$count")
+        Log.i("update_db: ","${deal.store}//$count")
     }
 
     //db  조회

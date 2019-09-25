@@ -9,6 +9,7 @@ import android.support.v7.app.ActionBarDrawerToggle
 import android.support.v7.app.AppCompatActivity
 import android.view.Menu
 import android.view.MenuItem
+import com.example.todayzero.db.DBHelper
 import com.example.todayzero.expense.ExpenseActivity
 import com.example.todayzero.findstore.StoreActivity
 import com.example.todayzero.notice.NoticeActivity
@@ -52,9 +53,10 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
     }
 
     private fun loadUserDataAndShowWelcomeFrag() {
-        //사용자 이름, 총급여 정보를  데이터베이스에서 불러옴
-        var name: String = "testetes"
-        var income: Long = 30000L
+         //사용자 이름, 총급여 정보를  데이터베이스에서 불러옴
+        val dbHelper=DBHelper(this)
+        var name: String = dbHelper.getUser().uname
+        var income: Long = dbHelper.getUser().income.toLong()
 
         showWelcomeFragToModifyUserData(name, income)
     }

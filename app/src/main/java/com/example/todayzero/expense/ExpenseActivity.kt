@@ -142,7 +142,7 @@ class ExpenseActivity : AppCompatActivity() {
     private fun initDateAndStore() {
         isupdate=intent.getBooleanExtra(UPDATE_DEAL_TAG,false)
         if(isupdate){
-            update_deal=intent?.getSerializableExtra("updateDeal") as deal
+            update_deal=intent?.getSerializableExtra(UPDATE_DEAL_DATA_TAG) as deal
         }else
             update_deal=null
 
@@ -162,6 +162,7 @@ class ExpenseActivity : AppCompatActivity() {
             store = ""
 
         if(update_deal!=null){
+
             zeropay_checkbox.isChecked=if(update_deal?.isZero==1){true}else{false}
             price_edit_text.setText(update_deal?.price)
             category_edit_text.setText(update_deal?.category)
@@ -199,18 +200,17 @@ class ExpenseActivity : AppCompatActivity() {
             dbHelper.insertDeal(deal)
         }
         else{
-            Log.i("expenseAct","update")
-            //dbHelper.updateDeal(deal)
+           dbHelper.updateDeal(update_deal!!.did,deal)
         }
-    //user 지출액 증가
+        //user 지출액 증가
         //list 에서 계속 저장.
          val expense=dbHelper.getUser().expenditure+price.toInt()
-    dbHelper.updateUserExpenditure(expense.toString())
+        dbHelper.updateUserExpenditure(expense.toString())
         expenseTxt.text=dbHelper.getUser().expenditure.toString()
         val deallist=dbHelper.getDeals(datePickText.text.toString().substring(0,7))
-    val adapter= DealAdapter(deallist)
-    adapter.notifyDataSetChanged()
-    spentListView.adapter=adapter
+         val adapter= DealAdapter(deallist)
+        adapter.notifyDataSetChanged()
+        spentListView.adapter=adapter
         adapter.itemClickListener=object:DealAdapter.OnItemClickListener{
             override fun onItemClick(holder: DealAdapter.ViewHolder, view: View, data: deal, position: Int) {
                 Log.i("dealclick","$position${data.store}")
@@ -251,8 +251,20 @@ class ExpenseActivity : AppCompatActivity() {
                 }
             }
             R.id.delete -> {
-
-
+                dbHelper.deleteDeal(update_deal!!.did)
+                val deallist=dbHelper.getDeals(datePickText.text.toString().substring(0,7))
+                val adapter= DealAdapter(deallist)
+                adapter.notifyDataSetChanged()
+                spentListView.adapter=adapter
+                adapter.itemClickListener=object:DealAdapter.OnItemClickListener{
+                    override fun onItemClick(holder: DealAdapter.ViewHolder, view: View, data: deal, position: Int) {
+                        Log.i("dealclick","$position${data.store}")
+                        val intent=Intent(applicationContext, ExpenseActivity::class.java)
+                        intent.putExtra(UPDATE_DEAL_TAG,true)
+                        intent.putExtra(UPDATE_DEAL_DATA_TAG,data)
+                        startActivity(intent)
+                    }
+                }
                 startActivity(intent)
             }
         }
@@ -266,7 +278,7 @@ class ExpenseActivity : AppCompatActivity() {
         //지출 내역 리스트를 클릭해서 Activity를 실행하는 경우 삭제 버튼 활성화
         //지출 내역 추가하는 경우 삭제 버튼 비활성화
         val deleteMenu = menu?.findItem(R.id.delete)
-        deleteMenu!!.isVisible = false
+        deleteMenu!!.isVisible =if(isupdate){true}else{false}
 
         return true
     }

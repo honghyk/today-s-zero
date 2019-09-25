@@ -1,6 +1,7 @@
 package com.example.todayzero
 
 
+import android.arch.lifecycle.Lifecycle
 import android.content.Context
 import android.content.Intent
 import android.content.res.ColorStateList
