@@ -257,13 +257,13 @@ class DBHelper(context: Context):SQLiteOpenHelper(context,DATABASE_NAME,null,DAT
         Log.i("updateDB_user","$count")
     }
 
-    fun updateStore(sid: String,store: store){
+    fun updateStore(sid: String,store: Store){
 
         val value=ContentValues().apply {
-            put(stores.KEY_NAME,store.sname)
+            put(stores.KEY_NAME,store.name)
             put(stores.KEY_ADDR,store.addr)
             put(stores.KEY_GU,store.locality)
-            put(stores.KEY_INFO,store.info)
+            put(stores.KEY_INFO,store.type)
         }
 
         val selection="${BaseColumns._ID} LIKE ?"
@@ -391,9 +391,9 @@ class DBHelper(context: Context):SQLiteOpenHelper(context,DATABASE_NAME,null,DAT
         return storeList
     }
 
-    fun getDeal(did:Int):deal{
+    fun getDeal(did:Int,date:String):deal{
 
-        var deal=getDeals().get(did-1)
+        var deal=getDeals(date).get(did-1)
         return deal
     }
     fun getDeals(date:String):ArrayList<deal>{
@@ -420,6 +420,8 @@ class DBHelper(context: Context):SQLiteOpenHelper(context,DATABASE_NAME,null,DAT
 
                 val deal = deal(did, date, sname, price, category, memo, isZero)
                 dealList.add(deal)
+                Log.i("searchdeal",deal.date)
+
             }
         }else{
             Log.i("searchdeal","nodeal")

@@ -31,8 +31,8 @@ class MainFragment : Fragment() {
 
     companion object {
         lateinit var spentListView:RecyclerView
+        lateinit var expenseTxt:TextView
     }
-    lateinit var userBalanceTxt:TextView
     lateinit var layoutManager: LinearLayoutManager
     lateinit var dbHelper: DBHelper
     lateinit var currentMonthTextView: TextView
@@ -62,8 +62,8 @@ class MainFragment : Fragment() {
             }
         }
         with(root) {
-            userBalanceTxt=findViewById(R.id.userBalanceTxt)
-            spentListView=findViewById<RecyclerView>(R.id.spent_list_view)
+            spentListView=findViewById(R.id.spent_list_view)
+            expenseTxt=findViewById(R.id.userExpenseTxt)
             layoutManager = LinearLayoutManager(requireContext(), RecyclerView.VERTICAL, false)
             spentListView.layoutManager=layoutManager
 
@@ -80,18 +80,18 @@ class MainFragment : Fragment() {
             }
             nextMonthTextView = findViewById<TextView>(R.id.next_month_text_button).apply {
                 setOnClickListener { forwardMonth()
-                init()
+                     init()
                 }
             }
             nextMonthBtn = findViewById<ImageButton>(R.id.next_month_button).apply {
                 setOnClickListener { forwardMonth()
-                init()
+                      init()
                 }
             }
         }
 
         initMonth()
-        init()
+
         return root
     }
 
@@ -103,7 +103,8 @@ class MainFragment : Fragment() {
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
         Log.i("life","ActivityCreated")
-
+        dbHelper=DBHelper(this.requireContext())
+        init()
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -120,19 +121,20 @@ class MainFragment : Fragment() {
     }
 
     fun init() {
-        dbHelper= DBHelper(requireContext())
-        Log.i("init","${dbHelper.getUser().expenditure.toString()}")
-        userBalanceTxt.text=dbHelper.getUser().expenditure.toString()
-        val dealList = dbHelper.getDeals("$currentYear.$currentMonth")
+        userExpenseTxt.text=dbHelper.getUser().expenditure.toString()
+
+       var date=if(currentMonth<10){"$currentYear.0$currentMonth"}else{"$currentYear.$currentMonth"}
+        val dealList = dbHelper.getDeals(date)
        //al dealList = dbHelper.getDeals("$currentYear.%$currentMonth")
         val adapter = DealAdapter(dealList)
+
         adapter.notifyDataSetChanged()
         spentListView.adapter = adapter
     }
 
     fun initMonth() {
         val c = Calendar.getInstance()
-        currentMonth = c.get(Calendar.MONTH)
+        currentMonth = c.get(Calendar.MONTH)+1
         currentYear = c.get(Calendar.YEAR)
 
         currentMonthTextView.text = String.format("%d월", currentMonth)

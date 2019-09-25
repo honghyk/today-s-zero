@@ -17,6 +17,7 @@ import android.widget.TextView
 import android.widget.Toast
 import com.example.todayzero.MainActivity
 import com.example.todayzero.MainFragment
+import com.example.todayzero.MainFragment.Companion.expenseTxt
 import com.example.todayzero.MainFragment.Companion.spentListView
 import com.example.todayzero.R
 import com.example.todayzero.db.DBHelper
@@ -43,7 +44,7 @@ class ExpenseActivity : AppCompatActivity() {
         setContentView(R.layout.expense_act)
         setSupportActionBar(expense_toolbar)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
-        dbHelper=DBHelper(this)
+        dbHelper= DBHelper(this)
         init()
 
     }
@@ -116,8 +117,8 @@ class ExpenseActivity : AppCompatActivity() {
         val day = c.get(Calendar.DAY_OF_MONTH)
 
         DatePickerDialog(this, DatePickerDialog.OnDateSetListener { view, year, month, dayOfMonth ->
-            month++
-            val date = if(month<10){"$year.0${month + 1}.$dayOfMonth"}else{"$year.${month + 1}.$dayOfMonth"}
+
+            val date = if(month<9){"$year.0${month + 1}.$dayOfMonth"}else{"$year.${month + 1}.$dayOfMonth"}
             //val date = "$year.${month + 1}.$dayOfMonth"
                 datePickText.text = date
             }, year, month, day).show()
@@ -175,7 +176,8 @@ class ExpenseActivity : AppCompatActivity() {
     //user 지출액 증가
     val expense=dbHelper.getUser().expenditure+price.toInt()
     dbHelper.updateUserExpenditure(expense.toString())
-    val deallist=dbHelper.getDeals(datePickText.text.toString().substring(0,7))
+        expenseTxt.text=dbHelper.getUser().expenditure.toString()
+        val deallist=dbHelper.getDeals(datePickText.text.toString().substring(0,7))
     val adapter= DealAdapter(deallist)
     adapter.notifyDataSetChanged()
     spentListView.adapter=adapter
