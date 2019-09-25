@@ -102,23 +102,10 @@ class MainFragment : Fragment() {
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
-        Log.i("life","ActivityCreated")
         dbHelper=DBHelper(this.requireContext())
         init()
     }
 
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-
-        Log.i("life","onviewCreated")
-       // init()
-
-    }
-
-    override fun onAttach(context: Context?) {
-        super.onAttach(context)
-        Log.i("life","onAttach")
-
-    }
 
     fun init() {
         userExpenseTxt.text=dbHelper.getUser().expenditure.toString()
@@ -127,10 +114,18 @@ class MainFragment : Fragment() {
         val dealList = dbHelper.getDeals(date)
        //al dealList = dbHelper.getDeals("$currentYear.%$currentMonth")
         val adapter = DealAdapter(dealList)
-
         adapter.notifyDataSetChanged()
         spentListView.adapter = adapter
+        adapter.itemClickListener=object:DealAdapter.OnItemClickListener{
+            override fun onItemClick(holder: DealAdapter.ViewHolder, view: View, data: deal, position: Int) {
+                Log.i("dealclick","$position,${dealList.get(position).price}")
+                val intent=Intent(requireContext(), ExpenseActivity::class.java)
+                intent.putExtra("updateDeal",dealList.get(position))
+                startActivity(intent)
+            }
+        }
     }
+
 
     fun initMonth() {
         val c = Calendar.getInstance()

@@ -7,11 +7,18 @@ import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
 import com.example.todayzero.R
+import com.example.todayzero.data.Notice
 import com.example.todayzero.db.deal
 import com.example.todayzero.notice.NoticeAdapter
 
 class DealAdapter(var items: ArrayList<deal>) :
     RecyclerView.Adapter<DealAdapter.ViewHolder>() {
+
+    interface OnItemClickListener {
+        fun onItemClick(holder:DealAdapter.ViewHolder, view: View, data: deal, position: Int)
+    }
+    var itemClickListener:OnItemClickListener?=null
+
     override fun getItemCount(): Int {
         return items.size
     }
@@ -46,6 +53,10 @@ class DealAdapter(var items: ArrayList<deal>) :
             deal_list_store = itemView.findViewById(R.id.deal_list_store)
             deal_list_payment = itemView.findViewById(R.id.deal_list_pay)
             deal_list_price = itemView.findViewById(R.id.deal_list_price)
+            itemView.setOnClickListener {
+                val position = adapterPosition
+                itemClickListener?.onItemClick(this, it, items[position], position)
+            }
         }
 
 

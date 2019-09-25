@@ -210,6 +210,7 @@ class ExpenseActivity : AppCompatActivity() {
                 }
             }
             R.id.delete -> {
+
                 startActivity(intent)
             }
         }
