@@ -1,10 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:background="@color/white"
               android:orientation="vertical"
               android:layout_width="match_parent"
               android:layout_height="wrap_content"
               android:paddingTop="10dp"
-              android:paddingHorizontal="10dp"
+              android:paddingRight="15dp"
 
 >
     <LinearLayout
@@ -14,17 +15,15 @@
             android:layout_height="wrap_content"
             >
 
-    <ImageView
-               android:id="@+id/deal_list_img"
-               android:src="@drawable/ic_favorite_black_24dp"
-               android:layout_weight="1"
-               android:layout_gravity="center"
-               android:layout_width="0dp"
-               android:layout_height="wrap_content"/>
+        <ImageView
+                android:id="@+id/deal_list_img"
+                android:src="@drawable/ic_exposure_zero_blue_24dp"
+                android:layout_gravity="center_vertical"
+                android:layout_width="42dp"
+                android:layout_height="42dp"/>
         <LinearLayout
                 android:layout_gravity="center_vertical"
-                android:layout_weight="8"
-                android:layout_width="0dp"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
         >
@@ -32,6 +31,8 @@
                     android:id="@+id/deal_list_store"
                     android:text="스타벅스"
                     android:layout_width="wrap_content"
+                    android:maxWidth="270dp"
+                    android:maxLines="1"
                     android:layout_height="wrap_content"
                     android:textSize="20sp"
                     android:textColor="@color/black"
@@ -47,9 +48,10 @@
         </LinearLayout>
     <TextView
               android:id="@+id/deal_list_price"
-              android:text="200원"
-              android:layout_width="0dp"
-              android:layout_weight="1.5"
+              android:text="30000원"
+              android:minWidth="80dp"
+              android:layout_width="wrap_content"
+              android:layout_weight="1"
               android:layout_height="wrap_content"
               android:textSize="18sp"
               android:layout_gravity="end|center_vertical"
@@ -57,7 +59,7 @@
     />
     </LinearLayout>
     <View
-            android:paddingStart="20dp"
+            android:layout_marginLeft="12dp"
             android:layout_width="match_parent"
             android:layout_height="0.5dp"
             android:background="#879cac"

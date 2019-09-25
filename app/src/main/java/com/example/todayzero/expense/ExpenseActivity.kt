@@ -5,7 +5,9 @@ import android.app.DatePickerDialog
 import android.app.TimePickerDialog
 import android.content.Intent
 import android.os.Bundle
+import android.support.v4.content.ContextCompat.startActivity
 import android.support.v7.app.AppCompatActivity
+import android.util.Log
 import android.support.v7.widget.GridLayoutManager
 import android.view.Menu
 import android.view.MenuItem
@@ -14,17 +16,25 @@ import android.view.inputmethod.InputMethodManager
 import android.widget.TextView
 import android.widget.Toast
 import com.example.todayzero.MainActivity
+import com.example.todayzero.MainFragment
+import com.example.todayzero.MainFragment.Companion.expenseTxt
+import com.example.todayzero.MainFragment.Companion.spentListView
 import com.example.todayzero.R
 import com.example.todayzero.db.DBHelper
 import com.example.todayzero.db.deal
 import kotlinx.android.synthetic.main.category_layout.*
+import com.example.todayzero.util.DealAdapter
 import kotlinx.android.synthetic.main.expense_act.*
+import kotlinx.android.synthetic.main.main_frag.*
 import java.text.SimpleDateFormat
 import java.util.*
 import kotlin.collections.ArrayList
 
 class ExpenseActivity : AppCompatActivity() {
+
     var store: String? = ""
+    var update_deal:deal?=null
+    var isupdate:Boolean=false
 
     lateinit var datePickText: TextView
     lateinit var timePickText: TextView
@@ -37,12 +47,15 @@ class ExpenseActivity : AppCompatActivity() {
         setContentView(R.layout.expense_act)
         setSupportActionBar(expense_toolbar)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
+        dbHelper= DBHelper(this)
         init()
 
     }
 
     fun init() {
         initLayout()
+
+
         datePickText = findViewById<TextView>(R.id.date_pick_text).apply {
             setOnClickListener { makeDatePickerDialog() }
         }
@@ -109,9 +122,11 @@ class ExpenseActivity : AppCompatActivity() {
         val day = c.get(Calendar.DAY_OF_MONTH)
 
         DatePickerDialog(this, DatePickerDialog.OnDateSetListener { view, year, month, dayOfMonth ->
-            val date = "$year.${month + 1}.$dayOfMonth"
-            datePickText.text = date
-        }, year, month, day).show()
+
+            val date = if(month<9){"$year.0${month + 1}.$dayOfMonth"}else{"$year.${month + 1}.$dayOfMonth"}
+            //val date = "$year.${month + 1}.$dayOfMonth"
+                datePickText.text = date
+            }, year, month, day).show()
     }
 
     private fun makeTimePickerDialog() {
@@ -126,19 +141,36 @@ class ExpenseActivity : AppCompatActivity() {
     }
 
     private fun initDateAndStore() {
+        isupdate=intent.getBooleanExtra(UPDATE_DEAL_TAG,false)
+        if(isupdate){
+            update_deal=intent?.getSerializableExtra(UPDATE_DEAL_DATA_TAG) as deal
+
+            zeropay_checkbox.isChecked=if(update_deal?.isZero==1){true}else{false}
+            price_edit_text.setText(update_deal?.price)
+            category_edit_text.setText(update_deal?.category)
+            place_edit_text.setText(update_deal?.store)
+            datePickText.setText(update_deal?.date)
+            timePickText.setText(" ")
+            memo_edit_text.setText(update_deal?.memo)
+
+        }else
+            update_deal=null
+
         val currentTime = System.currentTimeMillis()
         val currentDate = Date(currentTime)
         val dateFormat = SimpleDateFormat("yyyy.MM.dd", Locale.KOREA)
         val timeFormat = SimpleDateFormat("k시 m분", Locale.KOREA)
 
-        date_pick_text.text = dateFormat.format(currentDate)
-        time_pick_text.text = timeFormat.format(currentDate)
+
+         date_pick_text.text = dateFormat.format(currentDate)
+         time_pick_text.text = timeFormat.format(currentDate)
 
         store = intent.getStringExtra(STORE_NAME_TAG)
         if (store != null)
             place_edit_text.setText(store)
         else
             store = ""
+
     }
 
     private fun storeDealInDatabase() {
@@ -156,13 +188,45 @@ class ExpenseActivity : AppCompatActivity() {
         val memo = memo_edit_text.text.toString()
         val date = datePickText.text.toString() + " " + timePickText.text.toString()
 
-        if (zeropay_checkbox.isChecked)
-            isZero = 1
-        else
-            isZero = 0
+    if(zeropay_checkbox.isChecked)
+        isZero = 1
+    else
+        isZero = 0
 
-        val deal = deal("", date, store!!, price, category, memo, isZero)
-        dbHelper.insertDeal(deal)
+    val deal = deal("", date, store!!, price, category, memo, isZero)
+        if(!isupdate){
+            dbHelper.insertDeal(deal)
+        }
+        else{
+           dbHelper.updateDeal(update_deal!!.did,deal)
+        }
+        //user 지출액 증가
+        //list 에서 계속 저장.
+         val expense=dbHelper.getUser().expenditure+price.toInt()
+        dbHelper.updateUserExpenditure(expense.toString())
+        updateUI()
+
+
+}
+    private fun updateUI(){
+
+        expenseTxt.text=dbHelper.getUser().expenditure.toString()
+
+        val deallist=dbHelper.getDeals(datePickText.text.toString().substring(0,7))
+        val adapter= DealAdapter(deallist)
+        adapter.notifyDataSetChanged()
+        spentListView.adapter=adapter
+
+        adapter.itemClickListener=object:DealAdapter.OnItemClickListener{
+            override fun onItemClick(holder: DealAdapter.ViewHolder, view: View, data: deal, position: Int) {
+
+                val intent=Intent(applicationContext, ExpenseActivity::class.java)
+                intent.putExtra(UPDATE_DEAL_TAG,true)
+                intent.putExtra(UPDATE_DEAL_DATA_TAG,data)
+
+                startActivity(intent)
+            }
+        }
     }
 
     private fun checkDealForm(): Boolean {
@@ -191,6 +255,8 @@ class ExpenseActivity : AppCompatActivity() {
                 }
             }
             R.id.delete -> {
+                dbHelper.deleteDeal(update_deal!!.did)
+                updateUI()
                 startActivity(intent)
             }
         }
@@ -204,12 +270,14 @@ class ExpenseActivity : AppCompatActivity() {
         //지출 내역 리스트를 클릭해서 Activity를 실행하는 경우 삭제 버튼 활성화
         //지출 내역 추가하는 경우 삭제 버튼 비활성화
         val deleteMenu = menu?.findItem(R.id.delete)
-        deleteMenu!!.isVisible = false
+        deleteMenu!!.isVisible =if(isupdate){true}else{false}
 
         return true
     }
 
     companion object {
         const val STORE_NAME_TAG = "STORE_NAME"
+        const val UPDATE_DEAL_TAG="UPDATE_DEAL"
+        const val UPDATE_DEAL_DATA_TAG="UPDATE_DEAL_DATA"
     }
 }

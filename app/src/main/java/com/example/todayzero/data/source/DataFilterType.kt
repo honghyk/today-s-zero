@@ -5,6 +5,8 @@ enum class DataFilterType {
 
     STORE_RAW,
 
+    STORE_DB,
+
     NOTICE,
 
     STORE_NUM,

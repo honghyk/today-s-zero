@@ -178,6 +178,7 @@
                 android:layout_marginStart="@dimen/expense_edit_margin_start"
                 android:layout_marginTop="@dimen/expense_edit_margin_top"/>
 
+
     </android.support.constraint.ConstraintLayout>
 
     <android.support.v7.widget.RecyclerView

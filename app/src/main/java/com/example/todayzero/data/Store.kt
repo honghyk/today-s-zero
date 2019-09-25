@@ -1,18 +1,20 @@
 package com.example.todayzero.data
 
 
+import android.app.Activity
 import android.os.AsyncTask
-import android.util.Log
 import com.example.todayzero.data.source.DataFilterType
 import com.example.todayzero.data.source.DataSource
+import com.example.todayzero.db.DBHelper
+import com.example.todayzero.findstore.StoreActivity
 import com.example.todayzero.findstore.StoreRepository
 import com.example.todayzero.util.NetworkTask
 import java.io.*
-import java.lang.StringBuilder
 import kotlin.collections.ArrayList
 
 
 data class Store(
+    var sid:Int,
     val name: String,
     val addr: String,
     var locality: String,
@@ -20,7 +22,6 @@ data class Store(
     val type: String
 ) {
     init {
-        locality = addr.split(" ").get(1)
         var startIdx = addr.indexOf("(")
         if (startIdx != -1) {
             var endIdx = addr.indexOf(")")
@@ -30,7 +31,6 @@ data class Store(
                 if (endIdx != -1) dong = dong.substring(IntRange(0, endIdx - 1))
                 endIdx = dong.indexOf(" ")
                 if (endIdx != -1) dong = dong.substring(IntRange(0, endIdx - 1))
-                // Log.i("test", dong)
             }
         }
     }
@@ -41,12 +41,11 @@ data class Store(
         private const val originStoreNum = 121788 //나중엔 db 객체 갯수로 바꾸기
 
         fun loadStore(
-            storeList: ArrayList<Store>,
+            storeList: ArrayList<ArrayList<Store>>,
             callback: DataSource.ApiListener,
             scanArr: Array<InputStream>
         ) {
-            val storeRawTask =
-                NetworkTask(storeList, DataFilterType.STORE_RAW, scanArr, callback, -1)
+            val storeRawTask=NetworkTask(storeList, DataFilterType.STORE_RAW, scanArr,callback)
             storeRawTask.execute()
         }
 
