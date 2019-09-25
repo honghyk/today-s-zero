@@ -32,7 +32,9 @@ import kotlin.collections.ArrayList
 
 class ExpenseActivity : AppCompatActivity() {
     var store: String? = ""
-
+    var update_deal:deal?=null
+    var isupdate:Boolean=false
+    var isNew=true
     lateinit var datePickText: TextView
     lateinit var timePickText: TextView
     lateinit var category_list: ArrayList<category>
@@ -138,7 +140,11 @@ class ExpenseActivity : AppCompatActivity() {
     }
 
     private fun initDateAndStore() {
-        val update_deal=intent.getSerializableExtra("updateDeal") as deal
+        isupdate=intent.getBooleanExtra(UPDATE_DEAL_TAG,false)
+        if(isupdate){
+            update_deal=intent?.getSerializableExtra("updateDeal") as deal
+        }else
+            update_deal=null
 
         val currentTime = System.currentTimeMillis()
         val currentDate = Date(currentTime)
@@ -156,13 +162,14 @@ class ExpenseActivity : AppCompatActivity() {
             store = ""
 
         if(update_deal!=null){
-            zeropay_checkbox.isChecked=if(update_deal.isZero==1){true}else{false}
-            price_edit_text.setText(update_deal.price)
-            category_edit_text.setText(update_deal.category)
-            place_edit_text.setText(update_deal.store)
-            datePickText.setText(update_deal.date)
+            zeropay_checkbox.isChecked=if(update_deal?.isZero==1){true}else{false}
+            price_edit_text.setText(update_deal?.price)
+            category_edit_text.setText(update_deal?.category)
+            place_edit_text.setText(update_deal?.store)
+            datePickText.setText(update_deal?.date)
             timePickText.setText(" ")
-            memo_edit_text.setText(update_deal.memo)
+            memo_edit_text.setText(update_deal?.memo)
+            isNew=false
         }
 
     }
@@ -188,8 +195,15 @@ class ExpenseActivity : AppCompatActivity() {
         isZero = 0
 
     val deal = deal("", date, store!!, price, category, memo, isZero)
-    dbHelper.insertDeal(deal)
+        if(isNew){
+            dbHelper.insertDeal(deal)
+        }
+        else{
+            Log.i("expenseAct","update")
+            //dbHelper.updateDeal(deal)
+        }
     //user 지출액 증가
+        //list 에서 계속 저장.
     val expense=dbHelper.getUser().expenditure+price.toInt()
     dbHelper.updateUserExpenditure(expense.toString())
         expenseTxt.text=dbHelper.getUser().expenditure.toString()
@@ -197,6 +211,7 @@ class ExpenseActivity : AppCompatActivity() {
     val adapter= DealAdapter(deallist)
     adapter.notifyDataSetChanged()
     spentListView.adapter=adapter
+
 
 }
 
@@ -227,6 +242,7 @@ class ExpenseActivity : AppCompatActivity() {
             }
             R.id.delete -> {
 
+
                 startActivity(intent)
             }
         }
@@ -247,5 +263,6 @@ class ExpenseActivity : AppCompatActivity() {
 
     companion object {
         const val STORE_NAME_TAG = "STORE_NAME"
+        const val UPDATE_DEAL_TAG="UPDATE_DEAL"
     }
 }

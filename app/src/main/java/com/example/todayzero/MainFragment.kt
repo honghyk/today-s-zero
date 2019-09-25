@@ -120,6 +120,7 @@ class MainFragment : Fragment() {
             override fun onItemClick(holder: DealAdapter.ViewHolder, view: View, data: deal, position: Int) {
                 Log.i("dealclick","$position,${dealList.get(position).price}")
                 val intent=Intent(requireContext(), ExpenseActivity::class.java)
+                intent.putExtra(ExpenseActivity.UPDATE_DEAL_TAG,true)
                 intent.putExtra("updateDeal",dealList.get(position))
                 startActivity(intent)
             }
