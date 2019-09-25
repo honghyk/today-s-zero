@@ -204,13 +204,23 @@ class ExpenseActivity : AppCompatActivity() {
         }
     //user 지출액 증가
         //list 에서 계속 저장.
-    val expense=dbHelper.getUser().expenditure+price.toInt()
+         val expense=dbHelper.getUser().expenditure+price.toInt()
     dbHelper.updateUserExpenditure(expense.toString())
         expenseTxt.text=dbHelper.getUser().expenditure.toString()
         val deallist=dbHelper.getDeals(datePickText.text.toString().substring(0,7))
     val adapter= DealAdapter(deallist)
     adapter.notifyDataSetChanged()
     spentListView.adapter=adapter
+        adapter.itemClickListener=object:DealAdapter.OnItemClickListener{
+            override fun onItemClick(holder: DealAdapter.ViewHolder, view: View, data: deal, position: Int) {
+                Log.i("dealclick","$position${data.store}")
+                val intent=Intent(applicationContext, ExpenseActivity::class.java)
+                intent.putExtra(UPDATE_DEAL_TAG,true)
+                intent.putExtra(UPDATE_DEAL_DATA_TAG,data)
+                startActivity(intent)
+            }
+        }
+
 
 
 }
@@ -264,5 +274,6 @@ class ExpenseActivity : AppCompatActivity() {
     companion object {
         const val STORE_NAME_TAG = "STORE_NAME"
         const val UPDATE_DEAL_TAG="UPDATE_DEAL"
+        const val UPDATE_DEAL_DATA_TAG="UPDATE_DEAL_DATA"
     }
 }

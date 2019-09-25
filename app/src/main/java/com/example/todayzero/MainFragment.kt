@@ -43,6 +43,9 @@ class MainFragment : Fragment() {
     var currentMonth = 0
     var currentYear = 0
 
+
+
+
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         // Inflate the layout for this fragment
 
@@ -112,16 +115,14 @@ class MainFragment : Fragment() {
 
        var date=if(currentMonth<10){"$currentYear.0$currentMonth"}else{"$currentYear.$currentMonth"}
         val dealList = dbHelper.getDeals(date)
-       //al dealList = dbHelper.getDeals("$currentYear.%$currentMonth")
         val adapter = DealAdapter(dealList)
         adapter.notifyDataSetChanged()
         spentListView.adapter = adapter
         adapter.itemClickListener=object:DealAdapter.OnItemClickListener{
             override fun onItemClick(holder: DealAdapter.ViewHolder, view: View, data: deal, position: Int) {
-                Log.i("dealclick","$position,${dealList.get(position).price}")
                 val intent=Intent(requireContext(), ExpenseActivity::class.java)
                 intent.putExtra(ExpenseActivity.UPDATE_DEAL_TAG,true)
-                intent.putExtra("updateDeal",dealList.get(position))
+                intent.putExtra(ExpenseActivity.UPDATE_DEAL_DATA_TAG,data)
                 startActivity(intent)
             }
         }
