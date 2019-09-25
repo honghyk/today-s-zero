@@ -17,14 +17,8 @@ import com.example.todayzero.db.DBHelper
 import com.github.windsekirun.koreanindexer.KoreanIndexerListView
 import java.util.*
 import kotlin.collections.ArrayList
-import android.content.Context.INPUT_METHOD_SERVICE
-import android.support.v4.content.ContextCompat.getSystemService
 import android.view.inputmethod.InputMethodManager
-import android.support.v4.content.ContextCompat.getSystemService
-import android.app.Activity
-import com.github.windsekirun.koreanindexer.KoreanIndexerListView.OrderingByKorean
 import kotlinx.android.synthetic.main.store_list_frag.*
-import kotlin.Comparator
 import com.example.todayzero.data.Store
 import com.example.todayzero.util.replaceFragmentInActivity
 
@@ -113,8 +107,9 @@ class StoreListFragment : Fragment() {
         zeroList = arrayListOf()
         for(store in StoreActivity.storeList){
             if(store.dong==dongName)
-                addList(store.name)
+                zeroList.add(store.name)
         }
+
         val adapter = AlphabetAdapter(zeroList)
         listView!!.setKeywordList(zeroList)
         listView!!.onItemClickListener = AdapterView.OnItemClickListener { adapterView, view, i, l ->
