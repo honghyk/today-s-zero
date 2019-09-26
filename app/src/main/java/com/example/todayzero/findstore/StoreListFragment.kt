@@ -18,6 +18,7 @@ import com.example.todayzero.data.Store
 import com.example.todayzero.db.DBHelper
 import com.example.todayzero.util.replaceFragmentInActivity
 import com.github.windsekirun.koreanindexer.KoreanIndexerListView
+import com.google.android.libraries.places.internal.i
 import kotlinx.android.synthetic.main.store_list_frag.*
 import java.util.*
 
@@ -26,6 +27,7 @@ class StoreListFragment : Fragment() {
     lateinit var zeroListName:ArrayList<String>
     lateinit var zeroList: ArrayList<Store>
     lateinit var filterList: ArrayList<String>
+    lateinit var filterListInfo:ArrayList<Store>
     lateinit var dbHelper: DBHelper
     private var listView: KoreanIndexerListView? = null
     lateinit var search_adapter: ArrayAdapter<String>
@@ -39,17 +41,38 @@ class StoreListFragment : Fragment() {
         listView = root.findViewById(com.example.todayzero.R.id.store_list_view)
         indexer(root)
         filterList = arrayListOf()
+        filterListInfo = arrayListOf()
 
         searchinput.addTextChangedListener(object : TextWatcher {
             override fun afterTextChanged(s: Editable?) {
                 var filterText = s.toString()
                 if (filterText.length > 0) {
+                    listView!!.setIndexerWidth(0)
                     filterList.clear()
-                    for (i in zeroListName) {
-                        if (i.toLowerCase().contains(filterText.toLowerCase()))
-                            filterList.add(i)
+                    filterListInfo.clear()
+                    var i = 0
+                    while (i < zeroListName.size) {
+                        if (zeroListName[i].toLowerCase().contains(filterText.toLowerCase())){
+                            filterList.add(zeroListName[i])
+                            filterListInfo.add((zeroList[i]))
+                        }
+                        i++
                     }
                     listView!!.adapter = AlphabetAdapter(filterList)
+                    listView!!.onItemClickListener = AdapterView.OnItemClickListener { adapterView, view, i, l ->
+                        var item = adapterView.adapter.getItem(i).toString()
+
+                        var store_info = dbHelper.findStores(guNum!! + 1, item, filterListInfo[i].addr)
+                        //Toast.makeText(context, store_info[0].name, Toast.LENGTH_LONG).show()
+
+                        //Toast.makeText(context, store_info.name + store_info.addr, Toast.LENGTH_LONG).show()
+                        (requireActivity() as AppCompatActivity).replaceFragmentInActivity(
+                            StoreMapFragment.newInstance(
+                                store_info[0]
+                            ),
+                            R.id.store_contentFrame
+                        )
+                    }
                     //Toast.makeText(context, "" + filterList, Toast.LENGTH_LONG).show()
                 } else {
                     listView!!.adapter = AlphabetAdapter(zeroListName)

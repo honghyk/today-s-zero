@@ -131,6 +131,7 @@
 
     <android.support.v7.widget.RecyclerView
             android:id="@+id/spent_list_view"
+            android:paddingTop="20dp"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             app:layout_constraintTop_toBottomOf="@+id/current_month_text_view"
