@@ -33,6 +33,7 @@ class MainFragment : Fragment() {
     companion object {
         lateinit var spentListView:RecyclerView
         lateinit var expenseTxt:TextView
+        lateinit var expenseTextTitle:TextView
         const val EXPENSE_TITLE="월 사용 금액"
     }
     lateinit var layoutManager: LinearLayoutManager
@@ -69,6 +70,7 @@ class MainFragment : Fragment() {
         with(root) {
             spentListView=findViewById(R.id.spent_list_view)
             expenseTxt=findViewById(R.id.userExpenseTxt)
+            expenseTextTitle=findViewById(R.id.expenseTxtTitle)
             layoutManager = LinearLayoutManager(requireContext(), RecyclerView.VERTICAL, false)
             spentListView.layoutManager=layoutManager
 
@@ -115,10 +117,10 @@ class MainFragment : Fragment() {
     fun init() {
 
 
-       var date=if(currentMonth<10){"$currentYear.0$currentMonth"}else{"$currentYear.$currentMonth"}
+        var date=if(currentMonth<10){"$currentYear.0$currentMonth"}else{"$currentYear.$currentMonth"}
         val dealList = dbHelper.getDeals(date)
-        expenseTxtTitle.setText(currentMonth.toString()+ EXPENSE_TITLE)
-        userExpenseTxt.setText(dbHelper.getExpense(date))
+        expenseTextTitle.setText(currentMonth.toString()+ EXPENSE_TITLE)
+        expenseTxt.setText(dbHelper.getExpense(date)+"원")
         val adapter = DealAdapter(dealList)
         adapter.notifyDataSetChanged()
         spentListView.adapter = adapter
@@ -132,7 +134,20 @@ class MainFragment : Fragment() {
         }
     }
 
+    fun initMonth() {
 
+
+        val c = Calendar.getInstance()
+        currentMonth = c.get(Calendar.MONTH)+1
+        currentYear = c.get(Calendar.YEAR)
+
+        currentMonthTextView.text = String.format("%d월", currentMonth)
+        val prevMonth = currentMonth - 1
+        val nextMonth = currentMonth + 1
+
+        setPrevNextMonthTextBtn(prevMonth, nextMonth)
+    }
+/*
     fun initMonth() {
         val c = Calendar.getInstance()
         currentMonth = c.get(Calendar.MONTH)+1
@@ -144,7 +159,7 @@ class MainFragment : Fragment() {
 
         setPrevNextMonthTextBtn(prevMonth, nextMonth)
     }
-
+*/
     fun forwardMonth() {
         currentMonth++
         if(currentMonth == 13) {

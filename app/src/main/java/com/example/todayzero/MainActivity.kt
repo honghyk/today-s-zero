@@ -37,7 +37,7 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
 
         nav_view.setNavigationItemSelectedListener(this)
 
-        //데이터베이스 확인해서 true / false 값 설정하는 과정 필요
+        //데이터베이스 확인해서 true / falseㅑㅜㅑ 값 설정하는 과정 필요
         val dbHelper=DBHelper(this)
         val isUserInfoInit = if(dbHelper.getUser().uname==" "){true }else{false}
         Log.i("test",dbHelper.getUser().uname)

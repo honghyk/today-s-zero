@@ -18,6 +18,7 @@ import android.widget.Toast
 import com.example.todayzero.MainActivity
 import com.example.todayzero.MainFragment
 import com.example.todayzero.MainFragment.Companion.EXPENSE_TITLE
+import com.example.todayzero.MainFragment.Companion.expenseTextTitle
 import com.example.todayzero.MainFragment.Companion.expenseTxt
 import com.example.todayzero.MainFragment.Companion.spentListView
 import com.example.todayzero.R
@@ -201,19 +202,20 @@ class ExpenseActivity : AppCompatActivity() {
         else{
            dbHelper.updateDeal(update_deal!!.did,deal)
         }
-        //user 지출액 증가
-        //list 에서 계속 저장.
-         val expense=dbHelper.getUser().expenditure+price.toInt()
-        dbHelper.updateUserExpenditure(expense.toString())
+
+        //제로페이 지출만 계산해 user.expenditure에 저장-> 혜택 계산. (총 지출은 거래 내역 정보 이용) _0926
+        if(isZero==1){
+            val expense=dbHelper.getUser().expenditure+price.toInt()
+            dbHelper.updateUserExpenditure(expense.toString())
+        }
         updateUI()
 
 
 }
     private fun updateUI(){
 
-        userExpenseTxt.setText(datePickText.text.toString().substring(5,7)+ EXPENSE_TITLE)
-
-        expenseTxtTitle.text=dbHelper.getExpense(datePickText.text.toString().substring(0,7))
+        expenseTextTitle.setText(datePickText.text.toString().substring(5,7)+ EXPENSE_TITLE)
+        expenseTxt.text=dbHelper.getExpense(datePickText.text.toString().substring(0,7))+"원"
         val deallist=dbHelper.getDeals(datePickText.text.toString().substring(0,7))
         val adapter= DealAdapter(deallist)
         adapter.notifyDataSetChanged()
