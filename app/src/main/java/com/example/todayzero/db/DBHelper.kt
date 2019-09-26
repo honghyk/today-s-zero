@@ -367,6 +367,7 @@ class DBHelper(context: Context):SQLiteOpenHelper(context,DATABASE_NAME,null,DAT
         }
         return storeList
     }
+
     fun getStores(gu:Int):ArrayList<Store>{
 
         val storeList=ArrayList<Store>()
@@ -429,6 +430,21 @@ class DBHelper(context: Context):SQLiteOpenHelper(context,DATABASE_NAME,null,DAT
             Log.i("searchdeal","nodeal")
         }
         return dealList
+    }
+
+    fun getExpense(date:String):String{
+
+        var expense=0
+        val sql="SELECT SUM(${deals.KEY_PRICE}) FROM ${deals.TABLE_NAME} WHERE ${deals.KEY_DATE} LIKE ?"
+        val selectionArgs=arrayOf("$date%")
+        val cursor=rdb.rawQuery(sql,selectionArgs)
+        if(cursor!=null) {
+            while (cursor.moveToNext()) {
+                expense=cursor.getInt(0)
+            }
+        }
+        return expense.toString()
+
     }
 
 

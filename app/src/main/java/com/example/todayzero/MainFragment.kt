@@ -33,6 +33,7 @@ class MainFragment : Fragment() {
     companion object {
         lateinit var spentListView:RecyclerView
         lateinit var expenseTxt:TextView
+        const val EXPENSE_TITLE="월 사용 금액"
     }
     lateinit var layoutManager: LinearLayoutManager
     lateinit var dbHelper: DBHelper
@@ -112,10 +113,12 @@ class MainFragment : Fragment() {
 
 
     fun init() {
-        userExpenseTxt.text=dbHelper.getUser().expenditure.toString()
+
 
        var date=if(currentMonth<10){"$currentYear.0$currentMonth"}else{"$currentYear.$currentMonth"}
         val dealList = dbHelper.getDeals(date)
+        expenseTxtTitle.setText(currentMonth.toString()+ EXPENSE_TITLE)
+        userExpenseTxt.setText(dbHelper.getExpense(date))
         val adapter = DealAdapter(dealList)
         adapter.notifyDataSetChanged()
         spentListView.adapter = adapter

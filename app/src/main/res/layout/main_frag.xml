@@ -27,7 +27,8 @@
                 android:orientation="vertical">
 
             <TextView
-                    android:text="이번달 사용 금액"
+                    android:id="@+id/expenseTxtTitle"
+                    android:text="이번 달 사용 금액"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     style="@style/spoqa_text_white"

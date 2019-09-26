@@ -17,6 +17,7 @@ import android.widget.TextView
 import android.widget.Toast
 import com.example.todayzero.MainActivity
 import com.example.todayzero.MainFragment
+import com.example.todayzero.MainFragment.Companion.EXPENSE_TITLE
 import com.example.todayzero.MainFragment.Companion.expenseTxt
 import com.example.todayzero.MainFragment.Companion.spentListView
 import com.example.todayzero.R
@@ -210,8 +211,9 @@ class ExpenseActivity : AppCompatActivity() {
 }
     private fun updateUI(){
 
-        expenseTxt.text=dbHelper.getUser().expenditure.toString()
+        userExpenseTxt.setText(datePickText.text.toString().substring(5,7)+ EXPENSE_TITLE)
 
+        expenseTxtTitle.text=dbHelper.getExpense(datePickText.text.toString().substring(0,7))
         val deallist=dbHelper.getDeals(datePickText.text.toString().substring(0,7))
         val adapter= DealAdapter(deallist)
         adapter.notifyDataSetChanged()
