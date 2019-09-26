@@ -6,7 +6,6 @@ import android.database.sqlite.SQLiteDatabase
 import android.database.sqlite.SQLiteOpenHelper
 import android.provider.BaseColumns
 import android.util.Log
-import com.example.todayzero.findstore.StoreActivity.Companion.storeList
 import com.example.todayzero.data.Store
 
 
@@ -223,12 +222,14 @@ class DBHelper(context: Context):SQLiteOpenHelper(context,DATABASE_NAME,null,DAT
     fun deleteUser(){
         wdb.delete(users.TABLE_NAME,null,null)
     }
+
     fun deleteStore(sid:String,gu:String){   //gu 에 삭제할 store.locatlity  입력
 
         val selection="${BaseColumns._ID} = ?"
         val selectionArgs=arrayOf(sid)
         wdb.delete(stores.TABLE_NAME+gu,selection,selectionArgs)
     }
+
     fun deleteDeal(did: String){
         val selection="${BaseColumns._ID} = ?"
         val selectionArgs=arrayOf(did)

@@ -8,20 +8,17 @@ import android.support.v4.app.Fragment
 import android.support.v7.app.AppCompatActivity
 import android.text.Editable
 import android.text.TextWatcher
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.inputmethod.InputMethodManager
 import android.widget.*
 import com.example.todayzero.R
-import com.example.todayzero.db.DBHelper
-import com.github.windsekirun.koreanindexer.KoreanIndexerListView
-import java.util.*
-import kotlin.collections.ArrayList
-import android.view.inputmethod.InputMethodManager
-import kotlinx.android.synthetic.main.store_list_frag.*
 import com.example.todayzero.data.Store
 import com.example.todayzero.util.replaceFragmentInActivity
+import com.github.windsekirun.koreanindexer.KoreanIndexerListView
+import kotlinx.android.synthetic.main.store_list_frag.*
+import java.util.*
 
 
 class StoreListFragment : Fragment() {

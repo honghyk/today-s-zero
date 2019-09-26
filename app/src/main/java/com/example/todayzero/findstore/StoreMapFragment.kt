@@ -19,6 +19,7 @@ import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.MapView
 import com.google.android.gms.maps.OnMapReadyCallback
 import com.google.android.gms.maps.model.LatLng
+import com.google.android.gms.maps.model.MarkerOptions
 
 
 class StoreMapFragment : Fragment(), OnMapReadyCallback {
@@ -67,6 +68,9 @@ class StoreMapFragment : Fragment(), OnMapReadyCallback {
                 storeLat = addrList!![0].latitude
                 storeLng = addrList!![0].longitude
                 googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(LatLng(storeLat, storeLng), zoomLevel))
+                val markerOption = MarkerOptions()
+                markerOption.position(LatLng(storeLat, storeLng))
+                googleMap.addMarker(markerOption)
             }
         }
     }

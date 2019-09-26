@@ -8,12 +8,22 @@
         android:paddingLeft="@dimen/activity_horizontal_margin"
         android:paddingRight="@dimen/activity_horizontal_margin"
         android:paddingTop="@dimen/activity_vertical_margin"
-        android:orientation="horizontal"
+        android:orientation="vertical"
         android:gravity="bottom">
 
-    <ImageView android:layout_width="wrap_content"
-               android:layout_height="wrap_content"
-    />
+    <ImageView
+            android:src="@drawable/ic_account_56px"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="16dp"/>
+
+    <TextView
+            android:id="@+id/nav_header_user_text"
+            android:text="안녕하세요"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            style="@style/spoqa_text_white"
+            android:textSize="18sp"/>
 
 
 </LinearLayout>

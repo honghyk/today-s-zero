@@ -7,9 +7,7 @@ import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
 import com.example.todayzero.R
-import com.example.todayzero.data.Notice
 import com.example.todayzero.db.deal
-import com.example.todayzero.notice.NoticeAdapter
 
 class DealAdapter(var items: ArrayList<deal>) :
     RecyclerView.Adapter<DealAdapter.ViewHolder>() {
@@ -21,6 +19,11 @@ class DealAdapter(var items: ArrayList<deal>) :
 
     override fun getItemCount(): Int {
         return items.size
+    }
+
+    fun replaceAllItem(newItems: ArrayList<deal>) {
+        items.clear()
+        items.addAll(newItems)
     }
 
     override fun onCreateViewHolder(p0: ViewGroup, p1: Int): ViewHolder {
@@ -38,7 +41,7 @@ class DealAdapter(var items: ArrayList<deal>) :
                  //p0.deal_list_payment.text="일반 결제"
                  p0.deal_list_img.setImageResource(R.drawable.ic_exposure_zero_black_24dp)
              }
-          p0.deal_list_price.text=items[p1].price +"원"
+          p0.deal_list_price.text = NumberFormatter.format(items[p1].price) + "원"
 
     }
     inner class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView){

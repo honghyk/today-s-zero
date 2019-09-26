@@ -1,13 +1,11 @@
 package com.example.todayzero.expense
 
-import android.content.Context
 import android.app.DatePickerDialog
 import android.app.TimePickerDialog
+import android.content.Context
 import android.content.Intent
 import android.os.Bundle
-import android.support.v4.content.ContextCompat.startActivity
 import android.support.v7.app.AppCompatActivity
-import android.util.Log
 import android.support.v7.widget.GridLayoutManager
 import android.view.Menu
 import android.view.MenuItem
@@ -16,20 +14,12 @@ import android.view.inputmethod.InputMethodManager
 import android.widget.TextView
 import android.widget.Toast
 import com.example.todayzero.MainActivity
-import com.example.todayzero.MainFragment
-import com.example.todayzero.MainFragment.Companion.EXPENSE_TITLE
-import com.example.todayzero.MainFragment.Companion.expenseTxt
-import com.example.todayzero.MainFragment.Companion.spentListView
 import com.example.todayzero.R
 import com.example.todayzero.db.DBHelper
 import com.example.todayzero.db.deal
-import kotlinx.android.synthetic.main.category_layout.*
-import com.example.todayzero.util.DealAdapter
 import kotlinx.android.synthetic.main.expense_act.*
-import kotlinx.android.synthetic.main.main_frag.*
 import java.text.SimpleDateFormat
 import java.util.*
-import kotlin.collections.ArrayList
 
 class ExpenseActivity : AppCompatActivity() {
 
@@ -142,20 +132,21 @@ class ExpenseActivity : AppCompatActivity() {
     }
 
     private fun initDateAndStore() {
-        isupdate=intent.getBooleanExtra(UPDATE_DEAL_TAG,false)
-        if(isupdate){
-            update_deal=intent?.getSerializableExtra(UPDATE_DEAL_DATA_TAG) as deal
+        isupdate = intent.getBooleanExtra(UPDATE_DEAL_TAG,false)
 
-            zeropay_checkbox.isChecked=if(update_deal?.isZero==1){true}else{false}
+        if(isupdate) {
+            update_deal = intent?.getSerializableExtra(UPDATE_DEAL_DATA_TAG) as deal
+
+            zeropay_checkbox.isChecked = update_deal?.isZero == 1
             price_edit_text.setText(update_deal?.price)
             category_edit_text.setText(update_deal?.category)
             place_edit_text.setText(update_deal?.store)
-            datePickText.setText(update_deal?.date)
-            timePickText.setText(" ")
+            datePickText.text = update_deal?.date
+            timePickText.text = " "
             memo_edit_text.setText(update_deal?.memo)
 
-        }else
-            update_deal=null
+        } else
+            update_deal = null
 
         val currentTime = System.currentTimeMillis()
         val currentDate = Date(currentTime)
@@ -205,31 +196,31 @@ class ExpenseActivity : AppCompatActivity() {
         //list 에서 계속 저장.
          val expense=dbHelper.getUser().expenditure+price.toInt()
         dbHelper.updateUserExpenditure(expense.toString())
-        updateUI()
+//        updateUI()
 
 
 }
-    private fun updateUI(){
-
-        userExpenseTxt.setText(datePickText.text.toString().substring(5,7)+ EXPENSE_TITLE)
-
-        expenseTxtTitle.text=dbHelper.getExpense(datePickText.text.toString().substring(0,7))
-        val deallist=dbHelper.getDeals(datePickText.text.toString().substring(0,7))
-        val adapter= DealAdapter(deallist)
-        adapter.notifyDataSetChanged()
-        spentListView.adapter=adapter
-
-        adapter.itemClickListener=object:DealAdapter.OnItemClickListener{
-            override fun onItemClick(holder: DealAdapter.ViewHolder, view: View, data: deal, position: Int) {
-
-                val intent=Intent(applicationContext, ExpenseActivity::class.java)
-                intent.putExtra(UPDATE_DEAL_TAG,true)
-                intent.putExtra(UPDATE_DEAL_DATA_TAG,data)
-
-                startActivity(intent)
-            }
-        }
-    }
+//    private fun updateUI(){
+//
+//        userExpenseTxt.setText(datePickText.text.toString().substring(5,7)+ EXPENSE_TITLE)
+//
+//        expenseTxtTitle.text=dbHelper.getExpense(datePickText.text.toString().substring(0,7))
+//        val deallist=dbHelper.getDeals(datePickText.text.toString().substring(0,7))
+//        val adapter= DealAdapter(deallist)
+//        adapter.notifyDataSetChanged()
+//        spentListView.adapter=adapter
+//
+//        adapter.itemClickListener=object:DealAdapter.OnItemClickListener{
+//            override fun onItemClick(holder: DealAdapter.ViewHolder, view: View, data: deal, position: Int) {
+//
+//                val intent=Intent(applicationContext, ExpenseActivity::class.java)
+//                intent.putExtra(UPDATE_DEAL_TAG,true)
+//                intent.putExtra(UPDATE_DEAL_DATA_TAG,data)
+//
+//                startActivity(intent)
+//            }
+//        }
+//    }
 
     private fun checkDealForm(): Boolean {
         val categoryEdit = category_edit_text.text.toString()
@@ -258,7 +249,7 @@ class ExpenseActivity : AppCompatActivity() {
             }
             R.id.delete -> {
                 dbHelper.deleteDeal(update_deal!!.did)
-                updateUI()
+//                updateUI()
                 startActivity(intent)
             }
         }
@@ -272,7 +263,7 @@ class ExpenseActivity : AppCompatActivity() {
         //지출 내역 리스트를 클릭해서 Activity를 실행하는 경우 삭제 버튼 활성화
         //지출 내역 추가하는 경우 삭제 버튼 비활성화
         val deleteMenu = menu?.findItem(R.id.delete)
-        deleteMenu!!.isVisible =if(isupdate){true}else{false}
+        deleteMenu!!.isVisible = isupdate
 
         return true
     }

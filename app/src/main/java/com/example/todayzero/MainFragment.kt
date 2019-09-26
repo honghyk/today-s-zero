@@ -1,14 +1,13 @@
 package com.example.todayzero
 
 
-import android.arch.lifecycle.Lifecycle
-import android.content.Context
 import android.content.Intent
 import android.content.res.ColorStateList
-import android.media.Image
 import android.os.Bundle
 import android.support.design.widget.FloatingActionButton
+import android.support.design.widget.NavigationView
 import android.support.v4.app.Fragment
+import android.support.v7.widget.DividerItemDecoration
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
 import android.util.Log
@@ -21,21 +20,23 @@ import com.example.todayzero.db.DBHelper
 import com.example.todayzero.db.deal
 import com.example.todayzero.expense.ExpenseActivity
 import com.example.todayzero.util.DealAdapter
+import com.example.todayzero.util.NumberFormatter
 import kotlinx.android.synthetic.main.activity_main.*
-import kotlinx.android.synthetic.main.main_frag.*
-import org.w3c.dom.Text
-import java.text.SimpleDateFormat
 import java.util.*
 
 
 class MainFragment : Fragment() {
 
     companion object {
-        lateinit var spentListView:RecyclerView
-        lateinit var expenseTxt:TextView
         const val EXPENSE_TITLE="월 사용 금액"
     }
+
+    lateinit var spentListView:RecyclerView
+    lateinit var expenseTxt:TextView
+    lateinit var expenseTxtTitle: TextView
+    lateinit var userExpenseTxt: TextView
     lateinit var layoutManager: LinearLayoutManager
+    lateinit var dealAdapter: DealAdapter
     lateinit var dbHelper: DBHelper
     lateinit var currentMonthTextView: TextView
     lateinit var prevMonthTextView: TextView
@@ -44,8 +45,6 @@ class MainFragment : Fragment() {
     lateinit var nextMonthBtn: ImageButton
     var currentMonth = 0
     var currentYear = 0
-
-
 
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
@@ -66,33 +65,56 @@ class MainFragment : Fragment() {
                 startActivity(Intent(requireContext(), ExpenseActivity::class.java))
             }
         }
+        dbHelper = DBHelper(requireContext())
+
         with(root) {
-            spentListView=findViewById(R.id.spent_list_view)
-            expenseTxt=findViewById(R.id.userExpenseTxt)
+            spentListView = findViewById(R.id.spent_list_view)
+            expenseTxt = findViewById(R.id.userExpenseTxt)
+            expenseTxtTitle = findViewById(R.id.expenseTxtTitle)
+            userExpenseTxt = findViewById(R.id.userExpenseTxt)
+
             layoutManager = LinearLayoutManager(requireContext(), RecyclerView.VERTICAL, false)
-            spentListView.layoutManager=layoutManager
+            spentListView.layoutManager = layoutManager
+            dealAdapter = DealAdapter(ArrayList())
+            spentListView.adapter = dealAdapter
+            val dividerItemDecoration = DividerItemDecoration(requireContext(), layoutManager.orientation)
+            spentListView.addItemDecoration(dividerItemDecoration)
+
+            dealAdapter.itemClickListener = object : DealAdapter.OnItemClickListener {
+            override fun onItemClick(holder: DealAdapter.ViewHolder, view: View, data: deal, position: Int) {
+                val intent=Intent(requireContext(), ExpenseActivity::class.java)
+                intent.putExtra(ExpenseActivity.UPDATE_DEAL_TAG,true)
+                intent.putExtra(ExpenseActivity.UPDATE_DEAL_DATA_TAG,data)
+                startActivity(intent)
+            }
+        }
 
             currentMonthTextView = findViewById(R.id.current_month_text_view)
             prevMonthTextView = findViewById<TextView>(R.id.prev_month_text_button).apply {
-                setOnClickListener { backwardMonth()
-                    init()
+                setOnClickListener {
+                    backwardMonth()
+                    loadMonthlyDealList()
                 }
             }
             prevMonthBtn = findViewById<ImageButton>(R.id.prev_month_button).apply {
-                setOnClickListener { backwardMonth()
-                    init()
+                setOnClickListener {
+                    backwardMonth()
+                    loadMonthlyDealList()
                 }
             }
             nextMonthTextView = findViewById<TextView>(R.id.next_month_text_button).apply {
-                setOnClickListener { forwardMonth()
-                     init()
+                setOnClickListener {
+                    forwardMonth()
+                    loadMonthlyDealList()
                 }
             }
             nextMonthBtn = findViewById<ImageButton>(R.id.next_month_button).apply {
-                setOnClickListener { forwardMonth()
-                      init()
+                setOnClickListener {
+                    forwardMonth()
+                    loadMonthlyDealList()
                 }
             }
+
         }
 
         initMonth()
@@ -103,39 +125,37 @@ class MainFragment : Fragment() {
     override fun onResume() {
         super.onResume()
         requireActivity().actionBar?.title = resources.getString(R.string.app_name)
+
+        loadMonthlyDealList()
     }
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
-        dbHelper=DBHelper(this.requireContext())
-        init()
+
+        val userName = dbHelper.getUser().uname
+        val navView = requireActivity().findViewById<NavigationView>(R.id.nav_view)
+        val navHeaderView = navView.getHeaderView(0)
+        val navUserNameTextView = navHeaderView.findViewById<TextView>(R.id.nav_header_user_text)
+        navUserNameTextView.text = String.format("%s님 안녕하세요", userName)
+
     }
 
-
-    fun init() {
-
-
-       var date=if(currentMonth<10){"$currentYear.0$currentMonth"}else{"$currentYear.$currentMonth"}
+    fun loadMonthlyDealList() {
+        val date = if(currentMonth < 10) "$currentYear.0$currentMonth" else "$currentYear.$currentMonth"
         val dealList = dbHelper.getDeals(date)
-        expenseTxtTitle.setText(currentMonth.toString()+ EXPENSE_TITLE)
-        userExpenseTxt.setText(dbHelper.getExpense(date))
-        val adapter = DealAdapter(dealList)
-        adapter.notifyDataSetChanged()
-        spentListView.adapter = adapter
-        adapter.itemClickListener=object:DealAdapter.OnItemClickListener{
-            override fun onItemClick(holder: DealAdapter.ViewHolder, view: View, data: deal, position: Int) {
-                val intent=Intent(requireContext(), ExpenseActivity::class.java)
-                intent.putExtra(ExpenseActivity.UPDATE_DEAL_TAG,true)
-                intent.putExtra(ExpenseActivity.UPDATE_DEAL_DATA_TAG,data)
-                startActivity(intent)
-            }
-        }
+
+        dealAdapter.items = dealList
+        dealAdapter.notifyDataSetChanged()
+
+        expenseTxtTitle.text = currentMonth.toString()+ EXPENSE_TITLE
+        val expense = dbHelper.getExpense(date)
+        userExpenseTxt.text = NumberFormatter.format(expense) + "원"
     }
 
 
     fun initMonth() {
         val c = Calendar.getInstance()
-        currentMonth = c.get(Calendar.MONTH)+1
+        currentMonth = c.get(Calendar.MONTH) + 1
         currentYear = c.get(Calendar.YEAR)
 
         currentMonthTextView.text = String.format("%d월", currentMonth)
