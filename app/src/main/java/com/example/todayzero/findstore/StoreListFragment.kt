@@ -15,6 +15,7 @@ import android.view.inputmethod.InputMethodManager
 import android.widget.*
 import com.example.todayzero.R
 import com.example.todayzero.data.Store
+import com.example.todayzero.db.DBHelper
 import com.example.todayzero.util.replaceFragmentInActivity
 import com.github.windsekirun.koreanindexer.KoreanIndexerListView
 import kotlinx.android.synthetic.main.store_list_frag.*
@@ -22,16 +23,18 @@ import java.util.*
 
 
 class StoreListFragment : Fragment() {
-    lateinit var zeroList: ArrayList<String>
+    lateinit var zeroListName:ArrayList<String>
+    lateinit var zeroList: ArrayList<Store>
     lateinit var filterList: ArrayList<String>
+    lateinit var dbHelper: DBHelper
     private var listView: KoreanIndexerListView? = null
-    lateinit var search_adapter:ArrayAdapter<String>
-    lateinit var dongName:String
-     var guNum:Int?=null
+    lateinit var search_adapter: ArrayAdapter<String>
+    lateinit var dongName: String
+    var guNum: Int? = null
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         // Inflate the layout for this fragment
         var root = inflater.inflate(com.example.todayzero.R.layout.store_list_frag, container, false)
-
+        dbHelper = DBHelper(requireContext())
         var searchinput = root.findViewById<EditText>(com.example.todayzero.R.id.search_store);
         listView = root.findViewById(com.example.todayzero.R.id.store_list_view)
         indexer(root)
@@ -42,14 +45,14 @@ class StoreListFragment : Fragment() {
                 var filterText = s.toString()
                 if (filterText.length > 0) {
                     filterList.clear()
-                    for (i in zeroList) {
+                    for (i in zeroListName) {
                         if (i.toLowerCase().contains(filterText.toLowerCase()))
-                            addFilterList(i)
+                            filterList.add(i)
                     }
                     listView!!.adapter = AlphabetAdapter(filterList)
-                    Toast.makeText(context, "" + filterList, Toast.LENGTH_LONG).show()
+                    //Toast.makeText(context, "" + filterList, Toast.LENGTH_LONG).show()
                 } else {
-                    listView!!.adapter = AlphabetAdapter(zeroList)
+                    listView!!.adapter = AlphabetAdapter(zeroListName)
                     search_layout.setFocusableInTouchMode(true)
                     search_layout.requestFocus()
                     val imm = activity!!.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
@@ -61,6 +64,7 @@ class StoreListFragment : Fragment() {
             override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
 
             }
+
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
 
             }
@@ -74,11 +78,12 @@ class StoreListFragment : Fragment() {
         }
         return root
     }
+
     override fun onAttach(context: Context?) {
         super.onAttach(context)
-        if(arguments!=null) {
+        if (arguments != null) {
             dongName = arguments!!.getString("dongName")
-            guNum=arguments!!.getInt("guNum")
+            guNum = arguments!!.getInt("guNum")
         }
     }
 
@@ -89,28 +94,31 @@ class StoreListFragment : Fragment() {
 
     @SuppressLint("InflateParams")
     @SuppressWarnings("StringConcatenationInLoop")
-    fun addList(vararg text: String) {
-        Collections.addAll(zeroList, *text)
-    }
 
-    fun addFilterList(vararg text: String) {
-        Collections.addAll(filterList, *text)
-    }
-
-
-    fun indexer(root:View){
+    fun indexer(root: View) {
         zeroList = arrayListOf()
-        for(store in StoreActivity.storeList[guNum!!]){
-            if(store.dong==dongName)
-                zeroList.add(store.name)
+        zeroListName = arrayListOf()
+        for (store in StoreActivity.storeList[guNum!!]) {
+            if (store.dong == dongName)
+                zeroList.add(store)
         }
-
-        val adapter = AlphabetAdapter(zeroList)
-        listView!!.setKeywordList(zeroList)
+        for(i in zeroList)
+            zeroListName.add(i.name)
+        val adapter = AlphabetAdapter(zeroListName)
+        listView!!.setKeywordList(zeroListName)
         listView!!.onItemClickListener = AdapterView.OnItemClickListener { adapterView, view, i, l ->
-            (requireActivity() as AppCompatActivity).replaceFragmentInActivity(StoreMapFragment.newInstance(
-                Store(0, "서울시 은평구 갈현로23길 5 지하1층", "은평구", "ㅇㅇ동", "dong","type")),
-                R.id.store_contentFrame)
+            var item = adapterView.adapter.getItem(i).toString()
+
+            var store_info = dbHelper.findStores(guNum!! + 1, item, zeroList[i].addr)
+            //Toast.makeText(context, store_info[0].name, Toast.LENGTH_LONG).show()
+
+            //Toast.makeText(context, store_info.name + store_info.addr, Toast.LENGTH_LONG).show()
+            (requireActivity() as AppCompatActivity).replaceFragmentInActivity(
+                StoreMapFragment.newInstance(
+                    store_info[0]
+                ),
+                R.id.store_contentFrame
+            )
         }
         listView!!.adapter = adapter
     }
@@ -123,7 +131,8 @@ class StoreListFragment : Fragment() {
             val holder: ViewHolder
 
             if (convertView == null) {
-                convertView = LayoutInflater.from(context).inflate(com.example.todayzero.R.layout.list_item, parent, false)
+                convertView =
+                    LayoutInflater.from(context).inflate(com.example.todayzero.R.layout.list_item, parent, false)
                 holder = ViewHolder()
                 holder.txtName = convertView!!.findViewById(com.example.todayzero.R.id.txtName)
                 convertView.tag = holder

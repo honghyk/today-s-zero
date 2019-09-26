@@ -22,17 +22,18 @@ import com.example.todayzero.expense.ExpenseActivity
 import com.example.todayzero.util.DealAdapter
 import com.example.todayzero.util.NumberFormatter
 import kotlinx.android.synthetic.main.activity_main.*
+import kotlinx.android.synthetic.main.main_frag.*
 import java.util.*
 
 
 class MainFragment : Fragment() {
 
     companion object {
-        const val EXPENSE_TITLE="월 사용 금액"
+        const val EXPENSE_TITLE = "월 사용 금액"
     }
 
-    lateinit var spentListView:RecyclerView
-    lateinit var expenseTxt:TextView
+    lateinit var spentListView: RecyclerView
+    lateinit var expenseTxt: TextView
     lateinit var expenseTxtTitle: TextView
     lateinit var userExpenseTxt: TextView
     lateinit var layoutManager: LinearLayoutManager
@@ -50,7 +51,7 @@ class MainFragment : Fragment() {
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         // Inflate the layout for this fragment
 
-        Log.i("life","oncreateView")
+        Log.i("life", "oncreateView")
 
         val root = inflater.inflate(R.layout.main_frag, container, false)
 
@@ -81,13 +82,13 @@ class MainFragment : Fragment() {
             spentListView.addItemDecoration(dividerItemDecoration)
 
             dealAdapter.itemClickListener = object : DealAdapter.OnItemClickListener {
-            override fun onItemClick(holder: DealAdapter.ViewHolder, view: View, data: deal, position: Int) {
-                val intent=Intent(requireContext(), ExpenseActivity::class.java)
-                intent.putExtra(ExpenseActivity.UPDATE_DEAL_TAG,true)
-                intent.putExtra(ExpenseActivity.UPDATE_DEAL_DATA_TAG,data)
-                startActivity(intent)
+                override fun onItemClick(holder: DealAdapter.ViewHolder, view: View, data: deal, position: Int) {
+                    val intent = Intent(requireContext(), ExpenseActivity::class.java)
+                    intent.putExtra(ExpenseActivity.UPDATE_DEAL_TAG, true)
+                    intent.putExtra(ExpenseActivity.UPDATE_DEAL_DATA_TAG, data)
+                    startActivity(intent)
+                }
             }
-        }
 
             currentMonthTextView = findViewById(R.id.current_month_text_view)
             prevMonthTextView = findViewById<TextView>(R.id.prev_month_text_button).apply {
@@ -141,15 +142,73 @@ class MainFragment : Fragment() {
     }
 
     fun loadMonthlyDealList() {
-        val date = if(currentMonth < 10) "$currentYear.0$currentMonth" else "$currentYear.$currentMonth"
-        val dealList = dbHelper.getDeals(date)
+        var date = if (currentMonth < 10) "$currentYear.0$currentMonth" else "$currentYear.$currentMonth"
+        var dealList = dbHelper.getDeals(date)
 
         dealAdapter.items = dealList
         dealAdapter.notifyDataSetChanged()
 
-        expenseTxtTitle.text = currentMonth.toString()+ EXPENSE_TITLE
-        val expense = dbHelper.getExpense(date)
+        expenseTxtTitle.text = currentMonth.toString() + EXPENSE_TITLE
+        var expense = dbHelper.getExpense(date)
         userExpenseTxt.text = NumberFormatter.format(expense) + "원"
+
+        var i = 1
+        var total_expense = 0L
+        while (i <= currentMonth) {
+            date = if (i < 10) "$currentYear.0$i" else "$currentYear.$i"
+            dealList = dbHelper.getDeals(date)
+            dealAdapter.items = dealList
+            dealAdapter.notifyDataSetChanged()
+            expense = dbHelper.getExpense(date)
+            total_expense += expense.toLong()
+            i++
+        }
+
+        i = 1
+        var benefit_expense = 0L
+        var over_expense = 0L
+        var calendar = Calendar.getInstance()
+        var latestMonth = calendar.get(Calendar.MONTH) + 1
+        if (total_expense < ((dbHelper.getUser().income.toLong()) / 4))
+            benefit.text = "0원"
+        else {
+            var totalList = arrayListOf<deal>()
+            while (i <= latestMonth) {
+                date = if (i < 10) "$currentYear.0$i" else "$currentYear.$i"
+                dealList = dbHelper.getDeals(date)
+                totalList.addAll(dealList)
+                i++
+            }
+            for (i in totalList) {
+                if (i.isZero == 1) {
+                    over_expense += i.price.toLong()
+                }
+            }
+            benefit_expense =
+                dbHelper.getUser().income.toLong() - (((over_expense - (dbHelper.getUser().income.toLong() / 4)) * 4) / 10)
+
+            var final_benefit = calculate_tax(benefit_expense)
+
+            var normal_tax = calculate_tax(dbHelper.getUser().income.toLong())
+
+            benefit.text = "약" + (normal_tax - final_benefit).toString() + "원"
+        }
+    }
+//300000
+    fun calculate_tax(benefit: Long):Long {
+        var tax = 0L
+        if (benefit <= 12000000) {
+            tax = (benefit * 6) / 100
+        } else if (benefit > 12000000 && benefit <= 46000000) {
+            tax = 720000 + (((benefit - 12000000) * 15) / 100)
+        }else if(benefit > 46000000&&benefit<=88000000){
+            tax = 720000 + 5100000 + (((benefit - 46000000) * 24) / 100)
+        }else if(benefit > 88000000&&benefit<=150000000){
+            tax = 720000 + 5100000 + 10080000 + (((benefit - 88000000) * 35) / 100)
+        }else{
+            tax = 720000 + 5100000 + 10080000 + 21700000 + (((benefit - 150000000) * 38) / 100)
+        }
+        return tax
     }
 
 
@@ -167,7 +226,7 @@ class MainFragment : Fragment() {
 
     fun forwardMonth() {
         currentMonth++
-        if(currentMonth == 13) {
+        if (currentMonth == 13) {
             currentYear++
             currentMonth = 1
         }
@@ -179,7 +238,7 @@ class MainFragment : Fragment() {
 
     fun backwardMonth() {
         currentMonth--
-        if(currentMonth == 0) {
+        if (currentMonth == 0) {
             currentYear--
             currentMonth = 12
         }
@@ -193,14 +252,14 @@ class MainFragment : Fragment() {
         prevMonthTextView.text = String.format("%d월", prevMonth)
         nextMonthTextView.text = String.format("%d월", nextMonth)
 
-        if(currentMonth == 1) {
+        if (currentMonth == 1) {
             prevMonthTextView.text = "12월"
         }
-        if(currentMonth == 12) {
+        if (currentMonth == 12) {
             nextMonthTextView.text = "1월"
         }
 
-        Log.i("setPrevNextBtn","click$currentYear/$currentMonth")
+        Log.i("setPrevNextBtn", "click$currentYear/$currentMonth")
 
     }
 }
