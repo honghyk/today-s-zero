@@ -105,8 +105,9 @@ class StoreListFragment : Fragment() {
         zeroList = arrayListOf()
         for(store in StoreActivity.storeList[guNum!!]){
             if(store.dong==dongName)
-                addList(store.name)
+                zeroList.add(store.name)
         }
+
         val adapter = AlphabetAdapter(zeroList)
         listView!!.setKeywordList(zeroList)
         listView!!.onItemClickListener = AdapterView.OnItemClickListener { adapterView, view, i, l ->

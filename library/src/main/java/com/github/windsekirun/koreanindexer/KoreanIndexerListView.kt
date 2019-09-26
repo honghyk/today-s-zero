@@ -16,6 +16,7 @@ import android.view.View
 import android.widget.ArrayAdapter
 import android.widget.ListView
 import android.widget.SectionIndexer
+import android.widget.Toast
 
 import org.apache.commons.lang3.StringUtils
 
@@ -23,6 +24,7 @@ import java.util.ArrayList
 import java.util.Collections
 import java.util.Comparator
 import java.util.LinkedHashMap
+import kotlin.math.log
 
 class KoreanIndexerListView : ListView {
     //private var context: Context? = null
@@ -229,16 +231,17 @@ class KoreanIndexerListView : ListView {
      * @param keywordList 키워드 리스트
      */
     fun setKeywordList(keywordList: ArrayList<String>) {
-        Collections.sort(keywordList, OrderingByKorean.comparator)
-
+        //Collections.sort(keywordList, OrderingByKorean.comparator)
+        mapIndex = LinkedHashMap<String, Int>()
         for (i in keywordList.indices) {
             val item = keywordList[i]
-            var index = item.substring(0, 1)
+            var index = item.substring(0, 1).toUpperCase()
 
             val c = index.get(0)
             if (OrderingByKorean.isKorean(c)) {
                 index = KoreanChar.getCompatChoseong(c).toString()
             }
+
 
             if (mapIndex[index] == null)
                 mapIndex[index] = i
@@ -246,7 +249,12 @@ class KoreanIndexerListView : ListView {
 
         val indexList = ArrayList(mapIndex.keys)
         sections = arrayOfNulls(indexList.size)
-        indexList.toTypedArray<String>()
+        var j = 0
+        for(i in indexList){
+            sections[j] = i
+            j++
+        }
+        //indexList.toTypedArray<String>(sections)
 
         indexList.clear()
         indexList.trimToSize()
@@ -275,11 +283,12 @@ class KoreanIndexerListView : ListView {
 
         for (i in sections.indices) {
             val x = leftPosition + textPaint!!.textSize / 2
-            val calY:Float
+            var calY:Float
             if (this.height - (scaledCompensation + indexSize * i) > 100)
                 calY = scaledCompensation + paddingTop.toFloat() + indexerMargin + (indexSize * i).toFloat()
             else
                 calY = scaledCompensation + paddingTop.toFloat() + (indexSize * i).toFloat()
+
             canvas.drawText(sections[i]?.toUpperCase(), x, calY, textPaint!!)
         }
 
@@ -361,8 +370,13 @@ class KoreanIndexerListView : ListView {
         SectionIndexer {
 
         override fun getSections(): Array<Any> {
-            return sections
+            //TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+
+            return KoreanIndexerListView.sections as Array<Any>
         }
+        /*override fun getSections(): Array<Any> {
+            return sections
+        }*/
 
         override fun getPositionForSection(section: Int): Int {
             val letter = sections[section]
@@ -541,8 +555,8 @@ class KoreanIndexerListView : ListView {
     }
 
     companion object {
-        private var sections = arrayOf<String?>()
-        private val mapIndex = LinkedHashMap<String, Int>()
+        var sections = arrayOf<String?>()
+        private var mapIndex = LinkedHashMap<String, Int>()
     }
 
 }
