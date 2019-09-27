@@ -49,6 +49,7 @@
                     android:text="가맹점 주소"/>
 
             <TextView
+                    android:textColor="@color/colorPrimaryDark"
                     android:id="@+id/store_remark_text_view"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
