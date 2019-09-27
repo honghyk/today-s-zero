@@ -173,17 +173,21 @@ class MainFragment : Fragment() {
 
 
         var total_expense=dbHelper.getTotalExpense(currentYear)
-
-
         var benefit_expense = 0L
         var over_expense = 0L
-
         if (total_expense < ((dbHelper.getUser().income.toLong()) / 4))
-            benefitTextView.text = "0원"
+            benefitTextView.text = "약 0원"
         else {
             over_expense=dbHelper.getZeroPayExpense(currentYear)
+            if(over_expense > dbHelper.getUser().income.toLong() / 4)
+                over_expense = over_expense - dbHelper.getUser().income.toLong() / 4
+            if((over_expense  * 4) / 10 > 4000000)
+                over_expense = 4000000
+            else
+                over_expense = (over_expense  * 4) / 10
+
             benefit_expense =
-                dbHelper.getUser().income.toLong() - (((over_expense - (dbHelper.getUser().income.toLong() / 4)) * 4) / 10)
+                dbHelper.getUser().income.toLong() - over_expense
 
             var final_benefit = calculate_tax(benefit_expense)
 
