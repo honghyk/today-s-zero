@@ -238,10 +238,14 @@ class DBHelper(context: Context):SQLiteOpenHelper(context,DATABASE_NAME,null,DAT
     }
 
     //db 변경
-    fun updateUserIncome(income:String){
+    fun updateUser(user:user){
 
-        val value=ContentValues()
-        value.put(users.KEY_INCOME,income)
+        val value=ContentValues().apply{
+            put(users.KEY_NAME,user.uname)
+            put(users.KEY_INCOME,user.income)
+        }
+
+
         //val selection="${users.KEY_ID} LIKE ?"
         //val selectionArgs=arrayOf(uid)
         //val count=wdb.update(users.TABLE_NAME,value,selection,selectionArgs)
@@ -251,7 +255,6 @@ class DBHelper(context: Context):SQLiteOpenHelper(context,DATABASE_NAME,null,DAT
     }
 
     fun updateUserExpenditure(expenditure:String){
-        //expenditure 변경을 많이 쓸 것같아 따로.
         val value=ContentValues()
         value.put(users.KEY_EXPENDITURE,expenditure)
         //val selection="${users.KEY_ID} LIKE ?"
@@ -297,6 +300,7 @@ class DBHelper(context: Context):SQLiteOpenHelper(context,DATABASE_NAME,null,DAT
 
     //db  조회
     fun getUser(): user {
+        var user=user("",0,"0")
         val selectAllQuery="SELECT * FROM ${users.TABLE_NAME}"
         val cursor=rdb.rawQuery(selectAllQuery,null)
 
@@ -308,15 +312,15 @@ class DBHelper(context: Context):SQLiteOpenHelper(context,DATABASE_NAME,null,DAT
                     val name=cursor.getString(cursor.getColumnIndex(users.KEY_NAME))
                     val income=cursor.getString(cursor.getColumnIndex(users.KEY_INCOME))
                     val expenditure=cursor.getInt(cursor.getColumnIndex(users.KEY_EXPENDITURE))
-                    val result=user(name,expenditure,income)
-                    return result
-                }
+                    user=user(name,expenditure,income)
 
-                Log.i("findUser","no user")
+                }
+                return user
+
             }
+
         }
-        val fail=user("",0,"")
-        return fail
+        return user
     }
 
     fun getStorebyQuery(sid:Int,gu: String):Store{
@@ -467,7 +471,7 @@ class DBHelper(context: Context):SQLiteOpenHelper(context,DATABASE_NAME,null,DAT
         return zeroPayExpense.toLong()
 
     }
-    fun getExpense(date:String):String{
+    fun getExpense(date:String):Int{
 
         var expense=0
         val sql="SELECT SUM(${deals.KEY_PRICE}) FROM ${deals.TABLE_NAME} WHERE ${deals.KEY_DATE} LIKE ?"
@@ -477,8 +481,11 @@ class DBHelper(context: Context):SQLiteOpenHelper(context,DATABASE_NAME,null,DAT
             while (cursor.moveToNext()) {
                 expense=cursor.getInt(0)
             }
+
+
         }
-        return expense.toString()
+
+        return expense
 
     }
 

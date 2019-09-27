@@ -38,7 +38,7 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
 
         //데이터베이스 확인해서 true / false 값 설정하는 과정 필요
         val dbHelper = DBHelper(this)
-        val isUserInfoInit = dbHelper.getUser().uname != " "
+        val isUserInfoInit = dbHelper.getUser().uname !=""
         if(isUserInfoInit) {
             val mainFragment = supportFragmentManager.findFragmentById(R.id.main_contentFrame)
                     as MainFragment? ?: MainFragment().also {
@@ -53,7 +53,7 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
     }
 
     private fun loadUserDataAndShowWelcomeFrag() {
-         //사용자 이름, 총급여 정보를  데이터베이스에서 불러옴
+         //사용자 이름, 총 급여 정보를  데이터베이스에서 불러옴
         val dbHelper=DBHelper(this)
         var name: String = dbHelper.getUser().uname
         var income: Long = dbHelper.getUser().income.toLong()

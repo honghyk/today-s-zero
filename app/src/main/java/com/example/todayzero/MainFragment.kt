@@ -37,7 +37,6 @@ class MainFragment : Fragment() {
     lateinit var spentListView:RecyclerView
     lateinit var expenseTxt:TextView
     lateinit var expenseTxtTitle: TextView
-    lateinit var userExpenseTxt: TextView
     lateinit var layoutManager: LinearLayoutManager
     lateinit var dealAdapter: DealAdapter
     lateinit var dbHelper: DBHelper
@@ -74,7 +73,6 @@ class MainFragment : Fragment() {
             spentListView = findViewById(R.id.spent_list_view)
             expenseTxt = findViewById(R.id.userExpenseTxt)
             expenseTxtTitle = findViewById(R.id.expenseTxtTitle)
-            userExpenseTxt = findViewById(R.id.userExpenseTxt)
 
             layoutManager = LinearLayoutManager(requireContext(), RecyclerView.VERTICAL, false)
             spentListView.layoutManager = layoutManager
@@ -152,7 +150,7 @@ class MainFragment : Fragment() {
 
         expenseTxtTitle.text = currentMonth.toString() + EXPENSE_TITLE
         var expense = dbHelper.getExpense(date)
-        userExpenseTxt.text = NumberFormatter.format(expense) + "원"
+        expenseTxt.text = NumberFormatter.format(expense.toString()) + "원"
 
 
         var total_expense=dbHelper.getTotalExpense(currentYear)
@@ -172,7 +170,7 @@ class MainFragment : Fragment() {
 
             var normal_tax = calculate_tax(dbHelper.getUser().income.toLong())
 
-            benefitTextView.text = "약" + (normal_tax - final_benefit).toString() + "원"
+            benefitTextView.text = "약 " + (normal_tax - final_benefit).toString() + "원"
        }
     }
 //300000

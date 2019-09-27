@@ -49,12 +49,12 @@
                     android:text="가맹점 주소"/>
 
             <TextView
-                    android:textColor="@color/colorPrimaryDark"
+                    android:textColor="@color/colorAccent"
                     android:id="@+id/store_remark_text_view"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     style="@style/spoqa_text_black"
-                    android:textSize="14sp"
+                    android:textSize="13sp"
                     android:ellipsize="end"
                     android:text="비고"/>
 

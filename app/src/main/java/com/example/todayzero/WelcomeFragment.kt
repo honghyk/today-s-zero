@@ -55,7 +55,7 @@ class WelcomeFragment : Fragment() {
                         R.id.main_contentFrame
                     )
                 } else {
-                    Toast.makeText(requireContext(), "이름과 총급여를 모두 입력해주세요", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(requireContext(), "이름과 총 급여를 모두 입력해주세요", Toast.LENGTH_SHORT).show()
                 }
             }
         }
@@ -99,10 +99,14 @@ class WelcomeFragment : Fragment() {
     }
 
     private fun storeUserData(name: String, income: Long) {
-        //이름, 총급여 데이터 DB에 넣는 함수
+        //이름, 총 급여 데이터 DB에 넣는 함수
         val dbHelper=DBHelper(requireContext())
         val user= user(name,0,income.toString())
-        dbHelper.insertUser(user)
+        if(isModify)
+            dbHelper.updateUser(user)
+        else
+            dbHelper.insertUser(user)
+
     }
 
     companion object {
