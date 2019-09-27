@@ -1,68 +1,112 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-              android:background="@color/white"
-              android:orientation="vertical"
-              android:layout_width="match_parent"
-              android:layout_height="wrap_content"
-              android:paddingTop="10dp"
-              android:paddingRight="15dp"
+<android.support.constraint.ConstraintLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto" android:background="?android:colorBackground"
+        android:layout_width="match_parent"
+        android:layout_marginStart="16dp"
+        android:layout_marginEnd="16dp"
+        android:layout_height="56dp">
 
->
-    <LinearLayout
-
-            android:orientation="horizontal"
-            android:layout_width="match_parent"
+    <ImageView
+            android:id="@+id/deal_list_img"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            >
+            android:src="@drawable/ic_exposure_zero_blue_24dp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"/>
 
-        <ImageView
-                android:id="@+id/deal_list_img"
-                android:src="@drawable/ic_exposure_zero_blue_24dp"
-                android:layout_gravity="center_vertical"
-                android:layout_width="42dp"
-                android:layout_height="42dp"/>
-        <LinearLayout
-                android:layout_gravity="center_vertical"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:orientation="vertical"
-        >
-            <TextView
-                    android:id="@+id/deal_list_store"
-                    android:text="스타벅스"
-                    android:layout_width="wrap_content"
-                    android:maxWidth="270dp"
-                    android:maxLines="1"
-                    android:layout_height="wrap_content"
-                    android:textSize="20sp"
-                    android:textColor="@color/black"
-            />
-            <TextView
-                    android:id="@+id/deal_list_pay"
-                    android:text="제로페이 결제"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:textSize="12sp"
-            />
-
-        </LinearLayout>
     <TextView
-              android:id="@+id/deal_list_price"
-              android:text="30000원"
-              android:minWidth="80dp"
-              android:layout_width="wrap_content"
-              android:layout_weight="1"
-              android:layout_height="wrap_content"
-              android:textSize="18sp"
-              android:layout_gravity="end|center_vertical"
-              android:gravity="right"
-    />
-    </LinearLayout>
-    <View
-            android:layout_marginLeft="12dp"
-            android:layout_width="match_parent"
-            android:layout_height="0.5dp"
-            android:background="#879cac"
-            android:layout_marginTop="7dp"
-    />
-</LinearLayout>
+            android:id="@+id/deal_list_store"
+            android:text="dddddd"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/deal_list_img"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="4dp"
+            style="@style/spoqa_text_black"
+            android:textSize="18sp"/>
+
+    <TextView
+            android:text="dddddddd"
+            android:id="@+id/deal_list_pay"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintStart_toEndOf="@id/deal_list_img"
+            app:layout_constraintTop_toBottomOf="@id/deal_list_store"
+            android:layout_marginStart="16dp"
+            android:layout_marginBottom="8dp"
+            android:textSize="12sp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            style="@style/spoqa_text_black"
+            android:textColor="@color/gray"/>
+
+    <TextView
+            android:text="00000"
+            android:id="@+id/deal_list_price"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            style="@style/spoqa_text_black"
+            android:textSize="18sp"/>
+    <!--<LinearLayout-->
+
+    <!--android:orientation="horizontal"-->
+    <!--android:layout_width="match_parent"-->
+    <!--android:layout_height="wrap_content"-->
+    <!--&gt;-->
+
+    <!--<ImageView-->
+    <!--android:id="@+id/deal_list_img"-->
+    <!--android:src="@drawable/ic_exposure_zero_blue_24dp"-->
+    <!--android:layout_gravity="center_vertical"-->
+    <!--android:layout_width="42dp"-->
+    <!--android:layout_height="42dp"/>-->
+    <!--<LinearLayout-->
+    <!--android:layout_gravity="center_vertical"-->
+    <!--android:layout_width="wrap_content"-->
+    <!--android:layout_height="wrap_content"-->
+    <!--android:orientation="vertical"-->
+    <!--&gt;-->
+    <!--<TextView-->
+    <!--android:id="@+id/deal_list_store"-->
+    <!--android:text="스타벅스"-->
+    <!--android:layout_width="wrap_content"-->
+    <!--android:maxWidth="270dp"-->
+    <!--android:maxLines="1"-->
+    <!--android:layout_height="wrap_content"-->
+    <!--android:textSize="20sp"-->
+    <!--android:textColor="@color/black"-->
+    <!--/>-->
+    <!--<TextView-->
+    <!--android:id="@+id/deal_list_pay"-->
+    <!--android:text="제로페이 결제"-->
+    <!--android:layout_width="wrap_content"-->
+    <!--android:layout_height="wrap_content"-->
+    <!--android:textSize="12sp"-->
+    <!--/>-->
+
+    <!--</LinearLayout>-->
+    <!--<TextView-->
+    <!--android:id="@+id/deal_list_price"-->
+    <!--android:text="30000원"-->
+    <!--android:minWidth="80dp"-->
+    <!--android:layout_width="wrap_content"-->
+    <!--android:layout_weight="1"-->
+    <!--android:layout_height="wrap_content"-->
+    <!--android:textSize="18sp"-->
+    <!--android:layout_gravity="end|center_vertical"-->
+    <!--android:gravity="right"-->
+    <!--/>-->
+    <!--</LinearLayout>-->
+    <!--<View-->
+    <!--android:layout_marginLeft="12dp"-->
+    <!--android:layout_width="match_parent"-->
+    <!--android:layout_height="0.5dp"-->
+    <!--android:background="#879cac"-->
+    <!--android:layout_marginTop="7dp"-->
+    <!--/>-->
+</android.support.constraint.ConstraintLayout>

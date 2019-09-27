@@ -7,7 +7,6 @@ import android.support.design.widget.NavigationView
 import android.support.v4.view.GravityCompat
 import android.support.v7.app.ActionBarDrawerToggle
 import android.support.v7.app.AppCompatActivity
-import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
 import com.example.todayzero.db.DBHelper
@@ -37,10 +36,9 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
 
         nav_view.setNavigationItemSelectedListener(this)
 
-        //데이터베이스 확인해서 true / falseㅑㅜㅑ 값 설정하는 과정 필요
-        val dbHelper=DBHelper(this)
-        val isUserInfoInit = if(dbHelper.getUser().uname==" "){true }else{false}
-        Log.i("test",dbHelper.getUser().uname)
+        //데이터베이스 확인해서 true / false 값 설정하는 과정 필요
+        val dbHelper = DBHelper(this)
+        val isUserInfoInit = dbHelper.getUser().uname != " "
         if(isUserInfoInit) {
             val mainFragment = supportFragmentManager.findFragmentById(R.id.main_contentFrame)
                     as MainFragment? ?: MainFragment().also {
@@ -65,11 +63,9 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
 
     private fun showWelcomeFragToModifyUserData(name: String, income: Long) {
         val welcomeFragment = WelcomeFragment.newInstance(name, income).also {
-            replaceFragInActNotAddToBackStack(it, R.id.main_contentFrame)
+            replaceFragmentInActivity(it, R.id.main_contentFrame)
         }
     }
-
-
 
     override fun onBackPressed() {
         if (drawer_layout.isDrawerOpen(GravityCompat.START)) {

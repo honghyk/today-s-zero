@@ -6,7 +6,6 @@ import android.database.sqlite.SQLiteDatabase
 import android.database.sqlite.SQLiteOpenHelper
 import android.provider.BaseColumns
 import android.util.Log
-import com.example.todayzero.findstore.StoreActivity.Companion.storeList
 import com.example.todayzero.data.Store
 
 
@@ -223,12 +222,14 @@ class DBHelper(context: Context):SQLiteOpenHelper(context,DATABASE_NAME,null,DAT
     fun deleteUser(){
         wdb.delete(users.TABLE_NAME,null,null)
     }
+
     fun deleteStore(sid:String,gu:String){   //gu 에 삭제할 store.locatlity  입력
 
         val selection="${BaseColumns._ID} = ?"
         val selectionArgs=arrayOf(sid)
         wdb.delete(stores.TABLE_NAME+gu,selection,selectionArgs)
     }
+
     fun deleteDeal(did: String){
         val selection="${BaseColumns._ID} = ?"
         val selectionArgs=arrayOf(did)
@@ -248,6 +249,7 @@ class DBHelper(context: Context):SQLiteOpenHelper(context,DATABASE_NAME,null,DAT
 
         Log.i("updateDB_user","$count")
     }
+
     fun updateUserExpenditure(expenditure:String){
         //expenditure 변경을 많이 쓸 것같아 따로.
         val value=ContentValues()
@@ -337,10 +339,6 @@ class DBHelper(context: Context):SQLiteOpenHelper(context,DATABASE_NAME,null,DAT
         return store
     }
 
-    fun getStore(sid:Int,gu:String):Store{ //gu: 찾으려는 store의 locality
-        var store=getStores(gu).get(sid-1)
-        return store
-    }
 
     fun getStores(gu:String):ArrayList<Store>{
 
@@ -394,11 +392,6 @@ class DBHelper(context: Context):SQLiteOpenHelper(context,DATABASE_NAME,null,DAT
         return storeList
     }
 
-    fun getDeal(did:Int,date:String):deal{
-
-        var deal=getDeals(date).get(did-1)
-        return deal
-    }
     fun getDeals(date:String):ArrayList<deal>{
 
         val dealList=ArrayList<deal>()
@@ -447,5 +440,18 @@ class DBHelper(context: Context):SQLiteOpenHelper(context,DATABASE_NAME,null,DAT
 
     }
 
+    fun getZeroPayExpense():String{
+        var zeroPayExpense=0
+        val sql="SELECT SUM(${deals.KEY_PRICE}) FROM ${deals.TABLE_NAME} WHERE ${deals.KEY_ISZERO} = ?"
+        val selectionArgs=arrayOf("1")
+        val cursor=rdb.rawQuery(sql,selectionArgs)
+        if(cursor!=null) {
+            while (cursor.moveToNext()) {
+                zeroPayExpense=cursor.getInt(0)
+            }
+        }
+        return zeroPayExpense.toString()
+
+    }
 
 }

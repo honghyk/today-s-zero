@@ -15,6 +15,7 @@ import android.widget.EditText
 import android.widget.Toast
 import com.example.todayzero.db.DBHelper
 import com.example.todayzero.db.user
+import com.example.todayzero.util.NumberFormatter
 import com.example.todayzero.util.replaceFragInActNotAddToBackStack
 import kotlinx.android.synthetic.main.activity_main.*
 import java.text.NumberFormat
@@ -80,15 +81,10 @@ class WelcomeFragment : Fragment() {
             override fun afterTextChanged(s: Editable?) {
                 userIncomeEditText.removeTextChangedListener(this)
                 var income = s.toString()
-                if (income.contains(",")) {
-                    income = income.replace(",", "")
-                }
-                if(income.isNotEmpty()) {
-                    val incomeLong = income.toLong()
-                    income = NumberFormat.getNumberInstance().format(incomeLong)
-                    userIncomeEditText.setText(income)
-                    userIncomeEditText.setSelection(income.length)
-                }
+                income = NumberFormatter.format(income)
+
+                userIncomeEditText.setText(income)
+                userIncomeEditText.setSelection(income.length)
                 userIncomeEditText.addTextChangedListener(this)
             }
 
@@ -107,7 +103,6 @@ class WelcomeFragment : Fragment() {
         val dbHelper=DBHelper(requireContext())
         val user= user(name,0,income.toString())
         dbHelper.insertUser(user)
-
     }
 
     companion object {

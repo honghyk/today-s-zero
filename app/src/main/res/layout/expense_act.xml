@@ -102,6 +102,8 @@
                 app:layout_constraintStart_toEndOf="@+id/place_text"
                 app:layout_constraintTop_toBottomOf="@id/category_edit_text"
                 app:layout_constraintEnd_toEndOf="parent"
+                android:maxLines="1"
+                android:inputType="text"
                 android:layout_marginStart="52dp"
                 android:layout_marginTop="@dimen/expense_edit_margin_top"/>
 
@@ -113,7 +115,8 @@
                 style="@style/spoqa_text_black"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintEnd_toStartOf="@id/date_layout"
-                app:layout_constraintBottom_toBottomOf="@id/date_layout" android:layout_marginBottom="4dp"/>
+                app:layout_constraintBottom_toBottomOf="@id/date_layout"
+                android:layout_marginBottom="4dp"/>
 
         <android.support.constraint.ConstraintLayout
                 android:id="@+id/date_layout"
