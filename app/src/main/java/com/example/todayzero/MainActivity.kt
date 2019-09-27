@@ -7,7 +7,6 @@ import android.support.design.widget.NavigationView
 import android.support.v4.view.GravityCompat
 import android.support.v7.app.ActionBarDrawerToggle
 import android.support.v7.app.AppCompatActivity
-import android.view.Menu
 import android.view.MenuItem
 import com.example.todayzero.db.DBHelper
 import com.example.todayzero.expense.ExpenseActivity
@@ -75,19 +74,19 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         }
     }
 
-    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
-        menuInflater.inflate(R.menu.main_option_menu, menu)
-
-        return true
-    }
-
-    override fun onOptionsItemSelected(item: MenuItem?): Boolean {
-        if(item!!.itemId == R.id.menu_modify) {
-            loadUserDataAndShowWelcomeFrag()
-        }
-
-        return super.onOptionsItemSelected(item)
-    }
+//    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
+//        menuInflater.inflate(R.menu.main_option_menu, menu)
+//
+//        return true
+//    }
+//
+//    override fun onOptionsItemSelected(item: MenuItem?): Boolean {
+//        if(item!!.itemId == R.id.menu_modify) {
+//            loadUserDataAndShowWelcomeFrag()
+//        }
+//
+//        return super.onOptionsItemSelected(item)
+//    }
 
     override fun onNavigationItemSelected(item: MenuItem): Boolean {
         // Handle navigation view item clicks here.

@@ -6,6 +6,7 @@ import android.location.Address
 import android.location.Geocoder
 import android.os.Bundle
 import android.support.v4.app.Fragment
+import android.support.v7.widget.CardView
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -32,6 +33,7 @@ class StoreMapFragment : Fragment(), OnMapReadyCallback {
     lateinit var  storenameTextview:TextView
     lateinit var storeaddrTextView: TextView
     lateinit var storeremarkTextView: TextView
+    lateinit var storeCardView: CardView
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -45,7 +47,7 @@ class StoreMapFragment : Fragment(), OnMapReadyCallback {
             storenameTextview=findViewById(R.id.store_name_text_view)
             storeaddrTextView=findViewById(R.id.store_addr_text_view)
             storeremarkTextView=findViewById(R.id.store_remark_text_view)
-
+            storeCardView = findViewById(R.id.map_store_card)
 
             mapView = findViewById(R.id.mapView)
             addExpenseBtn = findViewById<Button>(R.id.map_add_expense_button).apply {
@@ -76,6 +78,7 @@ class StoreMapFragment : Fragment(), OnMapReadyCallback {
             storenameTextview.text=store.name
             storeaddrTextView.text=store.addr
             storeremarkTextView.text= store.type
+            storeCardView.visibility = View.VISIBLE
 
             addrList = geocoder.getFromLocationName(store.addr, 3)
         } catch(e: Exception) {

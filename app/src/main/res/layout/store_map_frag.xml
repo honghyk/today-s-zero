@@ -15,6 +15,7 @@
             android:id="@+id/map_store_card"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:visibility="invisible"
             app:cardCornerRadius="8dp"
             app:contentPadding="16dp"
             app:contentPaddingBottom="8dp"

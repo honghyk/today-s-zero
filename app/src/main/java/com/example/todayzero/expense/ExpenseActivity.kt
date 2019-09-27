@@ -141,8 +141,8 @@ class ExpenseActivity : AppCompatActivity() {
         val timeFormat = SimpleDateFormat("k시 m분", Locale.KOREA)
 
 
-         date_pick_text.text = dateFormat.format(currentDate)
-         time_pick_text.text = timeFormat.format(currentDate)
+         datePickText.text = dateFormat.format(currentDate)
+         datePickText.text = timeFormat.format(currentDate)
 
 
         store = intent.getStringExtra(STORE_NAME_TAG)
@@ -160,8 +160,12 @@ class ExpenseActivity : AppCompatActivity() {
             price_edit_text.setText(update_deal?.price)
             category_edit_text.setText(update_deal?.category)
             place_edit_text.setText(update_deal?.store)
-            datePickText.text = update_deal?.date
-            timePickText.text = " "
+            val st = StringTokenizer(update_deal?.date, " ")
+            datePickText.text = st.nextToken()
+            var time = ""
+            while(st.hasMoreTokens())
+                time += st.nextToken()
+            timePickText.text = time
             memo_edit_text.setText(update_deal?.memo)
 
         } else

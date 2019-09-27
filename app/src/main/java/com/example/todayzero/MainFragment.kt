@@ -7,6 +7,9 @@ import android.os.Bundle
 import android.support.design.widget.FloatingActionButton
 import android.support.design.widget.NavigationView
 import android.support.v4.app.Fragment
+import android.support.v4.view.GravityCompat
+import android.support.v4.widget.DrawerLayout
+import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.DividerItemDecoration
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
@@ -21,9 +24,8 @@ import com.example.todayzero.db.deal
 import com.example.todayzero.expense.ExpenseActivity
 import com.example.todayzero.util.DealAdapter
 import com.example.todayzero.util.NumberFormatter
-import com.google.android.libraries.places.internal.i
+import com.example.todayzero.util.replaceFragmentInActivity
 import kotlinx.android.synthetic.main.activity_main.*
-import kotlinx.android.synthetic.main.main_frag.*
 import java.util.*
 
 
@@ -138,7 +140,25 @@ class MainFragment : Fragment() {
         val navHeaderView = navView.getHeaderView(0)
         val navUserNameTextView = navHeaderView.findViewById<TextView>(R.id.nav_header_user_text)
         navUserNameTextView.text = String.format("%s님 안녕하세요", userName)
+        val navModifyUserTextView = navHeaderView.findViewById<TextView>(R.id.nav_modify_text)
+        navModifyUserTextView.setOnClickListener {
+            requireActivity().findViewById<DrawerLayout>(R.id.drawer_layout).closeDrawer(GravityCompat.START)
+            loadUserDataAndShowWelcomeFrag()
+        }
+    }
 
+    private fun loadUserDataAndShowWelcomeFrag() {
+        //사용자 이름, 총 급여 정보를  데이터베이스에서 불러옴
+        val name: String = dbHelper.getUser().uname
+        val income: Long = dbHelper.getUser().income.toLong()
+
+        showWelcomeFragToModifyUserData(name, income)
+    }
+
+    private fun showWelcomeFragToModifyUserData(name: String, income: Long) {
+        val welcomeFragment = WelcomeFragment.newInstance(name, income).also {
+            (requireActivity() as AppCompatActivity).replaceFragmentInActivity(it, R.id.main_contentFrame)
+        }
     }
 
     fun loadMonthlyDealList() {
