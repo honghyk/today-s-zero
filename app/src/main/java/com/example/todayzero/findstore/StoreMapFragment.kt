@@ -10,6 +10,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
+import android.widget.TextView
 import android.widget.Toast
 import com.example.todayzero.R
 import com.example.todayzero.data.Store
@@ -28,6 +29,9 @@ class StoreMapFragment : Fragment(), OnMapReadyCallback {
     lateinit var mapView: MapView
     var addrList: MutableList<Address>? = null
     lateinit var addExpenseBtn: Button
+    lateinit var  storenameTextview:TextView
+    lateinit var storeaddrTextView: TextView
+    lateinit var storeremarkTextView: TextView
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -37,16 +41,28 @@ class StoreMapFragment : Fragment(), OnMapReadyCallback {
         val root = inflater.inflate(R.layout.store_map_frag, container, false)
 
         with(root) {
+
+            storenameTextview=findViewById(R.id.store_name_text_view)
+            storeaddrTextView=findViewById(R.id.store_addr_text_view)
+            storeremarkTextView=findViewById(R.id.store_remark_text_view)
+
+
             mapView = findViewById(R.id.mapView)
             addExpenseBtn = findViewById<Button>(R.id.map_add_expense_button).apply {
                 setOnClickListener { showExpenseActivity() }
             }
+
         }
 
         mapView.onCreate(savedInstanceState)
         mapView.getMapAsync(this)
 
         return root
+    }
+
+    override fun onActivityCreated(savedInstanceState: Bundle?) {
+        super.onActivityCreated(savedInstanceState)
+
     }
 
     override fun onMapReady(p0: GoogleMap?) {
@@ -57,6 +73,10 @@ class StoreMapFragment : Fragment(), OnMapReadyCallback {
         val storeLng: Double
 
         try {
+            storenameTextview.text=store.name
+            storeaddrTextView.text=store.addr
+            storeremarkTextView.text= store.type
+
             addrList = geocoder.getFromLocationName(store.addr, 3)
         } catch(e: Exception) {
             e.printStackTrace()
@@ -71,6 +91,8 @@ class StoreMapFragment : Fragment(), OnMapReadyCallback {
                 val markerOption = MarkerOptions()
                 markerOption.position(LatLng(storeLat, storeLng))
                 googleMap.addMarker(markerOption)
+
+
             }
         }
     }
