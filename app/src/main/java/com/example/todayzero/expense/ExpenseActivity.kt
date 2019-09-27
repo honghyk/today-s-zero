@@ -97,7 +97,7 @@ class ExpenseActivity : AppCompatActivity() {
                 holder: ExpenseCategoryAdapter.ViewHolder,
                 view: View,
                 data: Category,
-                posㅇition: Int
+                position: Int
             ) {
                 category_edit_text.setText(data.category_string)
                 recyclerview.visibility = View.GONE

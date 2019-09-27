@@ -5,7 +5,6 @@ import android.content.Context
 import android.database.sqlite.SQLiteDatabase
 import android.database.sqlite.SQLiteOpenHelper
 import android.provider.BaseColumns
-import android.util.Log
 import com.example.todayzero.data.Store
 
 
@@ -23,7 +22,7 @@ class DBHelper(context: Context):SQLiteOpenHelper(context,DATABASE_NAME,null,DAT
         for(gu in 1..25){
             var sql= "DROP TABLE IF EXISTS '${zone[gu]}'"
             db.execSQL(sql)
-            Log.i("create db","create stable ${zone[gu]}")
+//            Log.i("create db","create stable ${zone[gu]}")
         }
         db.execSQL("DROP TABLE IF EXISTS '${deals.TABLE_NAME}'")
         onCreate(db)
@@ -33,18 +32,18 @@ class DBHelper(context: Context):SQLiteOpenHelper(context,DATABASE_NAME,null,DAT
 
         //zeroPayDB에 users 와 stores 테이블 생성
         db.execSQL(SQL_CREATE_TABLE_USERS)
-        Log.i("create db","create utable")
+//        Log.i("create db","create utable")
 
         //table name : stores강남구, stores마포구
         for(gu in 1..25){
             var sql= SQL_CREATE_TABLE_STORES_PRE+"${zone[gu]}"+ SQL_CREATE_TABLE_STORES_POST
             db.execSQL(sql)
-            Log.i("create db","create stable ${zone[gu]}")
+//            Log.i("create db","create stable ${zone[gu]}")
         }
 
 
         db.execSQL(SQL_CREATE_TABLE_DEALS)
-        Log.i("create db","create dtable")
+//        Log.i("create db","create dtable")
 
     }
 
@@ -52,17 +51,17 @@ class DBHelper(context: Context):SQLiteOpenHelper(context,DATABASE_NAME,null,DAT
 
         //zeroPayDB에 users 와 stores 테이블 생성
         wdb.execSQL(SQL_CREATE_TABLE_USERS)
-        Log.i("create db","create utable")
+//        Log.i("create db","create utable")
 
         for(gu in 1..25){
             var sql= SQL_CREATE_TABLE_STORES_PRE+"${zone[gu]}"+ SQL_CREATE_TABLE_STORES_POST
             wdb.execSQL(sql)
-            Log.i("create db","create stable ${zone[gu]}")
+//            Log.i("create db","create stable ${zone[gu]}")
         }
 
 
         wdb.execSQL(SQL_CREATE_TABLE_DEALS)
-        Log.i("create db","create dtable")
+//        Log.i("create db","create dtable")
     }
 
     companion object {

@@ -19,7 +19,7 @@
 
     <TextView
             android:id="@+id/deal_list_store"
-            android:text="dddddd"
+            android:text="ddbbbbbbbbbbbbbbdddd"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             app:layout_constraintTop_toTopOf="parent"
@@ -27,7 +27,10 @@
             android:layout_marginStart="16dp"
             android:layout_marginTop="4dp"
             style="@style/spoqa_text_black"
-            android:textSize="18sp"/>
+            android:maxLines="1"
+            android:ellipsize="end"
+            android:textSize="18sp"
+            android:layout_marginEnd="8dp" app:layout_constraintEnd_toStartOf="@+id/deal_list_price"/>
 
     <TextView
             android:text="dddddddd"
@@ -44,7 +47,7 @@
             android:textColor="@color/gray"/>
 
     <TextView
-            android:text="00000"
+            android:text="0000000"
             android:id="@+id/deal_list_price"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -52,7 +55,8 @@
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             style="@style/spoqa_text_black"
-            android:textSize="18sp"/>
+            android:textSize="18sp"
+    />
     <!--<LinearLayout-->
 
     <!--android:orientation="horizontal"-->

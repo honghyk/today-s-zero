@@ -39,7 +39,7 @@
 
             <TextView
                     android:id="@+id/userExpenseTxt"
-                    android:text="200,000원"
+                    android:text="2,000원"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     style="@style/spoqa_text_white"
