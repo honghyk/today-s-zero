@@ -16,9 +16,9 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             app:layout_constraintStart_toStartOf="parent"
+            android:id="@+id/account_image"
             android:layout_marginBottom="8dp"
-            app:layout_constraintBottom_toTopOf="@+id/nav_header_user_text"
-            android:id="@+id/account_image"/>
+            app:layout_constraintBottom_toBottomOf="parent"/>
 
     <TextView
             android:id="@+id/nav_header_user_text"
@@ -27,8 +27,8 @@
             android:layout_height="wrap_content"
             style="@style/spoqa_text_white"
             android:textSize="18sp"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintStart_toStartOf="parent"/>
+            app:layout_constraintStart_toStartOf="@+id/nav_modify_text"
+            app:layout_constraintBottom_toTopOf="@+id/nav_modify_text"/>
 
     <!--<ImageView-->
     <!--android:layout_width="16dp"-->
@@ -46,11 +46,10 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="8dp"
-            android:layout_marginBottom="8dp"
             android:textSize="12sp"
             android:drawableStart="@drawable/ic_pencil_icon_16dp"
             android:drawablePadding="4dp"
             app:layout_constraintStart_toEndOf="@id/account_image"
-            app:layout_constraintBottom_toTopOf="@id/nav_header_user_text"/>
+            app:layout_constraintBottom_toBottomOf="@+id/account_image"/>
 
 </android.support.constraint.ConstraintLayout>

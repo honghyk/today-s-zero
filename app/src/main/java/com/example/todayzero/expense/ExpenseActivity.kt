@@ -142,7 +142,7 @@ class ExpenseActivity : AppCompatActivity() {
 
 
          datePickText.text = dateFormat.format(currentDate)
-         datePickText.text = timeFormat.format(currentDate)
+         timePickText.text = timeFormat.format(currentDate)
 
 
         store = intent.getStringExtra(STORE_NAME_TAG)
