@@ -117,7 +117,6 @@ class ExpenseActivity : AppCompatActivity() {
         DatePickerDialog(this, DatePickerDialog.OnDateSetListener { view, year, month, dayOfMonth ->
 
             val date = if(month<9){"$year.0${month + 1}.$dayOfMonth"}else{"$year.${month + 1}.$dayOfMonth"}
-            //val date = "$year.${month + 1}.$dayOfMonth"
                 datePickText.text = date
             }, year, month, day).show()
     }
@@ -199,32 +198,8 @@ class ExpenseActivity : AppCompatActivity() {
            dbHelper.updateDeal(update_deal!!.did,deal)
         }
 
-//        updateUI()
-
 
 }
-//    private fun updateUI(){
-//
-//        userExpenseTxt.setText(datePickText.text.toString().substring(5,7)+ EXPENSE_TITLE)
-//
-//        expenseTxtTitle.text=dbHelper.getExpense(datePickText.text.toString().substring(0,7))
-//        val deallist=dbHelper.getDeals(datePickText.text.toString().substring(0,7))
-//        val adapter= DealAdapter(deallist)
-//        adapter.notifyDataSetChanged()
-//        spentListView.adapter=adapter
-//
-//        adapter.itemClickListener=object:DealAdapter.OnItemClickListener{
-//            override fun onItemClick(holder: DealAdapter.ViewHolder, view: View, data: deal, position: Int) {
-//
-//                val intent=Intent(applicationContext, ExpenseActivity::class.java)
-//                intent.putExtra(UPDATE_DEAL_TAG,true)
-//                intent.putExtra(UPDATE_DEAL_DATA_TAG,data)
-//
-//                startActivity(intent)
-//            }
-//        }
-//    }
-
     private fun checkDealForm(): Boolean {
         val categoryEdit = category_edit_text.text.toString()
         val storeEdit = place_edit_text.text.toString()
@@ -252,7 +227,6 @@ class ExpenseActivity : AppCompatActivity() {
             }
             R.id.delete -> {
                 dbHelper.deleteDeal(update_deal!!.did)
-//                updateUI()
                 startActivity(intent)
             }
         }

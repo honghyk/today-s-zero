@@ -36,7 +36,7 @@
                     android:ellipsize="end"
                     android:textStyle="bold"
                     android:textSize="18sp"
-                    android:text="가맹점 이름"/>
+                   />
 
             <TextView
                     android:id="@+id/store_addr_text_view"
@@ -46,7 +46,7 @@
                     android:textSize="14sp"
                     android:maxLines="2"
                     android:layout_marginTop="8dp"
-                    android:text="가맹점 주소"/>
+                    />
 
             <TextView
                     android:textColor="@color/colorAccent"
@@ -56,7 +56,7 @@
                     style="@style/spoqa_text_black"
                     android:textSize="13sp"
                     android:ellipsize="end"
-                    android:text="비고"/>
+                    />
 
             <Button
                     android:id="@+id/map_add_expense_button"

@@ -152,7 +152,6 @@ class DBHelper(context: Context):SQLiteOpenHelper(context,DATABASE_NAME,null,DAT
                     put(stores.KEY_INFO,Stores.get(i).type)
                 }
                 val success=wdb.insert(stores.TABLE_NAME+Stores.get(i).locality,null,values)
-                //  Log.i("test ","${Stores.get(i).locality} +$success + storekeyID+ ${Stores.get(i).sid}")
             }
             wdb.setTransactionSuccessful()
         }finally {
@@ -174,7 +173,6 @@ class DBHelper(context: Context):SQLiteOpenHelper(context,DATABASE_NAME,null,DAT
                 }
 
                 val success=wdb.insert(stores.TABLE_NAME+store.locality,null,values)
-              //  Log.i("InsertedStoreID: ","${store.locality} +$success + storekeyID+ ${store.sid}")
 
             }
             else {
@@ -245,20 +243,6 @@ class DBHelper(context: Context):SQLiteOpenHelper(context,DATABASE_NAME,null,DAT
             put(users.KEY_INCOME,user.income)
         }
 
-
-        //val selection="${users.KEY_ID} LIKE ?"
-        //val selectionArgs=arrayOf(uid)
-        //val count=wdb.update(users.TABLE_NAME,value,selection,selectionArgs)
-        val count=wdb.update(users.TABLE_NAME,value,null,null)
-
-        Log.i("updateDB_user","$count")
-    }
-
-    fun updateUserExpenditure(expenditure:String){
-        val value=ContentValues()
-        value.put(users.KEY_EXPENDITURE,expenditure)
-        //val selection="${users.KEY_ID} LIKE ?"
-        //val selectionArgs=arrayOf(uid)
         val count=wdb.update(users.TABLE_NAME,value,null,null)
 
         Log.i("updateDB_user","$count")
@@ -323,27 +307,6 @@ class DBHelper(context: Context):SQLiteOpenHelper(context,DATABASE_NAME,null,DAT
         return user
     }
 
-    fun getStorebyQuery(sid:Int,gu: String):Store{
-        // 스토어 빨리 찾기
-        val projection=arrayOf(BaseColumns._ID,stores.KEY_NAME,stores.KEY_ADDR,stores.KEY_GU,stores.KEY_INFO)
-
-        val selection="${BaseColumns._ID} = ?"
-        val selectionArgs=arrayOf(sid.toString())
-        lateinit var store:Store
-        val cursor=rdb.query(stores.TABLE_NAME, projection, selection,  selectionArgs,null,null,null)
-        while (cursor.moveToNext()) {
-            val sid = cursor.getInt(cursor.getColumnIndex(BaseColumns._ID))
-            val name = cursor.getString(cursor.getColumnIndex(stores.KEY_NAME))
-            val addr = cursor.getString(cursor.getColumnIndex(stores.KEY_ADDR))
-            val gu = cursor.getString(cursor.getColumnIndex(stores.KEY_GU))
-            val info = cursor.getString(cursor.getColumnIndex(stores.KEY_INFO))
-            store = Store(sid, name, addr, gu,"", info)
-            Log.i("getStore",store.sid.toString())
-        }
-        return store
-    }
-
-
     fun findStores(guNum:Int, storeName:String, store_addr:String):ArrayList<Store>{
         val storeList=ArrayList<Store>()
         val gu = zone[guNum]
@@ -362,7 +325,6 @@ class DBHelper(context: Context):SQLiteOpenHelper(context,DATABASE_NAME,null,DAT
                 val gu = cursor.getString(cursor.getColumnIndex(stores.KEY_GU))
                 val info = cursor.getString(cursor.getColumnIndex(stores.KEY_INFO))
                 val store = Store(sid, name, addr, gu, "",info)
-                Log.i("getStore",store.sid.toString())
 
                 storeList.add(store)
             }
@@ -380,7 +342,6 @@ class DBHelper(context: Context):SQLiteOpenHelper(context,DATABASE_NAME,null,DAT
             stores.KEY_INFO)
         val cursor=rdb.query(stores.TABLE_NAME+gu,projection,null,null,null,null,null,null)
         if(cursor!=null) {
-            Log.i("getStore","cursor")
             while (cursor.moveToNext()) {
                 val sid = cursor.getInt(cursor.getColumnIndex(BaseColumns._ID))
                 val name = cursor.getString(cursor.getColumnIndex(stores.KEY_NAME))
@@ -406,7 +367,6 @@ class DBHelper(context: Context):SQLiteOpenHelper(context,DATABASE_NAME,null,DAT
             stores.KEY_INFO)
         val cursor=rdb.query(stores.TABLE_NAME+zone[gu],projection,null,null,null,null,null,null)
         if(cursor!=null) {
-            Log.i("getStore","cursor")
             while (cursor.moveToNext()) {
                 val sid = cursor.getInt(cursor.getColumnIndex(BaseColumns._ID))
                 val name = cursor.getString(cursor.getColumnIndex(stores.KEY_NAME))
@@ -436,7 +396,6 @@ class DBHelper(context: Context):SQLiteOpenHelper(context,DATABASE_NAME,null,DAT
         val sortOrder="${deals.KEY_DATE} DESC"
         val cursor=rdb.query(deals.TABLE_NAME,projection,selection,selectionArgs,null,null,sortOrder,null)
 
-        //val cursor=rdb.query(deals.TABLE_NAME,projection,null,null,null,null,sortOrder,null)
         if(cursor!=null) {
             while (cursor.moveToNext()) {
                 val did = cursor.getString(cursor.getColumnIndex(BaseColumns._ID))
@@ -449,7 +408,6 @@ class DBHelper(context: Context):SQLiteOpenHelper(context,DATABASE_NAME,null,DAT
 
                 val deal = deal(did, date, sname, price, category, memo, isZero)
                 dealList.add(deal)
-                Log.i("searchdeal",deal.date)
 
             }
         }else{
