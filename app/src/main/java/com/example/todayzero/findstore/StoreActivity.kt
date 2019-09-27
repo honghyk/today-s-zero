@@ -45,6 +45,7 @@ class StoreActivity : AppCompatActivity() {
         * */
         dbHelper = DBHelper(this)
         storeList = ArrayList<ArrayList<Store>>()
+        progress_circular.visibility = ProgressBar.VISIBLE
         if (dbHelper.getStores("중랑구").isEmpty()) {
             for (i in 0..24) storeList.add(ArrayList())
             val assetManager = applicationContext.assets
@@ -62,7 +63,6 @@ class StoreActivity : AppCompatActivity() {
                 assetManager.open("storelist11.json")
             )
             val storeDataRepository = StoreRepository(storeList)
-            progress_circular.visibility = ProgressBar.VISIBLE
             storeDataRepository.initStore(fisList, object :
                 DataSource.LoadDataCallback {
                 override fun onDataLoaded() {
