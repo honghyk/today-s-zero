@@ -190,11 +190,11 @@ class MainFragment : Fragment() {
 
             var normal_tax = calculate_tax(dbHelper.getUser().income.toLong())
 
-            benefitTextView.text = "약 " + (normal_tax - final_benefit).toString() + "원"
+            benefitTextView.text = "약 " + NumberFormatter.format((normal_tax - final_benefit).toString()) + "원"
        }
     }
 //300000
-    fun calculate_tax(benefit: Long):Long {
+    fun calculate_tax(benefit: Long): Long {
         var tax = 0L
         if (benefit <= 12000000) {
             tax = (benefit * 6) / 100
