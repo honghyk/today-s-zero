@@ -97,7 +97,7 @@ class ExpenseActivity : AppCompatActivity() {
                 holder: ExpenseCategoryAdapter.ViewHolder,
                 view: View,
                 data: Category,
-                position: Int
+                posㅇition: Int
             ) {
                 category_edit_text.setText(data.category_string)
                 recyclerview.visibility = View.GONE
@@ -115,7 +115,11 @@ class ExpenseActivity : AppCompatActivity() {
 
         DatePickerDialog(this, DatePickerDialog.OnDateSetListener { view, year, month, dayOfMonth ->
 
-            val date = if(month<9){"$year.0${month + 1}.$dayOfMonth"}else{"$year.${month + 1}.$dayOfMonth"}
+            var monthStr= if(month<9) "0${month+1}" else "${month+1}"
+            var dateStr=if(dayOfMonth<10) "0$dayOfMonth" else "$dayOfMonth"
+
+
+            val date ="$year.$monthStr.$dateStr"
                 datePickText.text = date
             }, year, month, day).show()
     }

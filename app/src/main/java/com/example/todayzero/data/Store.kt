@@ -79,9 +79,7 @@ data class Store(
                             callback.onDataLoaded(DataFilterType.STORE_NUM)
                         }
                     }
-
                 }
-
             }
 
             val url = baseUrl + "1&lastIndex=10"
