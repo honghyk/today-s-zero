@@ -77,7 +77,7 @@ class MainFragment : Fragment() {
 
             layoutManager = LinearLayoutManager(requireContext(), RecyclerView.VERTICAL, false)
             spentListView.layoutManager = layoutManager
-            dealAdapter = DealAdapter(ArrayList())
+            dealAdapter = DealAdapter(ArrayList(), requireContext())
             spentListView.adapter = dealAdapter
             val dividerItemDecoration = DividerItemDecoration(requireContext(), layoutManager.orientation)
             spentListView.addItemDecoration(dividerItemDecoration)

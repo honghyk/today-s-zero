@@ -1,5 +1,7 @@
 package com.example.todayzero.util
 
+import android.content.Context
+import android.content.res.ColorStateList
 import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
@@ -8,8 +10,9 @@ import android.widget.ImageView
 import android.widget.TextView
 import com.example.todayzero.R
 import com.example.todayzero.db.deal
+import com.example.todayzero.expense.Category
 
-class DealAdapter(var items: ArrayList<deal>) :
+class DealAdapter(var items: ArrayList<deal>, val context: Context) :
     RecyclerView.Adapter<DealAdapter.ViewHolder>() {
 
     interface OnItemClickListener {
@@ -27,16 +30,17 @@ class DealAdapter(var items: ArrayList<deal>) :
     }
 
     override fun onBindViewHolder(p0: DealAdapter.ViewHolder, p1: Int) {
-            p0.deal_list_store.text=items[p1].store
-            p0.deal_list_payment.text=items[p1].date
-        if(items[p1].isZero==1){
-                 //p0.deal_list_payment.text="제로 페이 결제"
-                 p0.deal_list_img.setImageResource(R.drawable.ic_exposure_zero_blue_24dp)
+        p0.deal_list_store.text=items[p1].store
+        p0.deal_list_payment.text=items[p1].date
+        if(items[p1].isZero == 1){
+            //p0.deal_list_payment.text="제로 페이 결제"
+            p0.deal_list_img.imageTintList = ColorStateList.valueOf(context.getColor(R.color.colorPrimary))
              }else{
-                 //p0.deal_list_payment.text="일반 결제"
-                 p0.deal_list_img.setImageResource(R.drawable.ic_exposure_zero_black_24dp)
-             }
-          p0.deal_list_price.text = NumberFormatter.format(items[p1].price) + "원"
+            //p0.deal_list_payment.text="일반 결제"
+            p0.deal_list_img.imageTintList = ColorStateList.valueOf(context.getColor(R.color.black))
+        }
+        p0.deal_list_img.setImageResource(Category.matchImage(items[p1].category))
+        p0.deal_list_price.text = NumberFormatter.format(items[p1].price) + "원"
 
     }
     inner class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView){

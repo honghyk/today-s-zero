@@ -118,7 +118,7 @@ class DBHelper(context: Context):SQLiteOpenHelper(context,DATABASE_NAME,null,DAT
             val KEY_DATE="date"
             val KEY_NAME="store"
             val KEY_PRICE="price"
-            val KEY_CATEGORY="category"
+            val KEY_CATEGORY="Category"
             val KEY_MEMO="memo"
             val KEY_ISZERO="is_zeropay"
         }
