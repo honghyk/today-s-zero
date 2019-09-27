@@ -118,7 +118,7 @@ class DBHelper(context: Context):SQLiteOpenHelper(context,DATABASE_NAME,null,DAT
             val KEY_DATE="date"
             val KEY_NAME="store"
             val KEY_PRICE="price"
-            val KEY_CATEGORY="category"
+            val KEY_CATEGORY="Category"
             val KEY_MEMO="memo"
             val KEY_ISZERO="is_zeropay"
         }
@@ -138,7 +138,6 @@ class DBHelper(context: Context):SQLiteOpenHelper(context,DATABASE_NAME,null,DAT
         }
 
         val success=wdb.insert(users.TABLE_NAME,null,values)
-        Log.i("InsertedUserID: ","$success ${user.uname}")
     }
 
     fun insertStores( Stores:ArrayList<Store>){
@@ -176,7 +175,6 @@ class DBHelper(context: Context):SQLiteOpenHelper(context,DATABASE_NAME,null,DAT
 
             }
             else {
-                Log.i("insert_db","이미 등록한 상점")
                 return
             }
         }
@@ -212,8 +210,6 @@ class DBHelper(context: Context):SQLiteOpenHelper(context,DATABASE_NAME,null,DAT
         }
 
         val success=wdb.insert(deals.TABLE_NAME,null,values)
-        Log.i("InsertedDealID: ", " ${BaseColumns._ID}")
-
     }
 
     //db 에서 삭제
@@ -245,7 +241,6 @@ class DBHelper(context: Context):SQLiteOpenHelper(context,DATABASE_NAME,null,DAT
 
         val count=wdb.update(users.TABLE_NAME,value,null,null)
 
-        Log.i("updateDB_user","$count")
     }
 
     fun updateStore(sid: String,store: Store){
@@ -261,7 +256,6 @@ class DBHelper(context: Context):SQLiteOpenHelper(context,DATABASE_NAME,null,DAT
         val selectionArgs=arrayOf(sid)
         val count=wdb.update(stores.TABLE_NAME+store.locality,value,selection,selectionArgs)
 
-        Log.i("update_db: ","$count")
 
     }
     fun updateDeal(did: String,deal: deal){
@@ -279,7 +273,6 @@ class DBHelper(context: Context):SQLiteOpenHelper(context,DATABASE_NAME,null,DAT
         val selectionArgs=arrayOf(did)
         val count=wdb.update(deals.TABLE_NAME,value,selection,selectionArgs)
 
-        Log.i("update_db: ","${deal.store}//$count")
     }
 
     //db  조회
@@ -289,7 +282,6 @@ class DBHelper(context: Context):SQLiteOpenHelper(context,DATABASE_NAME,null,DAT
         val cursor=rdb.rawQuery(selectAllQuery,null)
 
         if(cursor!=null){
-            Log.i("finduser",cursor.columnCount.toString())
 
             with(cursor){
                 while(moveToNext()){
@@ -330,7 +322,6 @@ class DBHelper(context: Context):SQLiteOpenHelper(context,DATABASE_NAME,null,DAT
             }
         }
         else{
-            Log.i("searchStores","no store")
         }
         return storeList
     }
@@ -349,13 +340,11 @@ class DBHelper(context: Context):SQLiteOpenHelper(context,DATABASE_NAME,null,DAT
                 val gu = cursor.getString(cursor.getColumnIndex(stores.KEY_GU))
                 val info = cursor.getString(cursor.getColumnIndex(stores.KEY_INFO))
                 val store = Store(sid, name, addr, gu, "",info)
-                Log.i("getStore",store.sid.toString())
 
                 storeList.add(store)
             }
         }
         else{
-            Log.i("searchStores","no store")
         }
         return storeList
     }
@@ -374,13 +363,11 @@ class DBHelper(context: Context):SQLiteOpenHelper(context,DATABASE_NAME,null,DAT
                 val gu = cursor.getString(cursor.getColumnIndex(stores.KEY_GU))
                 val info = cursor.getString(cursor.getColumnIndex(stores.KEY_INFO))
                 val store = Store(sid, name, addr, gu, "",info)
-                Log.i("getStore",store.sid.toString())
 
                 storeList.add(store)
             }
         }
         else{
-            Log.i("searchStores","no store")
         }
         return storeList
     }
@@ -411,7 +398,7 @@ class DBHelper(context: Context):SQLiteOpenHelper(context,DATABASE_NAME,null,DAT
 
             }
         }else{
-            Log.i("searchdeal","nodeal")
+//            Log.i("searchdeal","nodeal")
         }
         return dealList
     }

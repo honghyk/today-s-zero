@@ -7,7 +7,6 @@ import android.content.Intent
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.GridLayoutManager
-import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
@@ -30,7 +29,7 @@ class ExpenseActivity : AppCompatActivity() {
 
     lateinit var datePickText: TextView
     lateinit var timePickText: TextView
-    lateinit var category_list: ArrayList<category>
+    lateinit var category_list: ArrayList<Category>
 
     lateinit var dbHelper: DBHelper
 
@@ -72,22 +71,22 @@ class ExpenseActivity : AppCompatActivity() {
 
     fun initLayout(){
         category_list = arrayListOf(
-            category("식비", R.drawable.ic_restaurant),
-            category("카페/간식", R.drawable.ic_coffee),
-            category("술/유흥", R.drawable.ic_drink),
-            category("생활", R.drawable.ic_couch),
-            category("쇼핑", R.drawable.ic_shopping),
-            category("뷰티/미용", R.drawable.ic_cosmetics),
-            category("교통", R.drawable.ic_bus),
-            category("자동차", R.drawable.ic_car),
-            category("주거/통신", R.drawable.ic_phone),
-            category("의료/건강", R.drawable.ic_health),
-            category("금융", R.drawable.ic_finance),
-            category("문화/여가", R.drawable.ic_hobby),
-            category("여행/숙박", R.drawable.ic_trip),
-            category("교육/학습", R.drawable.ic_education),
-            category("자녀/육아", R.drawable.ic_baby),
-            category("경조/선물", R.drawable.ic_gift)
+            Category("식비", R.drawable.ic_restaurant),
+            Category("카페/간식", R.drawable.ic_coffee),
+            Category("술/유흥", R.drawable.ic_drink),
+            Category("생활", R.drawable.ic_couch),
+            Category("쇼핑", R.drawable.ic_shopping),
+            Category("뷰티/미용", R.drawable.ic_cosmetics),
+            Category("교통", R.drawable.ic_bus),
+            Category("자동차", R.drawable.ic_car),
+            Category("주거/통신", R.drawable.ic_phone),
+            Category("의료/건강", R.drawable.ic_health),
+            Category("금융", R.drawable.ic_finance),
+            Category("문화/여가", R.drawable.ic_hobby),
+            Category("여행/숙박", R.drawable.ic_trip),
+            Category("교육/학습", R.drawable.ic_education),
+            Category("자녀/육아", R.drawable.ic_baby),
+            Category("경조/선물", R.drawable.ic_gift)
         )
         val layoutManager = GridLayoutManager(this, 4)
         recyclerview.layoutManager = layoutManager
@@ -97,7 +96,7 @@ class ExpenseActivity : AppCompatActivity() {
             override fun OnItemClick(
                 holder: ExpenseCategoryAdapter.ViewHolder,
                 view: View,
-                data: category,
+                data: Category,
                 position: Int
             ) {
                 category_edit_text.setText(data.category_string)
@@ -150,8 +149,6 @@ class ExpenseActivity : AppCompatActivity() {
             place_edit_text.setText(store)
         else
             store = ""
-
-        Log.i("ExpenseActivity",store.toString())
 
         if(isupdate) {
             update_deal = intent?.getSerializableExtra(UPDATE_DEAL_DATA_TAG) as deal

@@ -6,14 +6,12 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
-import com.example.todayzero.R
 import android.content.Context
-import java.security.AccessController.getContext
 
 
-class ExpenseCategoryAdapter(var items:ArrayList<category>):RecyclerView.Adapter<ExpenseCategoryAdapter.ViewHolder>() {
+class ExpenseCategoryAdapter(var items:ArrayList<Category>):RecyclerView.Adapter<ExpenseCategoryAdapter.ViewHolder>() {
     interface OnItemClickListener {
-        fun OnItemClick(holder: ViewHolder, view: View, data: category, position: Int)
+        fun OnItemClick(holder: ViewHolder, view: View, data: Category, position: Int)
     }
     var itemClickListener: OnItemClickListener? = null
     override fun onCreateViewHolder(p0: ViewGroup, p1: Int): ExpenseCategoryAdapter.ViewHolder {

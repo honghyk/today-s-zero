@@ -1,18 +1,13 @@
 package com.example.todayzero.util
 
-import android.app.ProgressDialog
 import android.os.AsyncTask
-import android.renderscript.ScriptGroup
-import android.util.Log
 import com.example.todayzero.data.Notice
 import com.example.todayzero.data.Store
 import com.example.todayzero.data.source.DataFilterType
-import com.example.todayzero.notice.NoticeRepository
 import com.example.todayzero.data.source.DataSource
 import com.example.todayzero.db.DBHelper
-import com.example.todayzero.findstore.StoreRepository
+import com.example.todayzero.notice.NoticeRepository
 import org.json.JSONArray
-import org.json.JSONObject
 import java.io.BufferedInputStream
 import java.io.InputStream
 
@@ -95,8 +90,8 @@ class NetworkTask(
                             if(a.contains(sLocality))
                                 storeList.get(zone[sLocality]!!).add(Store(-1,sName, sAddr, sLocality, "", sType))
                             else {
-                                Log.i("test", sLocality)
-                                Log.i("test", sName)
+//                                Log.i("test", sLocality)
+//                                Log.i("test", sName)
                             }
                             // [] 로 끝나는 파일들이 11개 읽혀서 문제 생김 -> sb 내용을 리스트에 담아서 리스트를 넘겨야 할듯! ! ! ! !
                         }

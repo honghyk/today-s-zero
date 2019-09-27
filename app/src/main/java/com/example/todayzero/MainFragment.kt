@@ -13,7 +13,6 @@ import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.DividerItemDecoration
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -78,7 +77,7 @@ class MainFragment : Fragment() {
 
             layoutManager = LinearLayoutManager(requireContext(), RecyclerView.VERTICAL, false)
             spentListView.layoutManager = layoutManager
-            dealAdapter = DealAdapter(ArrayList())
+            dealAdapter = DealAdapter(ArrayList(), requireContext())
             spentListView.adapter = dealAdapter
             val dividerItemDecoration = DividerItemDecoration(requireContext(), layoutManager.orientation)
             spentListView.addItemDecoration(dividerItemDecoration)
@@ -174,17 +173,21 @@ class MainFragment : Fragment() {
 
 
         var total_expense=dbHelper.getTotalExpense(currentYear)
-
-
         var benefit_expense = 0L
         var over_expense = 0L
-
         if (total_expense < ((dbHelper.getUser().income.toLong()) / 4))
-            benefitTextView.text = "0원"
+            benefitTextView.text = "약 0원"
         else {
             over_expense=dbHelper.getZeroPayExpense(currentYear)
+            if(over_expense > dbHelper.getUser().income.toLong() / 4)
+                over_expense = over_expense - dbHelper.getUser().income.toLong() / 4
+            if((over_expense  * 4) / 10 > 4000000)
+                over_expense = 4000000
+            else
+                over_expense = (over_expense  * 4) / 10
+
             benefit_expense =
-                dbHelper.getUser().income.toLong() - (((over_expense - (dbHelper.getUser().income.toLong() / 4)) * 4) / 10)
+                dbHelper.getUser().income.toLong() - over_expense
 
             var final_benefit = calculate_tax(benefit_expense)
 
@@ -258,7 +261,6 @@ class MainFragment : Fragment() {
             nextMonthTextView.text = "1월"
         }
 
-        Log.i("setPrevNextBtn", "click$currentYear/$currentMonth")
 
     }
 }
