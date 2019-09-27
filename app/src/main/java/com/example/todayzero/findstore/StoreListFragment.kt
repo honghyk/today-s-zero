@@ -76,10 +76,25 @@ class StoreListFragment : Fragment() {
                     //Toast.makeText(context, "" + filterList, Toast.LENGTH_LONG).show()
                 } else {
                     listView!!.adapter = AlphabetAdapter(zeroListName)
+
                     search_layout.setFocusableInTouchMode(true)
                     search_layout.requestFocus()
                     val imm = activity!!.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
                     imm!!.hideSoftInputFromWindow(searchinput.getWindowToken(), 0) // 키보드 숨기기
+                    listView!!.onItemClickListener = AdapterView.OnItemClickListener { adapterView, view, i, l ->
+                        var item = adapterView.adapter.getItem(i).toString()
+
+                        var store_info = dbHelper.findStores(guNum!! + 1, item, zeroList[i].addr)
+                        //Toast.makeText(context, store_info[0].name, Toast.LENGTH_LONG).show()
+
+                        //Toast.makeText(context, store_info.name + store_info.addr, Toast.LENGTH_LONG).show()
+                        (requireActivity() as AppCompatActivity).replaceFragmentInActivity(
+                            StoreMapFragment.newInstance(
+                                store_info[0]
+                            ),
+                            R.id.store_contentFrame
+                        )
+                    }
                 }
 
             }
