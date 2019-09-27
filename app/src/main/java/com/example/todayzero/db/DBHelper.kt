@@ -454,6 +454,19 @@ class DBHelper(context: Context):SQLiteOpenHelper(context,DATABASE_NAME,null,DAT
         return dealList
     }
 
+    fun getTotalExpense(year:Int):Long{
+        var zeroPayExpense=0
+        val sql="SELECT SUM(${deals.KEY_PRICE}) FROM ${deals.TABLE_NAME} WHERE ${deals.KEY_DATE} LIKE ?"
+        val selectionArgs=arrayOf("$year%")
+        val cursor=rdb.rawQuery(sql,selectionArgs)
+        if(cursor!=null) {
+            while (cursor.moveToNext()) {
+                zeroPayExpense=cursor.getInt(0)
+            }
+        }
+        return zeroPayExpense.toLong()
+
+    }
     fun getExpense(date:String):String{
 
         var expense=0
@@ -469,17 +482,17 @@ class DBHelper(context: Context):SQLiteOpenHelper(context,DATABASE_NAME,null,DAT
 
     }
 
-    fun getZeroPayExpense():String{
+    fun getZeroPayExpense(year:Int):Long{
         var zeroPayExpense=0
-        val sql="SELECT SUM(${deals.KEY_PRICE}) FROM ${deals.TABLE_NAME} WHERE ${deals.KEY_ISZERO} = ?"
-        val selectionArgs=arrayOf("1")
+        val sql="SELECT SUM(${deals.KEY_PRICE}) FROM ${deals.TABLE_NAME} WHERE ${deals.KEY_DATE} LIKE ? AND ${deals.KEY_ISZERO} = ?"
+        val selectionArgs=arrayOf("$year%","1")
         val cursor=rdb.rawQuery(sql,selectionArgs)
         if(cursor!=null) {
             while (cursor.moveToNext()) {
                 zeroPayExpense=cursor.getInt(0)
             }
         }
-        return zeroPayExpense.toString()
+        return zeroPayExpense.toLong()
 
     }
 

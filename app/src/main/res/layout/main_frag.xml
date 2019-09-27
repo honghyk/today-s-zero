@@ -61,7 +61,6 @@
             <TextView
                     android:id="@+id/benefit_text_view"
                     android:text="3,000원"
-                    android:id="@+id/benefit"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     style="@style/spoqa_text_white"

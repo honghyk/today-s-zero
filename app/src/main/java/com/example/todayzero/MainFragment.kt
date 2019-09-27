@@ -21,6 +21,7 @@ import com.example.todayzero.db.deal
 import com.example.todayzero.expense.ExpenseActivity
 import com.example.todayzero.util.DealAdapter
 import com.example.todayzero.util.NumberFormatter
+import com.google.android.libraries.places.internal.i
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.main_frag.*
 import java.util.*
@@ -152,41 +153,18 @@ class MainFragment : Fragment() {
         expenseTxtTitle.text = currentMonth.toString() + EXPENSE_TITLE
         var expense = dbHelper.getExpense(date)
         userExpenseTxt.text = NumberFormatter.format(expense) + "원"
-        val zeroPayExpense=dbHelper.getZeroPayExpense()
-        benefitTextView.text=NumberFormatter.format(zeroPayExpense)+"원"
 
-        var i = 1
-        var total_expense = 0L
-        while (i <= currentMonth) {
-            date = if (i < 10) "$currentYear.0$i" else "$currentYear.$i"
-            dealList = dbHelper.getDeals(date)
-            dealAdapter.items = dealList
-            dealAdapter.notifyDataSetChanged()
-            expense = dbHelper.getExpense(date)
-            total_expense += expense.toLong()
-            i++
-        }
 
-        i = 1
+        var total_expense=dbHelper.getTotalExpense(currentYear)
+
+
         var benefit_expense = 0L
         var over_expense = 0L
-        var calendar = Calendar.getInstance()
-        var latestMonth = calendar.get(Calendar.MONTH) + 1
+
         if (total_expense < ((dbHelper.getUser().income.toLong()) / 4))
-            benefit.text = "0원"
+            benefitTextView.text = "0원"
         else {
-            var totalList = arrayListOf<deal>()
-            while (i <= latestMonth) {
-                date = if (i < 10) "$currentYear.0$i" else "$currentYear.$i"
-                dealList = dbHelper.getDeals(date)
-                totalList.addAll(dealList)
-                i++
-            }
-            for (i in totalList) {
-                if (i.isZero == 1) {
-                    over_expense += i.price.toLong()
-                }
-            }
+            over_expense=dbHelper.getZeroPayExpense(currentYear)
             benefit_expense =
                 dbHelper.getUser().income.toLong() - (((over_expense - (dbHelper.getUser().income.toLong() / 4)) * 4) / 10)
 
@@ -194,8 +172,8 @@ class MainFragment : Fragment() {
 
             var normal_tax = calculate_tax(dbHelper.getUser().income.toLong())
 
-            benefit.text = "약" + (normal_tax - final_benefit).toString() + "원"
-        }
+            benefitTextView.text = "약" + (normal_tax - final_benefit).toString() + "원"
+       }
     }
 //300000
     fun calculate_tax(benefit: Long):Long {
