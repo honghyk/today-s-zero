@@ -13,7 +13,6 @@ import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.DividerItemDecoration
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -258,7 +257,6 @@ class MainFragment : Fragment() {
             nextMonthTextView.text = "1월"
         }
 
-        Log.i("setPrevNextBtn", "click$currentYear/$currentMonth")
 
     }
 }

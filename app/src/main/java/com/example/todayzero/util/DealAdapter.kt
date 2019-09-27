@@ -21,11 +21,6 @@ class DealAdapter(var items: ArrayList<deal>) :
         return items.size
     }
 
-    fun replaceAllItem(newItems: ArrayList<deal>) {
-        items.clear()
-        items.addAll(newItems)
-    }
-
     override fun onCreateViewHolder(p0: ViewGroup, p1: Int): ViewHolder {
         val v = LayoutInflater.from(p0.context).inflate(R.layout.deal_list_item, p0, false)
         return ViewHolder(v)
