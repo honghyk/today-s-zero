@@ -340,6 +340,35 @@ class DBHelper(context: Context):SQLiteOpenHelper(context,DATABASE_NAME,null,DAT
     }
 
 
+    fun findStores(guNum:Int, storeName:String, store_addr:String):ArrayList<Store>{
+        val storeList=ArrayList<Store>()
+        val gu = zone[guNum]
+        val projection=arrayOf(BaseColumns._ID, DBHelper.stores.KEY_NAME, DBHelper.stores.KEY_ADDR,stores.KEY_GU,
+            stores.KEY_INFO)
+        val cursor=rdb.query(stores.TABLE_NAME+gu,projection,null,null,null,null,null,null)
+        if(cursor!=null) {
+            while (cursor.moveToNext()) {
+                val sid = cursor.getInt(cursor.getColumnIndex(BaseColumns._ID))
+                val name = cursor.getString(cursor.getColumnIndex(stores.KEY_NAME))
+                if(name != storeName)
+                    continue
+                val addr = cursor.getString(cursor.getColumnIndex(stores.KEY_ADDR))
+                if(addr != store_addr)
+                    continue
+                val gu = cursor.getString(cursor.getColumnIndex(stores.KEY_GU))
+                val info = cursor.getString(cursor.getColumnIndex(stores.KEY_INFO))
+                val store = Store(sid, name, addr, gu, "",info)
+                Log.i("getStore",store.sid.toString())
+
+                storeList.add(store)
+            }
+        }
+        else{
+            Log.i("searchStores","no store")
+        }
+        return storeList
+    }
+
     fun getStores(gu:String):ArrayList<Store>{
 
         val storeList=ArrayList<Store>()

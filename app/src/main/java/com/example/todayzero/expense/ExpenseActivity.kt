@@ -100,6 +100,7 @@ class ExpenseActivity : AppCompatActivity() {
                 position: Int
             ) {
                 category_edit_text.setText(data.category_string)
+                recyclerview.visibility = View.GONE
                 //TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
             }
 
