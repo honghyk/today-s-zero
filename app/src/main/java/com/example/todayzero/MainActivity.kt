@@ -74,20 +74,6 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         }
     }
 
-//    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
-//        menuInflater.inflate(R.menu.main_option_menu, menu)
-//
-//        return true
-//    }
-//
-//    override fun onOptionsItemSelected(item: MenuItem?): Boolean {
-//        if(item!!.itemId == R.id.menu_modify) {
-//            loadUserDataAndShowWelcomeFrag()
-//        }
-//
-//        return super.onOptionsItemSelected(item)
-//    }
-
     override fun onNavigationItemSelected(item: MenuItem): Boolean {
         // Handle navigation view item clicks here.
         when (item.itemId) {
@@ -121,6 +107,7 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
                 startActivity(webIntent)
             }
         }
+        item.setCheckable(false)
         drawer_layout.closeDrawer(GravityCompat.START)
         return true
     }
