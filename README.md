@@ -13,7 +13,7 @@
 5. 제로페이 가맹점 안내
 
 ## Screenshots
-![screenshot](readme/screenshot.png)
+<img src="readme/screenshot.png" width="480px"></img>
 
 
 ## Application Versions
